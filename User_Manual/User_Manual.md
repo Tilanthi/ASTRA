@@ -1,7 +1,7 @@
 # ASTRA User Manual
 ## Autonomous System for Scientific Discovery in Astrophysics
 
-**Version**: 4.7
+**Version**: 5.0
 **Date**: April 2026
 **Authors**: Glenn J. White & Robin Dey
 **Repository**: https://github.com/Tilanthi/ASTRA
@@ -15,13 +15,14 @@
 3. [Installation and Setup](#3-installation-and-setup)
 4. [Getting Started](#4-getting-started)
 5. [Core Capabilities Overview](#5-core-capabilities-overview)
-6. [Use Case Examples](#6-use-case-examples)
-7. [Advanced Features](#7-advanced-features)
-8. [Domain Modules](#8-domain-modules)
-9. [API Reference](#9-api-reference)
-10. [Best Practices](#10-best-practices)
-11. [Troubleshooting](#11-troubleshooting)
-12. [Appendices](#12-appendices)
+6. [V5.0 Discovery Enhancement System](#6-v50-discovery-enhancement-system) ⭐ NEW
+7. [Use Case Examples](#7-use-case-examples)
+8. [Advanced Features](#8-advanced-features)
+9. [Domain Modules](#9-domain-modules)
+10. [API Reference](#10-api-reference)
+11. [Best Practices](#11-best-practices)
+12. [Troubleshooting](#12-troubleshooting)
+13. [Appendices](#13-appendices)
 
 ---
 
@@ -504,7 +505,87 @@ Checks all results against dimensional consistency, conservation laws, and estab
 
 ---
 
-## 6. Use Case Examples
+## 6. V5.0 Discovery Enhancement System ⭐ NEW
+
+### 6.1 Overview
+
+The V5.0 Discovery Enhancement System is a major expansion of ASTRA's scientific discovery capabilities, introduced in April 2026. It provides eight new specialized capabilities designed to improve the discovery, validation, and interpretation of scientific findings.
+
+**Key Innovations:**
+- **Temporal Causal Discovery**: Understand how causal relationships evolve over time
+- **Counterfactual Reasoning**: Test "what-if" scenarios to validate causal claims
+- **Multi-Modal Evidence Integration**: Combine text, numerical, visual, and code evidence
+- **Adversarial Validation**: Systematic challenge of discoveries to reduce false positives
+- **Meta-Discovery Transfer Learning**: Apply successful discovery strategies across domains
+- **Explainable Causal Reasoning**: Natural language explanations from causal graphs
+- **Discovery Triage**: Prioritize discoveries by impact and publication readiness
+- **Real-Time Streaming Discovery**: Monitor data streams for live discovery alerts
+
+### 6.2 V5.0 Capability Summary
+
+| Capability | Description | Use When |
+|------------|-------------|----------|
+| **V101** Temporal Causal Discovery | Discover time-lagged causal relationships and change points | Working with time-series or sequential data |
+| **V102** Counterfactual Engine | Test interventions and estimate causal effects | Validating causal claims from observational data |
+| **V103** Multi-Modal Evidence | Integrate evidence from text, numerical data, plots, and code | Corroborating findings across multiple evidence types |
+| **V104** Adversarial Discovery | Challenge hypotheses with systematic adversarial testing | Reducing false positives and validating discoveries |
+| **V105** Meta-Discovery Transfer | Apply discovery patterns from one domain to another | Exploring new domains with limited data |
+| **V106** Explainable Causal | Generate natural language explanations | Preparing papers or communicating results |
+| **V107** Discovery Triage | Prioritize discoveries by impact and readiness | Managing multiple discoveries or large surveys |
+| **V108** Streaming Discovery | Real-time causal discovery on data streams | Monitoring live observations or alerts |
+
+### 6.3 Quick Start
+
+The simplest way to use V5.0 is through the unified discovery interface:
+
+```python
+from stan_core.v5_discovery_orchestrator import discover_in_dataset
+import numpy as np
+
+# Your data
+data = np.array([...])  # Shape: (n_samples, n_variables)
+variable_names = ['var1', 'var2', 'var3', 'var4']
+
+# Run complete V5.0 discovery pipeline
+result = discover_in_dataset(data, variable_names, domain="your_domain")
+
+# Access comprehensive results
+print(f"Claim: {result.claim}")
+print(f"Confidence: {result.confidence:.2f}")
+print(f"Recommendation: {result.recommendation}")
+```
+
+### 6.4 Integration with Existing ASTRA
+
+V5.0 capabilities integrate seamlessly with:
+- **V97 Knowledge Isolation Mode**: Novelty scoring for new discoveries
+- **V98 FCI Causal Discovery**: Baseline causal graph generation
+- **V4.0 Meta-Cognitive Capabilities**: Context-aware processing
+
+### 6.5 When to Use V5.0
+
+- **V101 Temporal**: When you have time-series data and want to understand causality over time
+- **V102 Counterfactual**: When you need to test "what-if" scenarios or validate causal mechanisms
+- **V103 Multi-Modal**: When you have multiple types of evidence (data, papers, plots, code)
+- **V104 Adversarial**: When you want to rigorously validate a discovery before publication
+- **V105 Meta-Learning**: When exploring a new domain with limited data
+- **V106 Explainable**: When preparing papers or communicating results to astronomers
+- **V107 Triage**: When you have many discoveries and need to prioritize what to pursue
+- **V108 Streaming**: When monitoring live data streams (e.g., during observations)
+
+### 6.6 Detailed Documentation
+
+For complete documentation of V5.0 capabilities, including:
+- Detailed API reference
+- Code examples for each capability
+- Best practices and workflows
+- Performance considerations
+
+See the **[V5.0 Discovery Enhancement Guide](V5.0_DiscoveryEnhancement_Guide.md)** in this directory.
+
+---
+
+## 7. Use Case Examples
 
 The following examples demonstrate typical ASTRA workflows using natural language descriptions. These examples illustrate how to interact with ASTRA for common astronomical analysis tasks.
 
@@ -1144,7 +1225,7 @@ Identify features that would discriminate between formation channels
 
 ---
 
-## 7. Advanced Features
+## 8. Advanced Features
 
 ### 7.1 Custom Analysis Workflows
 
@@ -1208,7 +1289,7 @@ Share extensions with the ASTRA community
 
 ---
 
-## 8. Domain Modules
+## 9. Domain Modules
 
 ASTRA includes 75 specialized domain modules covering all major areas of astrophysics. These modules provide domain-specific knowledge, analysis methods, and validation criteria.
 
@@ -1259,11 +1340,11 @@ Modules contribute domain knowledge to guide analysis
 
 ---
 
-## 9. API Reference
+## 10. API Reference
 
-### 9.1 Core Functions
+### 10.1 Core Functions
 
-#### 9.1.1 Creating a System Instance
+#### 10.1.1 Creating a System Instance
 
 ```
 Create an ASTRA system with default configuration
@@ -1299,9 +1380,29 @@ Get validation results
 Get provenance information
 ```
 
-### 9.2 Advanced API Usage
+### 10.2 Advanced API Usage
 
-#### 9.2.1 Custom Workflows
+#### 10.2.1 Custom Workflows
+
+#### 10.2.2 V5.0 Discovery API ⭐ NEW
+
+```
+discover_in_dataset(data, variable_names, domain="", workflow="standard")
+```
+
+**V5.0 Discovery Orchestrator** - Main entry point for V5.0 capabilities
+
+The `discover_in_dataset()` function provides a unified interface to all V5.0 discovery capabilities. It automatically:
+1. Runs baseline causal discovery (V98 FCI)
+2. Applies temporal causal discovery (V101)
+3. Performs counterfactual analysis (V102)
+4. Integrates multi-modal evidence (V103)
+5. Validates with adversarial framework (V104)
+6. Generates explanations (V106)
+7. Triages by priority (V107)
+8. Returns comprehensive DiscoveryResult
+
+**See also**: [V5.0 Discovery Enhancement Guide](V5.0_DiscoveryEnhancement_Guide.md) for detailed V5.0 API documentation.
 
 ```
 Define a workflow as a directed acyclic graph
@@ -1321,7 +1422,7 @@ Monitor batch job progress
 
 ---
 
-## 10. Best Practices
+## 11. Best Practices
 
 ### 10.1 Data Preparation
 
@@ -1388,7 +1489,7 @@ Monitor batch job progress
 
 ---
 
-## 11. Troubleshooting
+## 12. Troubleshooting
 
 ### 11.1 Common Issues
 
@@ -1413,7 +1514,7 @@ Monitor batch job progress
 
 ---
 
-## 12. Appendices
+## 13. Appendices
 
 ### Appendix A: Data Format Specifications
 
