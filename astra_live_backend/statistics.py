@@ -393,3 +393,165 @@ def generate_mcmc_chain(n_steps: int = 1000, h0_true: float = 68.5,
         else:
             chain[i] = chain[i-1]
     return chain
+
+
+# ============================================================
+#   Phase 7.2 — Confounder Detection (Backdoor Criterion Proxy)
+# ============================================================
+
+def backdoor_criterion_test(data: 'pd.DataFrame', cause: str, effect: str,
+                            potential_confounders: list, alpha: float = 0.05) -> dict:
+    """
+    Test for confounders using a proxy for the backdoor criterion.
+    For each potential confounder Z:
+      1. Regress cause ~ Z → get residuals
+      2. Regress effect ~ Z → get residuals
+      3. Correlate residuals (confounder-adjusted effect)
+      4. Compare adjusted vs unadjusted effect size
+    Returns dict with confounders_detected, adjusted/unadjusted effect, confounding bias.
+    """
+    import pandas as pd
+
+    cause_data = data[cause].values.astype(float)
+    effect_data = data[effect].values.astype(float)
+
+    # Unadjusted correlation
+    valid = np.isfinite(cause_data) & np.isfinite(effect_data)
+    if valid.sum() < 10:
+        return {
+            "confounders_detected": [],
+            "adjusted_effect": 0.0,
+            "unadjusted_effect": 0.0,
+            "confounding_bias": 0.0,
+            "error": "Insufficient valid data points",
+        }
+
+    unadj_r, unadj_p = stats.pearsonr(cause_data[valid], effect_data[valid])
+    unadj_effect = float(unadj_r)
+
+    confounders_detected = []
+
+    for z_name in potential_confounders:
+        if z_name in (cause, effect):
+            continue
+        z_data = data[z_name].values.astype(float)
+        mask = valid & np.isfinite(z_data)
+        if mask.sum() < 10:
+            continue
+
+        c, e, z = cause_data[mask], effect_data[mask], z_data[mask]
+
+        # Regress cause ~ Z
+        z_mean = z - z.mean()
+        z_var = np.dot(z_mean, z_mean)
+        if z_var < 1e-12:
+            continue
+        beta_cz = np.dot(z_mean, c - c.mean()) / z_var
+        residual_c = c - (c.mean() + beta_cz * z_mean)
+
+        # Regress effect ~ Z
+        beta_ez = np.dot(z_mean, e - e.mean()) / z_var
+        residual_e = e - (e.mean() + beta_ez * z_mean)
+
+        # Adjusted correlation (partial correlation)
+        if np.std(residual_c) < 1e-12 or np.std(residual_e) < 1e-12:
+            continue
+        adj_r, adj_p = stats.pearsonr(residual_c, residual_e)
+
+        # Bias = |unadjusted| - |adjusted|: positive means Z inflated the association
+        bias = abs(unadj_r) - abs(adj_r)
+
+        # Is Z associated with both cause and effect?
+        _, p_zc = stats.pearsonr(z, c)
+        _, p_ze = stats.pearsonr(z, e)
+
+        confounders_detected.append({
+            "variable": z_name,
+            "unadjusted_r": round(float(unadj_r), 5),
+            "adjusted_r": round(float(adj_r), 5),
+            "bias_magnitude": round(float(bias), 5),
+            "p_cause_z": round(float(p_zc), 6),
+            "p_effect_z": round(float(p_ze), 6),
+            "adj_p_value": round(float(adj_p), 6),
+            "is_confounder": bool(p_zc < alpha and p_ze < alpha and abs(bias) > 0.02),
+        })
+
+    # Sort by bias magnitude (largest first)
+    confounders_detected.sort(key=lambda x: abs(x["bias_magnitude"]), reverse=True)
+
+    # Best adjusted effect = effect after conditioning on strongest confounder
+    if confounders_detected and confounders_detected[0]["is_confounder"]:
+        adj_effect = confounders_detected[0]["adjusted_r"]
+    else:
+        adj_effect = unadj_effect
+
+    return {
+        "confounders_detected": confounders_detected,
+        "adjusted_effect": round(float(adj_effect), 5),
+        "unadjusted_effect": round(float(unadj_effect), 5),
+        "confounding_bias": round(float(unadj_effect - adj_effect), 5),
+    }
+
+
+def detect_confounders(df: 'pd.DataFrame', cause: str, effect: str,
+                       alpha: float = 0.05) -> dict:
+    """
+    High-level confounder detection:
+      1. Identifies potential confounders as all other numeric columns
+      2. Runs backdoor_criterion_test for each
+      3. Applies FDR correction to the confounder significance tests
+      4. Returns ranked list of confirmed confounders with bias magnitude
+    """
+    import pandas as pd
+
+    # Identify numeric columns (potential confounders)
+    numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+    potential = [c for c in numeric_cols if c not in (cause, effect)]
+
+    if not potential:
+        return {
+            "cause": cause,
+            "effect": effect,
+            "n_candidates": 0,
+            "confirmed_confounders": [],
+            "fdr_corrected": False,
+            "summary": f"No numeric confounders to test for {cause} → {effect}",
+        }
+
+    # Run backdoor criterion test
+    result = backdoor_criterion_test(df, cause, effect, potential, alpha)
+
+    detected = result.get("confounders_detected", [])
+
+    # FDR correction on p-values for Z→cause and Z→effect associations
+    if detected:
+        # Use the product of p_cause_z and p_effect_z as joint significance
+        p_values = [max(d["p_cause_z"], d["p_effect_z"]) for d in detected]
+        fdr_result = fdr_correction(p_values, alpha)
+
+        for i, d in enumerate(detected):
+            d["fdr_significant"] = fdr_result["rejected_mask"][i] if i < len(fdr_result["rejected_mask"]) else False
+            d["fdr_adjusted_p"] = fdr_result["adjusted_p_values"][i] if i < len(fdr_result["adjusted_p_values"]) else 1.0
+
+        confirmed = [d for d in detected if d.get("fdr_significant") and d["is_confounder"]]
+    else:
+        confirmed = []
+        fdr_result = None
+
+    return {
+        "cause": cause,
+        "effect": effect,
+        "n_candidates": len(potential),
+        "n_tested": len(detected),
+        "confirmed_confounders": confirmed,
+        "all_candidates": detected,
+        "unadjusted_effect": result.get("unadjusted_effect", 0),
+        "adjusted_effect": result.get("adjusted_effect", 0),
+        "confounding_bias": result.get("confounding_bias", 0),
+        "fdr_corrected": fdr_result is not None,
+        "summary": (
+            f"Tested {len(potential)} candidates for {cause} → {effect}: "
+            f"{len(confirmed)} confirmed confounders "
+            f"(bias: {result.get('confounding_bias', 0):.4f})"
+        ),
+    }

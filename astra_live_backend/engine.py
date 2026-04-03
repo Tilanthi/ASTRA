@@ -453,16 +453,36 @@ class DiscoveryEngine:
                     result = self.run_causal_discovery(vars_list[:data.shape[1]], data[:, :len(vars_list)])
                     # Record discovery
                     if result.get("edges"):
+                        # Phase 7.2: Confounder detection for each causal edge
+                        import pandas as pd
+                        from .statistics import detect_confounders
+                        df_causal = pd.DataFrame(data[:, :len(vars_list)],
+                                                 columns=vars_list[:data.shape[1]])
                         for edge in result["edges"]:
+                            src = edge.get("source", "")
+                            tgt = edge.get("target", "")
+                            # Run confounder detection
+                            confounder_result = {}
+                            if src in df_causal.columns and tgt in df_causal.columns:
+                                try:
+                                    confounder_result = detect_confounders(df_causal, src, tgt)
+                                except Exception as ce:
+                                    self._log("CONFOUNDER", "STATISTICS",
+                                              f"Confounder detection failed for {src}→{tgt}: {ce}")
+                            desc = f"Causal edge: {edge}"
+                            if confounder_result.get("confirmed_confounders"):
+                                cnames = [c["variable"] for c in confounder_result["confirmed_confounders"]]
+                                desc += f" | Confounders: {cnames}"
                             self.discovery_memory.record_discovery(
                                 hypothesis_id=h.id, domain=h.domain,
                                 finding_type="causal",
-                                variables=[edge.get("source", ""), edge.get("target", "")],
+                                variables=[src, tgt],
                                 statistic=edge.get("weight", 0.5),
                                 p_value=0.05,
-                                description=f"Causal edge: {edge}",
+                                description=desc,
                                 data_source=params.get("data_source", "unknown"),
                                 sample_size=data.shape[0],
+                                metadata={"confounder_analysis": confounder_result} if confounder_result else {},
                             )
 
             elif method_name == "run_scaling_discovery":

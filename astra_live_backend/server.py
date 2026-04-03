@@ -9,7 +9,7 @@ import os
 import sys
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
@@ -848,9 +848,92 @@ def api_statistics_methods():
             "change_point_detection": {"available": True, "description": "CUSUM change point detection"},
             "granger_causality": {"available": True, "description": "Granger causality F-test"},
             "compute_posterior_intervals": {"available": True, "description": "Laplace approximation posterior"},
+            "confounder_detection": {"available": True, "description": "Backdoor criterion proxy — detect confounders"},
         },
         "timestamp": time.time(),
     }
+
+
+@app.post("/api/statistics/confounder-analysis")
+async def api_confounder_analysis(request: Request):
+    """Detect confounders between a cause-effect pair in a data source."""
+    body = await request.json()
+    cause = body.get("cause")
+    effect = body.get("effect")
+    data_source = body.get("data_source", "sdss")
+    alpha = body.get("alpha", 0.05)
+
+    if not cause or not effect:
+        return {"error": "Both 'cause' and 'effect' fields are required"}
+
+    import pandas as pd
+    import numpy as np
+    from astra_live_backend.statistics import detect_confounders
+    from astra_live_backend.data_fetcher import data_cache
+
+    # Fetch data from shared cache
+    try:
+        # Map source name to cached fetch function
+        source_map = {
+            "sdss": "sdss",
+            "exoplanets": "exoplanets",
+            "gaia": "gaia",
+            "pantheon": "pantheon",
+        }
+        cache_key = source_map.get(data_source, data_source)
+        source_data = data_cache.get(cache_key)
+
+        if source_data is None:
+            # Trigger a fetch
+            from astra_live_backend.data_fetcher import (
+                get_cached_sdss, get_cached_exoplanets,
+                get_cached_gaia, get_cached_pantheon,
+            )
+            fetch_map = {
+                "sdss": get_cached_sdss,
+                "exoplanets": get_cached_exoplanets,
+                "gaia": get_cached_gaia,
+                "pantheon": get_cached_pantheon,
+            }
+            fetcher = fetch_map.get(data_source)
+            if fetcher:
+                source_data = fetcher()
+            else:
+                return {"error": f"Unknown data source '{data_source}'",
+                        "available_sources": list(source_map.keys())}
+
+        # Extract the numpy array from DataResult
+        raw_data = source_data.data if hasattr(source_data, 'data') else source_data
+
+        # Convert structured/recarray numpy to DataFrame
+        if isinstance(raw_data, np.ndarray) and raw_data.dtype.names:
+            df = pd.DataFrame({name: raw_data[name] for name in raw_data.dtype.names})
+        elif isinstance(raw_data, np.ndarray):
+            df = pd.DataFrame(raw_data)
+        elif isinstance(raw_data, pd.DataFrame):
+            df = raw_data
+        else:
+            return {"error": f"Cannot convert {type(raw_data)} to DataFrame"}
+
+        # Validate columns
+        available = list(df.select_dtypes(include=[np.number]).columns)
+        if cause not in df.columns:
+            return {"error": f"Column '{cause}' not found in {data_source}",
+                    "available_columns": available[:30]}
+        if effect not in df.columns:
+            return {"error": f"Column '{effect}' not found in {data_source}",
+                    "available_columns": available[:30]}
+
+        result = detect_confounders(df, cause, effect, alpha)
+        result["data_source"] = data_source
+        result["n_rows"] = len(df)
+        result["timestamp"] = time.time()
+        return result
+
+    except Exception as e:
+        import traceback
+        return {"error": str(e), "traceback": traceback.format_exc(),
+                "cause": cause, "effect": effect, "data_source": data_source}
 
 
 if __name__ == "__main__":

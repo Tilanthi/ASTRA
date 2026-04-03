@@ -36,6 +36,7 @@ class DiscoveryRecord:
     follow_ups_generated: int = 0  # track how many hypotheses this spawned
     verified: bool = False  # did follow-up confirm?
     effect_size: Optional[float] = None  # Cohen's d, η², or domain-appropriate effect size
+    metadata: Optional[dict] = None  # Additional structured data (e.g. confounder analysis)
 
 
 @dataclass
@@ -220,7 +221,8 @@ class DiscoveryMemory:
                          variables: list, statistic: float, p_value: float,
                          description: str, data_source: str,
                          sample_size: int = 0,
-                         effect_size: Optional[float] = None) -> DiscoveryRecord:
+                         effect_size: Optional[float] = None,
+                         metadata: Optional[dict] = None) -> DiscoveryRecord:
         """Record a scientific finding for future hypothesis generation."""
         # Composite strength: significance × effect size proxy × log sample size
         sig_score = max(0, 1 - p_value) if p_value <= 1 else 0
@@ -242,6 +244,7 @@ class DiscoveryMemory:
             data_source=data_source,
             strength=strength,
             effect_size=effect_size,
+            metadata=metadata,
         )
         self._next_discovery_id += 1
         self.discoveries.append(rec)
