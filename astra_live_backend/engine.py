@@ -301,7 +301,7 @@ class DiscoveryEngine:
         self.current_phase = "ORIENT"
         self._log("ORIENT", "ORIENT", "Scanning astronomical data feeds…")
 
-        # Check what's in cache (doesn't trigger new fetches)
+        # Check what's in cache (legacy sources — doesn't trigger new fetches)
         total = 0
         sources = []
         for key, label in [("exoplanets", "Exoplanets"), ("pantheon", "Pantheon+ SNe"),
@@ -310,6 +310,16 @@ class DiscoveryEngine:
             if cached is not None and cached.data is not None and len(cached.data) > 0:
                 total += len(cached.data)
                 sources.append(f"{label}: {len(cached.data)}")
+
+        # Check registry sources
+        from .data_registry import get_registry
+        reg = get_registry()
+        reg_stats = reg.get_stats()
+        self._log("ORIENT", "ORIENT",
+                  f"Registry: {reg_stats['total_sources']} sources across "
+                  f"{len(reg_stats['domains'])} domains, "
+                  f"{reg_stats['cross_match_pairs']} cross-match pairs, "
+                  f"{reg_stats['total_variables']} variables")
 
         if sources:
             self.total_data_points = total
@@ -393,8 +403,20 @@ class DiscoveryEngine:
                 self._investigate_crossdomain(h)
             elif category == "star_formation":
                 self._investigate_star_formation(h)
+            elif category == "gravitational_waves":
+                self._investigate_gw_events(h)
+            elif category == "cmb":
+                self._investigate_cmb(h)
+            elif category == "transients":
+                self._investigate_transients(h)
+            elif category == "time_domain":
+                self._investigate_time_domain(h)
             else:
                 self._investigate_generic(h)
+
+            # Always run cross-source linking for hypotheses with multiple data sources
+            if self.cycle_count % 2 == 0:  # Every other cycle
+                self._investigate_crosslink(h)
 
             # Secondary methods from strategist (scaling, causal, Bayesian, etc.)
             for method_name in methods[1:]:
@@ -707,6 +729,175 @@ class DiscoveryEngine:
             self._log("INVESTIGATE", "INVESTIGATE",
                       f"Using Gaia sample: {len(gaia.data)} stars", h.id)
 
+        self.total_plots += 1
+
+    def _investigate_gw_events(self, h: Hypothesis):
+        """Gravitational wave event analysis — mass distributions, spin."""
+        self._log("INVESTIGATE", "INVESTIGATE",
+                  f"Analyzing GW events for {h.id} ({h.name})", h.id)
+        from .data_registry import get_registry
+        reg = get_registry()
+        result = reg.fetch("gw_events")
+        if result.data is None or len(result.data) == 0:
+            self._log("INVESTIGATE", "INVESTIGATE",
+                      f"⚠ No GW data available — skipping {h.id}", h.id)
+            return
+
+        h.data_points_used = len(result.data)
+        chirp = result.data['chirp_mass']
+        self._log("INVESTIGATE", "INVESTIGATE",
+                  f"GW sample: {len(chirp)} events, chirp mass range "
+                  f"[{np.min(chirp):.1f}, {np.max(chirp):.1f}] M☉", h.id)
+
+        # Mass ratio distribution (BBH vs BNS vs NSBH)
+        q = result.data['mass_ratio']
+        bbh_frac = np.mean(q > 0.5)  # Similar mass = likely BBH
+        self._log("INVESTIGATE", "INVESTIGATE",
+                  f"Mass ratio analysis: {bbh_frac:.0%} have q > 0.5 (BBH-like)", h.id)
+
+        self.total_plots += 1
+
+    def _investigate_cmb(self, h: Hypothesis):
+        """CMB power spectrum analysis — acoustic peaks, cosmological parameters."""
+        self._log("INVESTIGATE", "INVESTIGATE",
+                  f"Analyzing CMB power spectrum for {h.id} ({h.name})", h.id)
+        from .data_registry import get_registry
+        reg = get_registry()
+        result = reg.fetch("planck_cmb")
+        if result.data is None or len(result.data) == 0:
+            self._log("INVESTIGATE", "INVESTIGATE",
+                      f"⚠ No CMB data available — skipping {h.id}", h.id)
+            return
+
+        h.data_points_used = len(result.data)
+        ells = result.data['ell']
+        cls = result.data['cl']
+
+        # Find acoustic peaks
+        # First peak around ell ~ 220
+        peak_region = cls[(ells > 150) & (ells < 300)]
+        if len(peak_region) > 0:
+            first_peak_idx = np.argmax(peak_region)
+            first_peak_ell = ells[(ells > 150) & (ells < 300)][first_peak_idx]
+            self._log("INVESTIGATE", "INVESTIGATE",
+                      f"First acoustic peak at ℓ ≈ {first_peak_ell:.0f} "
+                      f"(expected ~220 for ΛCDM)", h.id)
+
+        # Power-law index at low ℓ (Sachs-Wolfe)
+        low_ells = cls[(ells > 2) & (ells < 30)]
+        if len(low_ells) > 5:
+            log_ell = np.log(ells[(ells > 2) & (ells < 30)])
+            log_cl = np.log(low_ells)
+            slope = np.polyfit(log_ell, log_cl, 1)[0]
+            self._log("INVESTIGATE", "INVESTIGATE",
+                      f"Low-ℓ spectral index: {slope:.3f} (flat expected for scale-invariant)", h.id)
+
+        self.total_plots += 1
+
+    def _investigate_transients(self, h: Hypothesis):
+        """Transient event analysis — SNe, AGN, CV classification."""
+        self._log("INVESTIGATE", "INVESTIGATE",
+                  f"Analyzing transient events for {h.id} ({h.name})", h.id)
+        from .data_registry import get_registry
+        reg = get_registry()
+        result = reg.fetch("ztf_transients")
+        if result.data is None or len(result.data) == 0:
+            self._log("INVESTIGATE", "INVESTIGATE",
+                      f"⚠ No ZTF data available — skipping {h.id}", h.id)
+            return
+
+        h.data_points_used = len(result.data)
+        mags = result.data['mean_mag']
+        delta = result.data['delta_mag']
+        ndet = result.data['ndet']
+
+        self._log("INVESTIGATE", "INVESTIGATE",
+                  f"ZTF sample: {len(mags)} transients, mag range "
+                  f"[{np.min(mags):.1f}, {np.max(mags):.1f}]", h.id)
+
+        # Variability analysis
+        high_var = np.mean(delta > 2.0) if len(delta) > 0 else 0
+        self._log("INVESTIGATE", "INVESTIGATE",
+                  f"High-variability fraction (Δmag > 2): {high_var:.0%}", h.id)
+
+        self.total_plots += 1
+
+    def _investigate_time_domain(self, h: Hypothesis):
+        """TESS/MAST stellar parameter analysis for transit hosts."""
+        self._log("INVESTIGATE", "INVESTIGATE",
+                  f"Analyzing time-domain stellar data for {h.id} ({h.name})", h.id)
+        from .data_registry import get_registry
+        reg = get_registry()
+        result = reg.fetch("tess_mast")
+        if result.data is None or len(result.data) == 0:
+            self._log("INVESTIGATE", "INVESTIGATE",
+                      f"⚠ No TESS/MAST data available — skipping {h.id}", h.id)
+            return
+
+        h.data_points_used = len(result.data)
+        teff = result.data['teff']
+        radii = result.data['radius']
+        masses = result.data['mass']
+
+        valid_teff = teff[teff > 0]
+        valid_rad = radii[radii > 0]
+        valid_mass = masses[masses > 0]
+
+        if len(valid_teff) > 0:
+            self._log("INVESTIGATE", "INVESTIGATE",
+                      f"TESS sample: {len(result.data)} stars, Teff range "
+                      f"[{np.min(valid_teff):.0f}, {np.max(valid_teff):.0f}] K", h.id)
+
+        # Mass-radius relation for stellar hosts
+        if len(valid_rad) > 10 and len(valid_mass) > 10:
+            # Match lengths
+            min_len = min(len(valid_rad), len(valid_mass))
+            r = valid_rad[:min_len]
+            m = valid_mass[:min_len]
+            log_r = np.log10(r[r > 0])
+            log_m = np.log10(m[:len(log_r)])
+            if len(log_r) > 5:
+                corr = np.corrcoef(log_m, log_r)[0, 1]
+                self._log("INVESTIGATE", "INVESTIGATE",
+                          f"Stellar mass-radius correlation: r = {corr:.3f}", h.id)
+
+        self.total_plots += 1
+
+    def _investigate_crosslink(self, h: Hypothesis):
+        """Cross-source linking — match data across registries."""
+        self._log("INVESTIGATE", "INVESTIGATE",
+                  f"Running cross-source analysis for {h.id}", h.id)
+        from .data_registry import get_registry
+        reg = get_registry()
+
+        links = reg.get_cross_link_pairs()
+        if not links:
+            self._log("INVESTIGATE", "INVESTIGATE",
+                      f"No cross-match pairs available", h.id)
+            return
+
+        matched = 0
+        for src_a, src_b, key in links[:3]:  # Check top 3 pairs
+            result_a = reg.fetch(src_a)
+            result_b = reg.fetch(src_b)
+            if (result_a.data is not None and len(result_a.data) > 0 and
+                result_b.data is not None and len(result_b.data) > 0):
+                matched += 1
+                self._log("INVESTIGATE", "INVESTIGATE",
+                          f"Cross-match: {result_a.source} ↔ {result_b.source} "
+                          f"via '{key}' ({len(result_a.data)} × {len(result_b.data)})", h.id)
+
+                # If both have RA/Dec, count positional overlaps
+                if (hasattr(result_a.data, 'dtype') and 'ra' in str(result_a.data.dtype.names or []) and
+                    hasattr(result_b.data, 'dtype') and 'ra' in str(result_b.data.dtype.names or [])):
+                    self._log("INVESTIGATE", "INVESTIGATE",
+                              f"  → Both sources have sky coordinates for positional matching", h.id)
+
+        h.data_points_used = sum(
+            len(reg.fetch(src_a).data) + len(reg.fetch(src_b).data)
+            for src_a, src_b, _ in links[:3]
+            if reg.fetch(src_a).data is not None and reg.fetch(src_b).data is not None
+        )
         self.total_plots += 1
 
     def _check_novelty(self, h: Hypothesis, test_name: str, statistic: float,

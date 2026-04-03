@@ -722,6 +722,108 @@ def api_system_health():
     return health.get_report(engine.get_state())
 
 
+# ═══════════════════════════════════════════════════════════════
+# Data Registry Endpoints (Phase 6)
+# ═══════════════════════════════════════════════════════════════
+
+@app.get("/api/data-sources")
+def api_data_sources():
+    """List all registered data sources."""
+    from astra_live_backend.data_registry import get_registry
+    reg = get_registry()
+    return {
+        "sources": reg.list_sources(),
+        "stats": reg.get_stats(),
+        "timestamp": time.time(),
+    }
+
+
+@app.get("/api/data-sources/{source_id}")
+def api_data_source_detail(source_id: str):
+    """Get details and schema for a specific data source."""
+    from astra_live_backend.data_registry import get_registry
+    reg = get_registry()
+    source = reg.get_source(source_id)
+    if not source:
+        return JSONResponse(status_code=404,
+                            content={"error": f"Unknown source: {source_id}"})
+    return {
+        "id": source_id,
+        "name": source.schema.name,
+        "description": source.schema.description,
+        "domain": source.schema.domain.value,
+        "columns": [{"name": c.name, "dtype": c.dtype, "unit": c.unit,
+                      "description": c.description} for c in source.schema.columns],
+        "variables": source.variables,
+        "api_url": source.schema.api_url,
+        "reference": source.schema.reference,
+        "cross_match_keys": source.schema.cross_match_keys,
+        "priority": source.priority,
+        "timestamp": time.time(),
+    }
+
+
+@app.get("/api/data-sources/{source_id}/fetch")
+def api_fetch_data_source(source_id: str):
+    """Fetch data from a specific source."""
+    from astra_live_backend.data_registry import get_registry
+    reg = get_registry()
+    result = reg.fetch(source_id, use_cache=True)
+    return {
+        "source": result.source,
+        "row_count": result.row_count,
+        "fetch_time": result.fetch_time,
+        "columns": list(result.data.dtype.names) if result.data is not None and result.data.dtype.names else [],
+        "metadata": {k: v for k, v in result.metadata.items()
+                     if k != 'records'},  # Don't return raw records in API
+        "timestamp": time.time(),
+    }
+
+
+@app.get("/api/cross-matches")
+def api_cross_matches():
+    """Get all possible cross-source data links."""
+    from astra_live_backend.data_registry import get_registry
+    reg = get_registry()
+    pairs = reg.get_cross_link_pairs()
+    links = []
+    for a, b, key in pairs:
+        src_a = reg.get_source(a)
+        src_b = reg.get_source(b)
+        if src_a and src_b:
+            links.append({
+                "source_a": a,
+                "source_a_name": src_a.schema.name,
+                "source_b": b,
+                "source_b_name": src_b.schema.name,
+                "match_key": key,
+                "common_variables": list(set(src_a.variables) & set(src_b.variables)),
+            })
+    return {
+        "links": links,
+        "total_pairs": len(links),
+        "timestamp": time.time(),
+    }
+
+
+@app.get("/api/variables")
+def api_variables():
+    """Get all available variables with affinities."""
+    from astra_live_backend.data_registry import get_registry, Domain
+    reg = get_registry()
+    return {
+        "variables": reg.get_variables(),
+        "affinities": reg.get_variable_affinities(),
+        "by_domain": {
+            "exoplanets": reg.get_variables(Domain.EXOPLANETS),
+            "cosmology": reg.get_variables(Domain.COSMOLOGY),
+            "stellar": reg.get_variables(Domain.STELLAR),
+            "galaxies": reg.get_variables(Domain.GALAXIES),
+        },
+        "timestamp": time.time(),
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     print("=" * 60)

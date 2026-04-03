@@ -274,6 +274,22 @@ def seed_initial_hypotheses(store: HypothesisStore):
          "NASA Exoplanet Archive: distribution of transit depths across discovery methods", 0.38, "H"),
         ("Dark Energy Equation of State", "Astrophysics",
          "Pantheon+ distance modulus: constrain w(z) with binned SNe Ia analysis", 0.35, "H"),
+        # Phase 6 — New data sources
+        ("GW Mass Distribution", "Astrophysics",
+         "LIGO/Virgo chirp mass and mass ratio distribution: test population synthesis models", 0.40, "GW"),
+        ("CMB Acoustic Peak Structure", "Astrophysics",
+         "Planck TT power spectrum: measure acoustic peak positions and cosmological parameters", 0.45, "CMB"),
+        ("ZTF Transient Classification", "Astrophysics",
+         "ZTF transient light curves: test SNe classification and host galaxy association", 0.35, "ZTF"),
+        ("TESS Stellar Host Parameters", "Astrophysics",
+         "TESS Input Catalog: mass-radius relation for exoplanet host stars", 0.42, "TESS"),
+        ("Cluster Richness-Mass Scaling", "Astrophysics",
+         "SDSS redMaPPer richness as mass proxy: test self-similar scaling relation", 0.38, "CLU"),
+        # Cross-domain — Phase 6
+        ("GW Electromagnetic Counterpart", "Astrophysics",
+         "Cross-match GW events with ZTF transients for multi-messenger association", 0.30, "GW"),
+        ("Stellar TESS-Gaia Cross-Match", "Astrophysics",
+         "Link TESS host stars with Gaia astrometry for precise distance-luminosity calibration", 0.35, "TESS"),
         # Cross-domain — qualitative comparisons
         ("Econ-Astro Funding Correlation", "Economics",
          "Correlation between national R&D funding and astronomical discovery rates", 0.25, "CD"),

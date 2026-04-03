@@ -42,6 +42,30 @@ _METHOD_REGISTRY = {
         "data_source": "sdss",
         "primary_vars": ["u", "r", "redshift"],
     },
+    "gravitational_waves": {
+        "methods": ["_investigate_gw_events", "run_scaling_discovery",
+                     "run_model_comparison", "run_knowledge_isolation"],
+        "data_source": "gw_events",
+        "primary_vars": ["chirp_mass", "total_mass", "mass_ratio"],
+    },
+    "cmb": {
+        "methods": ["_investigate_cmb", "run_model_comparison",
+                     "run_scaling_discovery"],
+        "data_source": "planck_cmb",
+        "primary_vars": ["ell", "cl"],
+    },
+    "transients": {
+        "methods": ["_investigate_transients", "run_knowledge_isolation",
+                     "run_causal_discovery"],
+        "data_source": "ztf_transients",
+        "primary_vars": ["mean_mag", "delta_mag", "ndet"],
+    },
+    "time_domain": {
+        "methods": ["_investigate_time_domain", "run_scaling_discovery",
+                     "run_knowledge_isolation"],
+        "data_source": "tess_mast",
+        "primary_vars": ["teff", "radius", "mass"],
+    },
     "generic": {
         "methods": ["_investigate_generic", "run_scaling_discovery",
                      "run_causal_discovery", "run_model_comparison"],
@@ -77,6 +101,16 @@ class AdaptiveStrategist:
             return "stellar"
         elif "star formation" in name_lower or "scaling" in name_lower:
             return "star_formation"
+        elif "gravitational" in name_lower or "gw" in name_lower or "merger" in name_lower or "black hole" in name_lower:
+            return "gravitational_waves"
+        elif "cmb" in name_lower or "cosmic microwave" in name_lower or "planck" in name_lower or "power spectrum" in name_lower:
+            return "cmb"
+        elif "transient" in name_lower or "supernova" in name_lower or "sn " in name_lower or "variable" in name_lower:
+            return "transients"
+        elif "tess" in name_lower or "kepler" in name_lower or "light curve" in name_lower:
+            return "time_domain"
+        elif "cluster" in name_lower or "richness" in name_lower:
+            return "galaxy"
         elif "econ" in name_lower or "funding" in name_lower:
             return "crossdomain"
         else:
