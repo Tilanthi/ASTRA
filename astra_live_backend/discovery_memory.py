@@ -10,6 +10,8 @@ exploration strategy.
 import time
 import json
 import math
+import sqlite3
+import os
 import numpy as np
 from dataclasses import dataclass, field, asdict
 from collections import defaultdict, deque
@@ -33,6 +35,7 @@ class DiscoveryRecord:
     strength: float  # 0-1, composite of significance, effect size, sample size
     follow_ups_generated: int = 0  # track how many hypotheses this spawned
     verified: bool = False  # did follow-up confirm?
+    effect_size: Optional[float] = None  # Cohen's d, η², or domain-appropriate effect size
 
 
 @dataclass
@@ -71,7 +74,8 @@ class DiscoveryMemory:
     3. Exploration → Coverage: Track what's been tried, prioritize unexplored
     """
 
-    def __init__(self, max_records: int = 500):
+    def __init__(self, max_records: int = 500,
+                 db_path: str = "/workspace/astra_discoveries.db"):
         self.discoveries: deque[DiscoveryRecord] = deque(maxlen=max_records)
         self.method_outcomes: deque[MethodOutcome] = deque(maxlen=500)
         self.exploration: dict[str, ExplorationState] = {}
@@ -83,12 +87,140 @@ class DiscoveryMemory:
         # Domain momentum: which domains are currently "hot"
         self._domain_momentum: dict[str, float] = defaultdict(float)
 
+        # ── SQLite persistence ──────────────────────────────────────
+        self.db_path = db_path
+        self._init_db()
+        self._load_from_db(max_records)
+
+    # ── Database init & load ─────────────────────────────────────
+
+    def _init_db(self):
+        """Create DB and tables if they don't exist."""
+        os.makedirs(os.path.dirname(self.db_path) or ".", exist_ok=True)
+        conn = sqlite3.connect(self.db_path)
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.executescript("""
+            CREATE TABLE IF NOT EXISTS discoveries (
+                id TEXT PRIMARY KEY,
+                timestamp REAL,
+                cycle INTEGER,
+                hypothesis_id TEXT,
+                domain TEXT,
+                finding_type TEXT,
+                variables TEXT,
+                statistic REAL,
+                p_value REAL,
+                description TEXT,
+                data_source TEXT,
+                strength REAL,
+                follow_ups_generated INTEGER DEFAULT 0,
+                verified INTEGER DEFAULT 0,
+                effect_size REAL
+            );
+            CREATE TABLE IF NOT EXISTS method_outcomes (
+                rowid INTEGER PRIMARY KEY AUTOINCREMENT,
+                method_name TEXT,
+                hypothesis_id TEXT,
+                domain TEXT,
+                timestamp REAL,
+                cycle INTEGER,
+                data_points INTEGER,
+                tests_run INTEGER,
+                significant_results INTEGER,
+                novelty_signals INTEGER,
+                confidence_delta REAL,
+                success INTEGER
+            );
+            CREATE TABLE IF NOT EXISTS generated_hypotheses (
+                rowid INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp REAL,
+                source_discovery_id TEXT,
+                hypothesis_text TEXT,
+                domain TEXT
+            );
+        """)
+        conn.commit()
+        conn.close()
+
+    def _load_from_db(self, max_records: int):
+        """Load existing records from DB into in-memory deques."""
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+
+        # Load discoveries (most recent up to max_records)
+        rows = conn.execute(
+            "SELECT * FROM discoveries ORDER BY timestamp ASC LIMIT ?",
+            (max_records,)
+        ).fetchall()
+        for row in rows:
+            variables = json.loads(row["variables"]) if row["variables"] else []
+            rec = DiscoveryRecord(
+                id=row["id"],
+                timestamp=row["timestamp"],
+                cycle=row["cycle"],
+                hypothesis_id=row["hypothesis_id"],
+                domain=row["domain"],
+                finding_type=row["finding_type"],
+                variables=variables,
+                statistic=row["statistic"],
+                p_value=row["p_value"],
+                description=row["description"],
+                data_source=row["data_source"],
+                strength=row["strength"],
+                follow_ups_generated=row["follow_ups_generated"] or 0,
+                verified=bool(row["verified"]),
+                effect_size=row["effect_size"],
+            )
+            self.discoveries.append(rec)
+            # Rebuild variable affinity from loaded discoveries
+            for v in rec.variables:
+                self._variable_affinity[v] += rec.strength * 0.3
+            self._domain_momentum[rec.domain] += rec.strength * 0.2
+
+        # Set _next_discovery_id based on max existing ID
+        max_id_row = conn.execute(
+            "SELECT id FROM discoveries ORDER BY CAST(SUBSTR(id, 2) AS INTEGER) DESC LIMIT 1"
+        ).fetchone()
+        if max_id_row:
+            try:
+                self._next_discovery_id = int(max_id_row["id"][1:]) + 1
+            except (ValueError, IndexError):
+                self._next_discovery_id = len(self.discoveries) + 1
+
+        # Load method outcomes (most recent 500)
+        rows = conn.execute(
+            "SELECT * FROM method_outcomes ORDER BY timestamp ASC LIMIT 500"
+        ).fetchall()
+        for row in rows:
+            self.method_outcomes.append(MethodOutcome(
+                method_name=row["method_name"],
+                hypothesis_id=row["hypothesis_id"],
+                domain=row["domain"],
+                timestamp=row["timestamp"],
+                cycle=row["cycle"],
+                data_points=row["data_points"],
+                tests_run=row["tests_run"],
+                significant_results=row["significant_results"],
+                novelty_signals=row["novelty_signals"],
+                confidence_delta=row["confidence_delta"],
+                success=bool(row["success"]),
+            ))
+
+        # Load generation count
+        gen_count = conn.execute(
+            "SELECT COUNT(*) FROM generated_hypotheses"
+        ).fetchone()[0]
+        self.generation_count = gen_count
+
+        conn.close()
+
     # ── Recording ────────────────────────────────────────────────────
 
     def record_discovery(self, hypothesis_id: str, domain: str, finding_type: str,
                          variables: list, statistic: float, p_value: float,
                          description: str, data_source: str,
-                         sample_size: int = 0) -> DiscoveryRecord:
+                         sample_size: int = 0,
+                         effect_size: Optional[float] = None) -> DiscoveryRecord:
         """Record a scientific finding for future hypothesis generation."""
         # Composite strength: significance × effect size proxy × log sample size
         sig_score = max(0, 1 - p_value) if p_value <= 1 else 0
@@ -109,9 +241,13 @@ class DiscoveryMemory:
             description=description,
             data_source=data_source,
             strength=strength,
+            effect_size=effect_size,
         )
         self._next_discovery_id += 1
         self.discoveries.append(rec)
+
+        # Persist to SQLite
+        self._persist_discovery(rec)
 
         # Update variable affinity
         for v in variables:
@@ -141,7 +277,7 @@ class DiscoveryMemory:
                                significant_results: int, novelty_signals: int,
                                confidence_delta: float, success: bool):
         """Record how well an investigation method performed."""
-        self.method_outcomes.append(MethodOutcome(
+        outcome = MethodOutcome(
             method_name=method_name,
             hypothesis_id=hypothesis_id,
             domain=domain,
@@ -153,7 +289,92 @@ class DiscoveryMemory:
             novelty_signals=novelty_signals,
             confidence_delta=confidence_delta,
             success=success,
-        ))
+        )
+        self.method_outcomes.append(outcome)
+
+        # Persist to SQLite
+        self._persist_method_outcome(outcome)
+
+    # ── SQLite persistence helpers ─────────────────────────────────
+
+    def _persist_discovery(self, rec: DiscoveryRecord):
+        """INSERT a discovery record into SQLite."""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            conn.execute(
+                """INSERT OR REPLACE INTO discoveries
+                   (id, timestamp, cycle, hypothesis_id, domain, finding_type,
+                    variables, statistic, p_value, description, data_source,
+                    strength, follow_ups_generated, verified, effect_size)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (rec.id, rec.timestamp, rec.cycle, rec.hypothesis_id,
+                 rec.domain, rec.finding_type, json.dumps(rec.variables),
+                 rec.statistic, rec.p_value, rec.description, rec.data_source,
+                 rec.strength, rec.follow_ups_generated, int(rec.verified),
+                 rec.effect_size),
+            )
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            print(f"[DiscoveryMemory] SQLite persist discovery error: {e}")
+
+    def _persist_method_outcome(self, outcome: MethodOutcome):
+        """INSERT a method outcome into SQLite."""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            conn.execute(
+                """INSERT INTO method_outcomes
+                   (method_name, hypothesis_id, domain, timestamp, cycle,
+                    data_points, tests_run, significant_results, novelty_signals,
+                    confidence_delta, success)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (outcome.method_name, outcome.hypothesis_id, outcome.domain,
+                 outcome.timestamp, outcome.cycle, outcome.data_points,
+                 outcome.tests_run, outcome.significant_results,
+                 outcome.novelty_signals, outcome.confidence_delta,
+                 int(outcome.success)),
+            )
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            print(f"[DiscoveryMemory] SQLite persist outcome error: {e}")
+
+    def record_generated_hypothesis(self, source_discovery_id: str,
+                                     hypothesis_text: str, domain: str):
+        """Record a hypothesis generated from a discovery (persisted to SQLite)."""
+        self.generation_count += 1
+        try:
+            conn = sqlite3.connect(self.db_path)
+            conn.execute(
+                """INSERT INTO generated_hypotheses
+                   (timestamp, source_discovery_id, hypothesis_text, domain)
+                   VALUES (?, ?, ?, ?)""",
+                (time.time(), source_discovery_id, hypothesis_text, domain),
+            )
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            print(f"[DiscoveryMemory] SQLite persist hypothesis error: {e}")
+
+    def get_persistence_stats(self) -> Dict:
+        """Return SQLite persistence statistics."""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            disc_count = conn.execute("SELECT COUNT(*) FROM discoveries").fetchone()[0]
+            out_count = conn.execute("SELECT COUNT(*) FROM method_outcomes").fetchone()[0]
+            hyp_count = conn.execute("SELECT COUNT(*) FROM generated_hypotheses").fetchone()[0]
+            conn.close()
+            db_size = os.path.getsize(self.db_path) if os.path.exists(self.db_path) else 0
+        except Exception as e:
+            return {"error": str(e), "db_path": self.db_path}
+
+        return {
+            "db_path": self.db_path,
+            "discoveries_persisted": disc_count,
+            "outcomes_persisted": out_count,
+            "hypotheses_persisted": hyp_count,
+            "db_size_bytes": db_size,
+        }
 
     # ── Querying for hypothesis generation ───────────────────────────
 

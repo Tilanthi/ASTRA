@@ -824,6 +824,35 @@ def api_variables():
     }
 
 
+@app.get("/api/persistence")
+def api_persistence():
+    """SQLite persistence stats."""
+    return engine.discovery_memory.get_persistence_stats()
+
+
+@app.get("/api/statistics/methods")
+def api_statistics_methods():
+    """Available advanced statistical methods and their status."""
+    from astra_live_backend.statistics import (
+        fdr_correction, cohen_d, cramers_v, eta_squared,
+        detect_autocorrelation, change_point_detection,
+    )
+    return {
+        "methods": {
+            "fdr_correction": {"available": True, "description": "Benjamini-Hochberg FDR correction"},
+            "cohen_d": {"available": True, "description": "Cohen's d effect size (continuous)"},
+            "cramers_v": {"available": True, "description": "Cramér's V effect size (categorical)"},
+            "eta_squared": {"available": True, "description": "η² effect size (ANOVA)"},
+            "effect_size_report": {"available": True, "description": "Auto-select effect size measure"},
+            "detect_autocorrelation": {"available": True, "description": "Ljung-Box autocorrelation test"},
+            "change_point_detection": {"available": True, "description": "CUSUM change point detection"},
+            "granger_causality": {"available": True, "description": "Granger causality F-test"},
+            "compute_posterior_intervals": {"available": True, "description": "Laplace approximation posterior"},
+        },
+        "timestamp": time.time(),
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     print("=" * 60)

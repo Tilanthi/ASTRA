@@ -14,6 +14,7 @@ from .hypotheses import HypothesisStore, Hypothesis, Phase, seed_initial_hypothe
 from .statistics import (
     chi_squared_test, kolmogorov_smirnov_test, bayesian_t_test,
     pearson_correlation, granger_causality_simple, StatTestResult,
+    fdr_correction, cohen_d, effect_size_report, detect_autocorrelation, change_point_detection,
 )
 from .data_fetcher import (
     get_cached_exoplanets, get_cached_pantheon, get_cached_gaia,
@@ -1014,6 +1015,16 @@ class DiscoveryEngine:
                 confidence_delta=conf_delta,
                 success=len(new_tests) > 0,
             )
+
+            # FDR correction on all p-values from this hypothesis
+            all_p_values = [t.get('p_value', 1.0) for t in h.test_results
+                           if isinstance(t, dict) and 'p_value' in t]
+            if len(all_p_values) >= 2:
+                fdr = fdr_correction(all_p_values)
+                h.fdr_results = fdr
+                self._log("EVALUATE", "FDR",
+                          f"FDR correction for {h.id}: {fdr['n_significant']}/{len(all_p_values)} "
+                          f"tests significant after BH correction (α*={fdr['corrected_alpha']:.4f})", h.id)
 
             self.hypotheses_tested += 1
 

@@ -122,3 +122,21 @@ def fit_h0_from_sne(z: np.ndarray, mb: np.ndarray, mb_err: np.ndarray,
         h0_err = 0.5  # fallback
 
     return best_h0, best_chi2, h0_err
+
+
+def fit_h0_laplace(z: np.ndarray, mb: np.ndarray, mb_err: np.ndarray) -> dict:
+    """Fit H0 with Laplace approximation uncertainty."""
+    from .bayesian import compute_posterior_intervals
+    
+    def model_func(params):
+        h0 = params[0]
+        cosmo = PLANCK_2018.copy()
+        cosmo['H0'] = h0
+        return distance_modulus(z, cosmo)
+    
+    result = compute_posterior_intervals(
+        mb, model_func,
+        param_bounds={"H0": (60.0, 80.0)},
+        n_samples=500,
+    )
+    return result

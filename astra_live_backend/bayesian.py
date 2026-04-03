@@ -259,3 +259,84 @@ def rank_hypotheses(hypotheses: List[Dict]) -> List[Dict]:
 
     scored.sort(key=lambda h: h["score"], reverse=True)
     return scored
+
+
+def compute_posterior_intervals(data: np.ndarray, model_func, param_bounds: dict,
+                                 n_samples: int = 1000) -> dict:
+    """
+    Compute posterior parameter intervals using Laplace approximation.
+    
+    1. Find MAP estimate via differential_evolution
+    2. Compute Hessian at MAP for approximate posterior covariance
+    3. Return MAP params, uncertainties, and 95% credible intervals
+    """
+    from scipy import optimize
+    import numpy as np
+    
+    param_names = list(param_bounds.keys())
+    bounds_list = [param_bounds[k] for k in param_names]
+    
+    def neg_log_posterior(params):
+        try:
+            pred = model_func(params)
+            residuals = data - pred
+            sigma = np.std(residuals) if np.std(residuals) > 0 else 1.0
+            log_lik = -0.5 * np.sum((residuals / sigma)**2)
+            # Flat prior within bounds
+            return -log_lik
+        except Exception:
+            return 1e10
+    
+    # MAP via differential evolution
+    result = optimize.differential_evolution(neg_log_posterior, bounds_list,
+                                              maxiter=200, seed=42, tol=1e-6)
+    map_params = result.x
+    
+    # Laplace approximation: Hessian at MAP
+    try:
+        hess = np.zeros((len(map_params), len(map_params)))
+        eps = 1e-5
+        f0 = neg_log_posterior(map_params)
+        for i in range(len(map_params)):
+            for j in range(i, len(map_params)):
+                params_pp = map_params.copy()
+                params_pm = map_params.copy()
+                params_mp = map_params.copy()
+                params_mm = map_params.copy()
+                params_pp[i] += eps; params_pp[j] += eps
+                params_pm[i] += eps; params_pm[j] -= eps
+                params_mp[i] -= eps; params_mp[j] += eps
+                params_mm[i] -= eps; params_mm[j] -= eps
+                hess[i, j] = (neg_log_posterior(params_pp) - neg_log_posterior(params_pm) -
+                              neg_log_posterior(params_mp) + neg_log_posterior(params_mm)) / (4 * eps**2)
+                hess[j, i] = hess[i, j]
+        
+        # Covariance = inverse Hessian
+        try:
+            cov = np.linalg.inv(hess)
+            # Ensure positive diagonal
+            uncertainties = np.sqrt(np.abs(np.diag(cov)))
+        except np.linalg.LinAlgError:
+            uncertainties = np.full(len(map_params), np.nan)
+    except Exception:
+        uncertainties = np.full(len(map_params), np.nan)
+    
+    # Build result
+    param_dict = {}
+    unc_dict = {}
+    ci_dict = {}
+    for i, name in enumerate(param_names):
+        param_dict[name] = round(float(map_params[i]), 6)
+        unc_dict[name] = round(float(uncertainties[i]), 6)
+        ci_dict[name] = {
+            "lower": round(float(map_params[i] - 1.96 * uncertainties[i]), 6),
+            "upper": round(float(map_params[i] + 1.96 * uncertainties[i]), 6),
+        }
+    
+    return {
+        "map_params": param_dict,
+        "param_uncertainties": unc_dict,
+        "credible_intervals": ci_dict,
+        "convergence": result.success,
+        "n_evaluations": result.nfev,
+    }

@@ -174,6 +174,175 @@ def granger_causality_simple(x: np.ndarray, y: np.ndarray,
     )
 
 
+# === Advanced Statistical Methods (Phase 7) ===
+
+def fdr_correction(p_values: list, alpha: float = 0.05) -> dict:
+    """Benjamini-Hochberg FDR correction for multiple comparisons."""
+    import numpy as np
+    p = np.array(p_values, dtype=float)
+    n = len(p)
+    if n == 0:
+        return {"corrected_alpha": alpha, "rejected_mask": [], "adjusted_p_values": [], "n_significant": 0}
+    
+    sorted_idx = np.argsort(p)
+    sorted_p = p[sorted_idx]
+    
+    # BH adjusted p-values
+    adjusted = np.zeros(n)
+    adjusted[sorted_idx[-1]] = sorted_p[-1]
+    for i in range(n - 2, -1, -1):
+        adjusted[sorted_idx[i]] = min(adjusted[sorted_idx[i + 1]], sorted_p[i] * n / (i + 1))
+    
+    # Corrected alpha (threshold for the last rejected hypothesis)
+    rejected_mask = adjusted <= alpha
+    n_significant = int(np.sum(rejected_mask))
+    
+    # Corrected alpha = max p-value that's still rejected
+    if n_significant > 0:
+        corrected_alpha = float(np.max(p[rejected_mask]))
+    else:
+        corrected_alpha = 0.0
+    
+    return {
+        "corrected_alpha": corrected_alpha,
+        "rejected_mask": rejected_mask.tolist(),
+        "adjusted_p_values": [round(float(v), 8) for v in adjusted],
+        "n_significant": n_significant,
+    }
+
+
+def cohen_d(group1, group2) -> float:
+    """Cohen's d effect size for two groups."""
+    import numpy as np
+    g1, g2 = np.asarray(group1, dtype=float), np.asarray(group2, dtype=float)
+    n1, n2 = len(g1), len(g2)
+    if n1 < 2 or n2 < 2:
+        return 0.0
+    pooled_std = np.sqrt(((n1 - 1) * np.var(g1, ddof=1) + (n2 - 1) * np.var(g2, ddof=1)) / (n1 + n2 - 2))
+    if pooled_std == 0:
+        return 0.0
+    return float((np.mean(g1) - np.mean(g2)) / pooled_std)
+
+
+def cramers_v(contingency_table) -> float:
+    """Cramér's V effect size for categorical data."""
+    import numpy as np
+    from scipy.stats import chi2_contingency
+    table = np.asarray(contingency_table, dtype=float)
+    if table.size == 0 or table.sum() == 0:
+        return 0.0
+    chi2, _, _, _ = chi2_contingency(table)
+    n = table.sum()
+    min_dim = min(table.shape[0], table.shape[1]) - 1
+    if min_dim == 0 or n == 0:
+        return 0.0
+    return float(np.sqrt(chi2 / (n * min_dim)))
+
+
+def eta_squared(groups: list) -> float:
+    """η² effect size for one-way ANOVA."""
+    import numpy as np
+    all_data = np.concatenate([np.asarray(g, dtype=float) for g in groups])
+    grand_mean = np.mean(all_data)
+    ss_between = sum(len(g) * (np.mean(g) - grand_mean)**2 for g in groups)
+    ss_total = np.sum((all_data - grand_mean)**2)
+    if ss_total == 0:
+        return 0.0
+    return float(ss_between / ss_total)
+
+
+def effect_size_report(data1, data2, test_type="continuous") -> dict:
+    """Auto-select appropriate effect size measure."""
+    import numpy as np
+    d1, d2 = np.asarray(data1, dtype=float), np.asarray(data2, dtype=float)
+    
+    if test_type == "continuous":
+        d = cohen_d(d1, d2)
+        interpretation = "large" if abs(d) >= 0.8 else ("medium" if abs(d) >= 0.5 else ("small" if abs(d) >= 0.2 else "negligible"))
+        return {"measure": "cohen_d", "value": round(d, 4), "interpretation": interpretation}
+    elif test_type == "categorical":
+        # Treat as 2x2 contingency
+        table = np.array([[np.sum(d1 > 0), np.sum(d1 <= 0)],
+                          [np.sum(d2 > 0), np.sum(d2 <= 0)]])
+        v = cramers_v(table)
+        interpretation = "large" if v >= 0.5 else ("medium" if v >= 0.3 else ("small" if v >= 0.1 else "negligible"))
+        return {"measure": "cramers_v", "value": round(v, 4), "interpretation": interpretation}
+    else:
+        return {"measure": "none", "value": 0.0, "interpretation": "unknown"}
+
+
+def detect_autocorrelation(series: list, max_lag: int = 10) -> dict:
+    """Detect autocorrelation in a time series using Ljung-Box test."""
+    import numpy as np
+    from scipy import stats as sp_stats
+    
+    s = np.asarray(series, dtype=float)
+    n = len(s)
+    if n < max_lag + 5:
+        return {"autocorrelations": {}, "ar1_significant": False, "ljung_box_p": 1.0}
+    
+    s_centered = s - np.mean(s)
+    var = np.var(s)
+    if var == 0:
+        return {"autocorrelations": {}, "ar1_significant": False, "ljung_box_p": 1.0}
+    
+    acf = {}
+    for lag in range(1, max_lag + 1):
+        c = np.mean(s_centered[lag:] * s_centered[:-lag]) / var
+        acf[lag] = round(float(c), 6)
+    
+    # Ljung-Box statistic for AR(1) test
+    Q = n * (n + 2) * sum((acf[k]**2) / (n - k) for k in range(1, min(max_lag + 1, n)))
+    lb_p = 1.0 - sp_stats.chi2.cdf(Q, max_lag)
+    
+    return {
+        "autocorrelations": acf,
+        "ar1_significant": acf.get(1, 0) > 2.0 / np.sqrt(n) or lb_p < 0.05,
+        "ljung_box_statistic": round(float(Q), 4),
+        "ljung_box_p": round(float(lb_p), 8),
+        "n": n,
+    }
+
+
+def change_point_detection(series: list) -> dict:
+    """Simple CUSUM change point detection."""
+    import numpy as np
+    
+    s = np.asarray(series, dtype=float)
+    n = len(s)
+    if n < 10:
+        return {"change_points": [], "n_changes": 0}
+    
+    mean = np.mean(s)
+    std = np.std(s)
+    if std == 0:
+        return {"change_points": [], "n_changes": 0}
+    
+    # CUSUM
+    cusum_pos = np.zeros(n)
+    cusum_neg = np.zeros(n)
+    threshold = 4.0 * std  # Detection threshold
+    
+    change_points = []
+    for i in range(1, n):
+        cusum_pos[i] = max(0, cusum_pos[i-1] + (s[i] - mean) - 0.5 * std)
+        cusum_neg[i] = min(0, cusum_neg[i-1] + (s[i] - mean) + 0.5 * std)
+        
+        if cusum_pos[i] > threshold:
+            change_points.append(int(i))
+            cusum_pos[i] = 0
+        elif cusum_neg[i] < -threshold:
+            change_points.append(int(i))
+            cusum_neg[i] = 0
+    
+    return {
+        "change_points": change_points,
+        "n_changes": len(change_points),
+        "method": "CUSUM",
+        "threshold": round(float(threshold), 4),
+    }
+
+
 # === Astronomical data generators with REAL distributions ===
 
 def generate_hubble_constant_measurements(n: int = 100, method: str = "BAO") -> np.ndarray:
