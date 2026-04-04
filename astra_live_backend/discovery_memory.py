@@ -14,7 +14,7 @@ import sqlite3
 import os
 import numpy as np
 from dataclasses import dataclass, field, asdict
-from collections import defaultdict, deque
+from collections import defaultdict, deque, Counter
 from typing import Optional, List, Dict, Tuple
 
 
@@ -358,6 +358,114 @@ class DiscoveryMemory:
             conn.close()
         except Exception as e:
             print(f"[DiscoveryMemory] SQLite persist hypothesis error: {e}")
+
+    # ── Phase 10.5: Importance-Weighted Memory Compaction ──────────
+
+    def _compute_importance(self, rec: 'DiscoveryRecord') -> float:
+        """Compute importance score for a discovery record.
+
+        importance = strength * (1 + effect_size_norm) * domain_diversity_bonus * recency_weight
+        """
+        # Base: discovery strength (0-1)
+        base = rec.strength
+
+        # Effect size normalization (0-1 range)
+        effect_norm = 0.0
+        if rec.effect_size is not None:
+            effect_norm = min(1.0, abs(rec.effect_size) / 2.0)  # d=2.0 is max
+        elif rec.statistic:
+            effect_norm = min(1.0, abs(rec.statistic) / 10.0)
+
+        # Domain diversity bonus: discoveries from underrepresented domains score 2x
+        domain_counts = Counter(d.domain for d in self.discoveries)
+        total = len(self.discoveries) or 1
+        domain_frac = domain_counts.get(rec.domain, 0) / total
+        domain_diversity_bonus = 2.0 if domain_frac < 0.2 else 1.0
+
+        # Recency weight: more recent = higher weight (exponential decay)
+        import math
+        now = time.time()
+        age_hours = (now - rec.timestamp) / 3600.0
+        recency_weight = math.exp(-age_hours / 168.0)  # half-life ~1 week
+
+        importance = base * (1.0 + effect_norm) * domain_diversity_bonus * recency_weight
+        return importance
+
+    def _compute_outcome_importance(self, outcome: 'MethodOutcome') -> float:
+        """Compute importance score for a method outcome."""
+        import math
+        # Higher info outcomes: those with significant results or large confidence delta
+        info_score = (0.5 if outcome.success else 0.1) + \
+                     min(1.0, outcome.significant_results * 0.3) + \
+                     min(1.0, abs(outcome.confidence_delta) * 5.0)
+
+        now = time.time()
+        age_hours = (now - outcome.timestamp) / 3600.0
+        recency = math.exp(-age_hours / 168.0)
+
+        return info_score * recency
+
+    def compact_if_needed(self):
+        """Importance-weighted compaction: evict lowest-importance records when at cap.
+
+        Called after each cycle. Instead of FIFO (deque default), we replace the
+        least important discovery with nothing, keeping the deque at maxlen.
+        """
+        max_disc = self.discoveries.maxlen or 500
+        max_outcomes = self.method_outcomes.maxlen or 500
+
+        compacted = False
+
+        # Compact discoveries if at cap
+        if len(self.discoveries) >= max_disc:
+            # Score all discoveries
+            scored = [(self._compute_importance(d), i, d)
+                      for i, d in enumerate(self.discoveries)]
+            scored.sort(key=lambda x: x[0])
+
+            # Evict bottom 10% (by importance)
+            n_evict = max(1, len(scored) // 10)
+            evict_ids = {scored[i][2].id for i in range(n_evict)}
+
+            # Remove from deque (rebuild without evicted)
+            remaining = [d for d in self.discoveries if d.id not in evict_ids]
+            self.discoveries.clear()
+            for d in remaining:
+                self.discoveries.append(d)
+
+            # Remove from SQLite too
+            try:
+                conn = sqlite3.connect(self.db_path)
+                placeholders = ",".join("?" * len(evict_ids))
+                conn.execute(
+                    f"DELETE FROM discoveries WHERE id IN ({placeholders})",
+                    list(evict_ids)
+                )
+                conn.commit()
+                conn.close()
+            except Exception as e:
+                print(f"[DiscoveryMemory] Compaction DB cleanup error: {e}")
+
+            compacted = True
+
+        # Compact method outcomes if at cap
+        if len(self.method_outcomes) >= max_outcomes:
+            scored = [(self._compute_outcome_importance(o), i, o)
+                      for i, o in enumerate(self.method_outcomes)]
+            scored.sort(key=lambda x: x[0])
+
+            n_evict = max(1, len(scored) // 10)
+            evict_indices = {scored[i][1] for i in range(n_evict)}
+
+            remaining = [o for i, o in enumerate(self.method_outcomes)
+                         if i not in evict_indices]
+            self.method_outcomes.clear()
+            for o in remaining:
+                self.method_outcomes.append(o)
+
+            compacted = True
+
+        return compacted
 
     def get_persistence_stats(self) -> Dict:
         """Return SQLite persistence statistics."""

@@ -52,6 +52,9 @@ class Hypothesis:
     pending_approval_at: float = 0.0     # Timestamp when approval was requested
     approval_status: str = ""            # "pending", "approved", "rejected"
     approval_reason: str = ""            # Reason for approval/rejection
+    # Phase 10.4: Lifecycle timestamps
+    last_tested_at: float = 0.0          # Timestamp of last statistical test
+    archived_at: float = 0.0             # Timestamp when archived
 
     def bayesian_update(self, likelihood_positive: float, likelihood_negative: float):
         """Real Bayesian update of confidence given evidence."""
@@ -98,6 +101,7 @@ class Hypothesis:
         # lr > 1 → positive_likelihood dominates → confidence increases
         # lr < 1 → negative_likelihood dominates → confidence decreases
         # lr = 1 → no change
+        self.last_tested_at = time.time()
         return self.bayesian_update(lr / (lr + 1), 1 / (lr + 1))
 
     def advance_phase(self):
@@ -161,6 +165,7 @@ class Hypothesis:
         if self.confidence < threshold and len(self.test_results) >= 3:
             self.phase = Phase.ARCHIVED
             self.updated_at = time.time()
+            self.archived_at = time.time()
             return True
         return False
 

@@ -830,6 +830,12 @@ def api_persistence():
     return engine.discovery_memory.get_persistence_stats()
 
 
+@app.get("/api/engine/degradation-status")
+def api_degradation_status():
+    """Current degradation detection metrics and recommendations."""
+    return engine.degradation_detector.get_status()
+
+
 @app.get("/api/statistics/methods")
 def api_statistics_methods():
     """Available advanced statistical methods and their status."""

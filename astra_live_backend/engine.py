@@ -41,6 +41,7 @@ from .safety.circuit_breakers import SafetyMonitor
 from .discovery_memory import DiscoveryMemory
 from .hypothesis_generator import HypothesisGenerator
 from .adaptive_strategist import AdaptiveStrategist
+from .degradation import DegradationDetector
 
 
 @dataclass
@@ -126,6 +127,13 @@ class DiscoveryEngine:
 
         # Adaptive strategist — chooses investigation methods based on history
         self.strategist = AdaptiveStrategist(self.discovery_memory)
+
+        # Degradation detector — Phase 10.3
+        self.degradation_detector = DegradationDetector()
+
+        # Exploration schedule — Phase 10.6: force domain round-robin
+        self._forced_domain: Optional[str] = None
+        self._domain_rotation_index = 0
 
         # Historical results for pattern anomaly detection
         self._result_history: dict = {}  # hypothesis_id -> list of result dicts
@@ -336,6 +344,12 @@ class DiscoveryEngine:
         self.current_phase = "SELECT"
         active = self.store.active()
 
+        # Phase 10.6: Check forced domain for exploration diversification
+        forced_domain = self._get_forced_domain()
+        if forced_domain:
+            self._log("SELECT", "SELECT",
+                      f"🔄 Forced domain exploration: {forced_domain}")
+
         # Score each hypothesis
         scored = []
         for h in active:
@@ -347,6 +361,9 @@ class DiscoveryEngine:
             # Testability: based on data available
             testability = min(h.data_points_used / 1000.0, 1.0)
             score = info_gain * 0.4 + novelty * 0.3 + testability * 0.3
+            # Phase 10.6: Boost score for hypotheses in forced domain
+            if forced_domain and h.domain == forced_domain:
+                score += 0.5
             scored.append((h, score))
 
         scored.sort(key=lambda x: x[1], reverse=True)
@@ -390,6 +407,7 @@ class DiscoveryEngine:
                       f"strategy: {category}, methods: {methods[:2]}", h.id)
 
             conf_before = h.confidence
+            tests_before_investigate = len(h.test_results)
 
             # Primary investigation (existing method dispatch)
             if category == "hubble":
@@ -425,20 +443,23 @@ class DiscoveryEngine:
 
             # Record method outcome in memory
             conf_delta = h.confidence - conf_before
-            tests_run = len(h.test_results)
-            sig_results = sum(1 for t in h.test_results
+            tests_run_now = len(h.test_results) - tests_before_investigate
+            sig_results = sum(1 for t in h.test_results[tests_before_investigate:]
                              if isinstance(t, dict) and t.get('p_value', 1.0) < 0.05)
+            # Success = data was available AND either new tests were run or data was examined
+            # (investigate methods that log but don't add formal tests still succeed
+            #  if they examined data — indicated by data_points_used > 0)
             self.discovery_memory.record_method_outcome(
                 method_name=f"investigate_{category}",
                 hypothesis_id=h.id,
                 domain=h.domain,
                 cycle=self.cycle_count,
                 data_points=h.data_points_used,
-                tests_run=tests_run,
+                tests_run=tests_run_now,
                 significant_results=sig_results,
                 novelty_signals=0,
                 confidence_delta=conf_delta,
-                success=h.data_points_used > 0 and tests_run > 0,
+                success=h.data_points_used > 0,
             )
 
         self.total_scripts += len(targets)
@@ -1575,6 +1596,60 @@ class DiscoveryEngine:
                     self._log("UPDATE", "UPDATE",
                               f"Hot-domain link: {h1.id} ({d1}) ↔ {h2.id} ({d2})", h1.id)
 
+    # ── Phase 10.4: Hypothesis Lifecycle Management ────────────────
+    def _manage_hypothesis_lifecycle(self):
+        """Auto-archive stale hypotheses, auto-promote strong ones, prune queue."""
+        now = time.time()
+
+        for h in list(self.store.all()):
+            # Auto-archive hypotheses stuck in SCREENING for >20 cycles with no progress
+            if h.phase == Phase.SCREENING:
+                age_seconds = now - h.updated_at
+                # ~20 cycles at 25s interval = 500s
+                if len(h.test_results) == 0 and age_seconds > 500:
+                    h.phase = Phase.ARCHIVED
+                    h.updated_at = now
+                    h.archived_at = now
+                    self._log("LIFECYCLE", "ENGINE",
+                              f"Auto-archived {h.id} ({h.name}): stuck in SCREENING with no tests",
+                              h.id)
+
+            # Auto-promote hypotheses with confidence >0.95 and ≥3 successful tests
+            if h.phase == Phase.TESTING and h.confidence > 0.95:
+                successful_tests = sum(
+                    1 for t in h.test_results
+                    if isinstance(t, dict) and t.get('p_value', 1.0) < 0.05
+                )
+                if successful_tests >= 3:
+                    h.phase = Phase.VALIDATED
+                    h.updated_at = now
+                    self._log("LIFECYCLE", "ENGINE",
+                              f"Auto-promoted {h.id} ({h.name}): confidence {h.confidence:.2f} "
+                              f"with {successful_tests} successful tests → VALIDATED", h.id)
+                    self._decide("confirm",
+                                 f"Auto-promoted {h.id} to VALIDATED (confidence {h.confidence:.2f})",
+                                 "VALIDATED", h.id)
+
+        # Prune the queue: if queue_depth > 15, archive lowest-confidence SCREENING hypotheses
+        screening = self.store.by_phase(Phase.SCREENING)
+        if len(screening) > 15:
+            screening.sort(key=lambda h: h.confidence)
+            to_prune = screening[:len(screening) - 15]
+            for h in to_prune:
+                h.phase = Phase.ARCHIVED
+                h.updated_at = now
+                h.archived_at = now
+                self._log("LIFECYCLE", "ENGINE",
+                          f"Queue-pruned {h.id} ({h.name}): confidence {h.confidence:.2f} "
+                          f"(queue too deep)", h.id)
+
+    # ── Phase 10.6: Exploration Diversification ──────────────────
+    def _get_forced_domain(self) -> Optional[str]:
+        """Return forced domain if diversification is needed, then clear it."""
+        domain = self._forced_domain
+        self._forced_domain = None
+        return domain
+
     # ── Main Loop ─────────────────────────────────────────────────
     def run_cycle(self):
         """Execute one full ORIENT → SELECT → INVESTIGATE → EVALUATE → UPDATE cycle."""
@@ -1610,6 +1685,42 @@ class DiscoveryEngine:
             else:
                 self._log("SAFETY", "ENGINE",
                           "Update phase skipped — safety mode restricts state changes")
+
+            # Phase 10.3: Degradation detection after UPDATE
+            deg_result = self.degradation_detector.check_after_cycle(
+                self.discovery_memory, self.cycle_count
+            )
+            if deg_result["degraded"]:
+                for rec in deg_result["recommendations"]:
+                    self._log("DEGRADATION", "ENGINE", f"⚠ {rec}")
+
+                if "TRIGGER_SAFE_MODE" in deg_result["actions"]:
+                    if self.safety.state.value == "NOMINAL":
+                        self.safety.transition("SAFE_MODE")
+                        self._log("DEGRADATION", "ENGINE",
+                                  "Auto-triggered SAFE_MODE due to sustained low success rate")
+
+                if "DIVERSIFY_DOMAINS" in deg_result["actions"]:
+                    least = self.degradation_detector.get_least_explored_domain(
+                        self.discovery_memory, self._canonical_domains
+                    )
+                    if least:
+                        self._forced_domain = least
+                        self._log("DEGRADATION", "ENGINE",
+                                  f"Forcing exploration of domain '{least}' next cycle")
+
+                if "SWITCH_STRATEGY" in deg_result["actions"]:
+                    self._forced_domain = self.degradation_detector.get_least_explored_domain(
+                        self.discovery_memory, self._canonical_domains
+                    )
+                    self._log("DEGRADATION", "ENGINE",
+                              "Switching exploration strategy due to low significant results")
+
+            # Phase 10.5: Memory compaction
+            self.discovery_memory.compact_if_needed()
+
+            # Phase 10.4: Hypothesis lifecycle management
+            self._manage_hypothesis_lifecycle()
 
             # Phase 2: Evaluate circuit breakers after cycle
             vec = self.compute_state_vector()
@@ -1695,6 +1806,7 @@ class DiscoveryEngine:
                 "safety_state": self.safety.state.value,
                 "pending_approvals": len(self.store.pending_approvals()),
                 "discovery_memory": self.discovery_memory.to_dict(),
+                "degradation": self.degradation_detector.get_status(),
             }
 
     def get_hypotheses(self) -> list[dict]:
