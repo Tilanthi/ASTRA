@@ -129,6 +129,16 @@ def api_hypothesis(hid: str):
     return h.to_dict()
 
 
+@app.post("/api/hypotheses")
+def api_create_hypothesis(name: str, domain: str, description: str,
+                          confidence: float = 0.25):
+    """Create a new hypothesis."""
+    from astra_live_backend.hypotheses import Phase
+    h = engine.store.add(name, domain, description, confidence=confidence)
+    h.phase = Phase.PROPOSED
+    return h.to_dict()
+
+
 @app.get("/api/activity")
 def api_activity(limit: int = 50):
     """Recent activity log entries."""

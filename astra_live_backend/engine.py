@@ -370,9 +370,12 @@ class DiscoveryEngine:
             info_gain = h.confidence * (1 - test_ratio * 0.5)
             # Novelty: inverse of how well-established
             novelty = 1.0 - (h.confidence * 0.3 + test_ratio * 0.3)
-            # Testability: based on data available
-            testability = min(h.data_points_used / 1000.0, 1.0)
+            # Testability: based on data available (with floor for untested hypotheses)
+            testability = max(0.3, min(h.data_points_used / 1000.0, 1.0))
             score = info_gain * 0.4 + novelty * 0.3 + testability * 0.3
+            # Boost fresh hypotheses in SCREENING that haven't been tested yet
+            if h.phase == Phase.SCREENING and len(h.test_results) == 0:
+                score += 0.15  # Give untested hypotheses a chance to reach TESTING
             # Phase 10.6: Boost score for hypotheses in forced domain
             if forced_domain and h.domain == forced_domain:
                 score += 0.5
@@ -406,7 +409,9 @@ class DiscoveryEngine:
         testing = self.store.by_phase(Phase.TESTING)
         validated = self.store.by_phase(Phase.VALIDATED)
 
-        targets = testing[:3] + validated[:1]  # Focus on testing + 1 validated
+        screening = self.store.by_phase(Phase.SCREENING)
+        # Focus on testing + 1 validated + 2 screening (to gather initial data)
+        targets = testing[:3] + validated[:1] + screening[:2]
 
         for h in targets:
             # Use strategist to select methods
