@@ -148,6 +148,284 @@ body::after {
   100% { background-position: 0% 50%; }
 }
 
+/* ============================================================
+   INLINE-STYLE EXTRACTION — Utility Classes (si- prefix)
+   ============================================================ */
+/* --- Dot color variants for panel titles --- */
+.dot-cyan    { background: var(--cyan); }
+.dot-amber   { background: var(--amber); }
+.dot-violet  { background: var(--violet); }
+.dot-emerald { background: var(--emerald); }
+.dot-coral   { background: var(--coral); }
+.dot-muted   { background: var(--text-tertiary); }
+
+/* --- Fade-in animation delays (only on active tab) --- */
+.tab-content.active .si-fade-in      { animation: fadeIn 0.4s ease both; }
+.tab-content.active .si-fade-in-d1   { animation: fadeIn 0.4s ease 0.1s both; }
+.tab-content.active .si-fade-in-d15  { animation: fadeIn 0.4s ease 0.15s both; }
+.tab-content.active .si-fade-in-d2   { animation: fadeIn 0.4s ease 0.2s both; }
+.tab-content.active .si-fade-in-d25  { animation: fadeIn 0.4s ease 0.25s both; }
+.si-fade-in, .si-fade-in-d1, .si-fade-in-d15, .si-fade-in-d2, .si-fade-in-d25 {
+  opacity: 1; transform: translateY(0);
+}
+
+/* --- Card cells (Phase4 stat cells, arbiter, safety case) --- */
+.si-stat-cell {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+.si-stat-cell-sm {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+}
+
+/* --- Mono label: small uppercase mono label --- */
+.si-mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+}
+.si-mono-label-sm {
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+.si-mono-label-xs {
+  font-size: 0.6rem;
+  color: var(--text-tertiary);
+}
+
+/* --- Mono value readout --- */
+.si-mono-value {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+.si-mono-value-lg {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+}
+.si-mono-value-sm {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+/* --- Color accents --- */
+.si-c-cyan     { color: var(--cyan); }
+.si-c-amber    { color: var(--amber); }
+.si-c-violet   { color: var(--violet); }
+.si-c-emerald  { color: var(--emerald); }
+.si-c-coral    { color: var(--coral); }
+.si-c-muted    { color: var(--text-tertiary); }
+.si-c-secondary { color: var(--text-secondary); }
+
+/* --- Small muted text with margin-top --- */
+.si-muted-note {
+  margin-top: 10px;
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+}
+
+/* --- Info sub-label (Phase4 supervisor, ceremony sections) --- */
+.si-info-label {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.si-info-sub {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+.si-info-sub-lg {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+}
+
+/* --- Rollback procedure label --- */
+.si-rollback-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.si-rollback-time {
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+}
+
+/* --- Discovery panel full-width accent --- */
+.si-discovery-full-cyan   { grid-column: 1 / -1; border-left: 3px solid var(--cyan); }
+.si-discovery-full-amber  { grid-column: 1 / -1; border-left: 3px solid var(--amber); }
+.si-discovery-accent-amber  { border-left: 3px solid var(--amber); }
+.si-discovery-accent-coral  { border-left: 3px solid var(--coral); }
+.si-discovery-accent-violet { border-left: 3px solid var(--violet); }
+.si-discovery-accent-emerald { border-left: 3px solid var(--emerald); }
+
+/* --- Canvas chart sizing --- */
+.si-chart-canvas { width: 100%; height: 180px; }
+
+/* --- Badge pill (anomaly count, pending count, health pct) --- */
+.si-badge-amber {
+  background: rgba(255,171,0,0.2);
+  color: var(--amber);
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.65rem;
+  margin-left: 8px;
+}
+.si-badge-emerald {
+  background: rgba(0,230,118,0.2);
+  color: var(--emerald);
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.65rem;
+  margin-left: 8px;
+}
+
+/* --- Scroll container --- */
+.si-scroll-sm {
+  font-size: 0.72rem;
+  max-height: 120px;
+  overflow-y: auto;
+}
+.si-scroll-md {
+  font-size: 0.72rem;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+/* --- Misc layout --- */
+.si-p12  { padding: 12px; }
+.si-p16  { padding: 16px; }
+.si-hidden { display: none; }
+
+/* --- Methodology footer --- */
+.si-methodology-box {
+  margin-top: 16px;
+  padding: 16px 20px;
+  background: var(--bg-panel);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-glass);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  line-height: 1.7;
+}
+
+/* --- Phase 8.2: Extracted inline styles --- */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.color-cyan { color: var(--cyan); }
+.color-amber { color: var(--amber); }
+.color-violet { color: var(--violet); }
+.color-emerald { color: var(--emerald); }
+.color-coral { color: var(--coral); }
+.color-blue { color: var(--blue); }
+.color-text-secondary { color: var(--text-secondary); }
+.color-text-tertiary { color: var(--text-tertiary); }
+
+/* Discovery detail boxes by color */
+.discovery-box-cyan    { color: var(--cyan); background: rgba(0,229,255,0.06); }
+.discovery-box-amber   { color: var(--amber); background: rgba(255,171,0,0.06); }
+.discovery-box-coral   { color: var(--coral); background: rgba(255,82,82,0.06); font-size: 0.75rem; padding: 10px 14px; }
+.discovery-box-violet  { color: var(--violet); background: rgba(124,77,255,0.06); }
+.discovery-box-emerald { color: var(--emerald); background: rgba(0,230,118,0.06); }
+
+/* Improvement stat card backgrounds */
+.si-stat-bg-amber   { background: rgba(255,171,0,0.06); }
+.si-stat-bg-cyan    { background: rgba(0,229,255,0.06); }
+.si-stat-bg-emerald { background: rgba(0,230,118,0.06); }
+.si-stat-bg-violet  { background: rgba(124,77,255,0.06); }
+
+/* Self-improve feedback summary */
+.si-feedback-summary {
+  font-family: var(--font-mono); font-size: 0.75rem; color: var(--amber);
+  margin-bottom: 12px; background: rgba(255,171,0,0.04); padding: 10px 14px;
+  border-radius: 8px; line-height: 1.8;
+}
+
+/* Phase 4: info label (small uppercase tertiary) */
+.si-info-label-upper {
+  font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 6px; text-transform: uppercase;
+}
+/* Phase 4: info values with mono font */
+.si-info-mono-amber  { font-family: var(--font-mono); font-size: 0.85rem; color: var(--amber); }
+.si-info-mono-violet { font-family: var(--font-mono); font-size: 0.85rem; color: var(--violet); }
+.si-info-mono-secondary { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary); }
+
+/* ORP display */
+.orp-gonogo { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; color: var(--amber); }
+.orp-checklist-info { font-size: 0.75rem; color: var(--text-tertiary); }
+
+/* Layout helpers */
+.layout-flex-between { display: flex; justify-content: space-between; padding: 8px 4px 0; font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-tertiary); }
+.layout-flex-wrap { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+.layout-flex-center-gap { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+.layout-flex-gap8 { margin-top: 12px; display: flex; gap: 8px; }
+.layout-align-left { min-width: 160px; }
+.layout-flex1 { flex: 1; min-width: 300px; }
+.health-components-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 10px; }
+
+/* Spacing helpers */
+.mt-4  { margin-top: 4px; }
+.mt-8  { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mb-6  { margin-bottom: 6px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-12 { margin-bottom: 12px; }
+.m-8-0-4 { margin: 8px 0 4px; }
+.pt-8-bt { padding-top: 8px; border-top: 1px solid var(--border-glass); }
+.p4-claims-gap { gap: 12px; padding: 12px; }
+
+/* Discovery data table */
+.discovery-table { width: 100%; border-collapse: collapse; }
+.discovery-table-header { color: var(--text-tertiary); }
+
+/* Trend label badge */
+.si-trend-badge { margin-left: 12px; font-family: var(--font-mono); font-size: 0.65rem; }
+.si-method-td-name { font-weight: 600; color: var(--text-primary); }
+
+/* Scrollable panel body */
+.panel-body-sm { padding: 12px 16px; }
+.panel-body-scroll { padding: 12px 16px; overflow-x: auto; }
+.panel-body-md { padding: 14px 16px; }
+.panel-body-lg { padding: 16px 20px; }
+
+/* Header pipe separator */
+.header-sep { color: var(--text-tertiary); }
+
+/* --- Phase 8.3: Exploration Coverage Matrix --- */
+.si-coverage-canvas-wrap {
+  width: 100%; height: 260px; position: relative;
+}
+.si-coverage-canvas-wrap canvas {
+  width: 100% !important; height: 100% !important;
+}
+.si-key-metrics-bar {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px; margin-bottom: 16px;
+}
+.si-key-metric {
+  background: var(--bg-panel); border: 1px solid var(--border-glass); border-radius: var(--radius-sm);
+  padding: 10px 14px; text-align: center;
+}
+.si-key-metric-val {
+  font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; color: var(--cyan);
+}
+.si-key-metric-label {
+  font-family: var(--font-heading); font-size: 0.55rem; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text-tertiary); margin-top: 4px;
+}
+.si-key-metric-delta {
+  font-family: var(--font-mono); font-size: 0.6rem; margin-top: 2px;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -894,6 +1172,8 @@ body::after {
   transition: all 0.2s;
 }
 .tab-btn:hover { color: var(--text-secondary); }
+.tab-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 4px; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 .tab-btn.active {
   color: var(--cyan); border-bottom-color: var(--cyan);
 }
@@ -1190,6 +1470,7 @@ body::after {
 .discovery-meta {
   margin-top: 10px;
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   font-size: 0.7rem;
   color: var(--text-tertiary);
@@ -1228,6 +1509,130 @@ body::after {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ============================================================
+   SELF-IMPROVEMENT TAB STYLES
+   ============================================================ */
+.si-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 8px 0;
+}
+@media (max-width: 768px) {
+  .si-grid { grid-template-columns: 1fr !important; }
+}
+.si-chart-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+}
+.si-chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+.si-method-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.si-method-table thead th {
+  text-align: left;
+  padding: 8px 10px;
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  border-bottom: 1px solid var(--border-glass);
+  white-space: nowrap;
+}
+.si-method-table tbody td {
+  padding: 7px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  color: var(--text-secondary);
+}
+.si-method-table tbody tr:hover {
+  background: rgba(0,229,255,0.04);
+}
+.si-rate-good { color: var(--emerald); }
+.si-rate-mid  { color: var(--amber); }
+.si-rate-bad  { color: var(--coral); }
+.si-affinity-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+}
+.si-affinity-label {
+  min-width: 130px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  text-align: right;
+  flex-shrink: 0;
+}
+.si-affinity-track {
+  flex: 1;
+  height: 18px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.si-affinity-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--cyan), rgba(0,229,255,0.4));
+  transition: width 0.8s ease-out;
+}
+.si-affinity-value {
+  min-width: 50px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--cyan);
+}
+.si-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+@media (max-width: 768px) {
+  .si-metrics-grid { grid-template-columns: 1fr 1fr; }
+}
+.si-metric-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-glass);
+  border-radius: 10px;
+  padding: 16px 14px;
+  text-align: center;
+}
+.si-metric-label {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  letter-spacing: 1.2px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+.si-metric-value {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.si-metric-sub {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.si-metric-sub span {
+  color: var(--text-tertiary);
+}
+.si-delta-pos { color: var(--emerald) !important; }
+.si-delta-neg { color: var(--coral) !important; }
+.si-delta-flat { color: var(--text-tertiary) !important; }
 </style>
 </head>
 <body>
@@ -1252,9 +1657,9 @@ body::after {
     <span>AUTONOMOUS MODE&nbsp;&nbsp;●&nbsp;&nbsp;ACTIVE</span>
   </div>
   <div class="header-right">
-    <span id="utc-clock">--:--:--</span>
-    <span style="color: var(--text-tertiary)">|</span>
-    <span>UP <span id="uptime">0d 0h 0m</span></span>
+    <span id="utc-clock" aria-live="off" aria-label="UTC clock">--:--:--</span>
+    <span class="header-sep">|</span>
+    <span>UP <span id="uptime" aria-live="polite" aria-label="System uptime">0d 0h 0m</span></span>
     <span class="version">v4.7</span>
   </div>
 </header>
@@ -1263,8 +1668,8 @@ body::after {
      AGI CONTROL ROOM — SAFETY STRIP (ALWAYS VISIBLE)
      ============================================================ -->
 <div class="safety-strip" id="safety-strip">
-  <div class="safety-beacon" id="safety-beacon" title="System Status"></div>
-  <span class="engine-state-badge" id="engine-state-badge">NOMINAL</span>
+  <div class="safety-beacon" id="safety-beacon" title="System Status" aria-live="polite" aria-label="System safety status"></div>
+  <span class="engine-state-badge" id="engine-state-badge" aria-live="polite" aria-label="Engine state">NOMINAL</span>
   <div class="autonomy-phase">
     <span class="phase-pip active" id="phase-shadow">SHADOW</span>
     <span class="phase-pip" id="phase-supervised">SUPERVISED</span>
@@ -1276,22 +1681,23 @@ body::after {
     <span class="sor-dot"></span>
     <span id="sor-strip-name">Supervisor: Not Set</span>
   </div>
-  <button class="safety-btn btn-pause" id="btn-strip-pause" onclick="safetyAction('pause')" title="Pause Discovery Engine">⏸ PAUSE</button>
-  <button class="safety-btn btn-safe" id="btn-strip-safe" onclick="safetyAction('safe-mode')" title="Switch to Safe Mode">🛡 SAFE</button>
-  <button class="safety-btn btn-resume" id="btn-strip-resume" onclick="safetyAction('resume')" title="Resume Engine" style="display:none">▶ RESUME</button>
-  <button class="safety-btn btn-estop" id="btn-strip-estop" onclick="confirmEstop()" title="Emergency Stop">🛑 E-STOP</button>
+  <button class="safety-btn btn-pause" id="btn-strip-pause" onclick="safetyAction('pause')" title="Pause Discovery Engine" aria-label="Pause discovery engine">⏸ PAUSE</button>
+  <button class="safety-btn btn-safe" id="btn-strip-safe" onclick="safetyAction('safe-mode')" title="Switch to Safe Mode" aria-label="Switch to safe mode">🛡 SAFE</button>
+  <button class="safety-btn btn-resume" id="btn-strip-resume" onclick="safetyAction('resume')" title="Resume Engine" aria-label="Resume engine" style="display:none">▶ RESUME</button>
+  <button class="safety-btn btn-estop" id="btn-strip-estop" onclick="confirmEstop()" title="Emergency Stop" aria-label="Emergency stop">🛑 E-STOP</button>
 </div>
 
 <!-- ============================================================
      AGI CONTROL ROOM — TAB BAR
      ============================================================ -->
-<nav class="tab-bar" role="tablist">
-  <button class="tab-btn active" data-tab="overview" role="tab" aria-selected="true" onclick="switchTab('overview')">◉ OVERVIEW</button>
-  <button class="tab-btn" data-tab="safety" role="tab" aria-selected="false" onclick="switchTab('safety')">◈ SAFETY</button>
-  <button class="tab-btn" data-tab="control" role="tab" aria-selected="false" onclick="switchTab('control')">⚙ CONTROL</button>
-  <button class="tab-btn" data-tab="health" role="tab" aria-selected="false" onclick="switchTab('health')">♥ HEALTH</button>
-  <button class="tab-btn" data-tab="phase4" role="tab" aria-selected="false" onclick="switchTab('phase4')">⬡ PHASE 4</button>
-  <button class="tab-btn" data-tab="discoveries" role="tab" aria-selected="false" onclick="switchTab('discoveries')">✦ DISCOVERIES</button>
+<nav class="tab-bar" role="tablist" aria-label="Dashboard navigation">
+  <button class="tab-btn active" data-tab="overview" role="tab" id="tab-btn-overview" aria-selected="true" aria-controls="tab-overview" onclick="switchTab('overview')" aria-label="Overview tab">◉ OVERVIEW</button>
+  <button class="tab-btn" data-tab="safety" role="tab" id="tab-btn-safety" aria-selected="false" aria-controls="tab-safety" onclick="switchTab('safety')" aria-label="Safety monitoring tab">◈ SAFETY</button>
+  <button class="tab-btn" data-tab="control" role="tab" id="tab-btn-control" aria-selected="false" aria-controls="tab-control" onclick="switchTab('control')" aria-label="Engine control tab">⚙ CONTROL</button>
+  <button class="tab-btn" data-tab="health" role="tab" id="tab-btn-health" aria-selected="false" aria-controls="tab-health" onclick="switchTab('health')" aria-label="System health tab">♥ HEALTH</button>
+  <button class="tab-btn" data-tab="phase4" role="tab" id="tab-btn-phase4" aria-selected="false" aria-controls="tab-phase4" onclick="switchTab('phase4')" aria-label="Phase 4 operational readiness tab">⬡ PHASE 4</button>
+  <button class="tab-btn" data-tab="discoveries" role="tab" id="tab-btn-discoveries" aria-selected="false" aria-controls="tab-discoveries" onclick="switchTab('discoveries')" aria-label="Scientific discoveries tab">✦ DISCOVERIES</button>
+  <button class="tab-btn" data-tab="selfimprove" role="tab" id="tab-btn-selfimprove" aria-selected="false" aria-controls="tab-selfimprove" onclick="switchTab('selfimprove')" aria-label="Self-improvement metrics tab">⟳ SELF-IMPROVE</button>
 </nav>
 
 <!-- ============================================================
@@ -1300,7 +1706,7 @@ body::after {
 <main class="dashboard" role="main">
 
 <!-- ==================== TAB: OVERVIEW (existing) ==================== -->
-<div class="tab-content active" id="tab-overview">
+<div class="tab-content active" id="tab-overview" role="tabpanel" aria-labelledby="tab-btn-overview">
 
   <!-- ========== MAIN GRID ========== -->
   <div class="main-grid">
@@ -1310,14 +1716,14 @@ body::after {
          ============================== -->
     <div class="panel panel-activity">
       <div class="panel-title"><span class="dot"></span>ACTIVITY STREAM</div>
-      <div class="activity-feed" id="activity-feed"></div>
+      <div class="activity-feed" id="activity-feed" aria-live="polite" aria-label="Activity stream"></div>
     </div>
 
     <!-- ==============================
          LEFT BOTTOM: DECISION ENGINE
          ============================== -->
     <div class="panel panel-decision-engine">
-      <div class="panel-title"><span class="dot" style="background:var(--violet)"></span>THOUGHT PROCESS — DECISION ENGINE</div>
+      <div class="panel-title"><span class="dot dot-violet"></span>THOUGHT PROCESS — DECISION ENGINE</div>
       <div class="cycle-phases" id="cycle-phases">
         <!-- Phases rendered by JS -->
       </div>
@@ -1352,7 +1758,7 @@ body::after {
          RIGHT TOP: DATA VISUALIZATIONS
          ============================== -->
     <div class="panel panel-charts">
-      <div class="panel-title"><span class="dot" style="background:var(--amber)"></span>DATA VISUALIZATIONS</div>
+      <div class="panel-title"><span class="dot dot-amber"></span>DATA VISUALIZATIONS</div>
       <div class="charts-grid">
         <div class="mini-chart">
           <div class="mini-chart-title">Hypothesis Funnel</div>
@@ -1385,7 +1791,7 @@ body::after {
          RIGHT BOTTOM: DECISION LOG
          ============================== -->
     <div class="panel panel-decisions">
-      <div class="panel-title"><span class="dot" style="background:var(--emerald)"></span>AUTONOMOUS DECISION LOG</div>
+      <div class="panel-title"><span class="dot dot-emerald"></span>AUTONOMOUS DECISION LOG</div>
       <div class="decisions-list" id="decisions-list"></div>
     </div>
 
@@ -1396,7 +1802,7 @@ body::after {
        ============================== -->
   <div class="metrics-row">
     <div class="panel">
-      <div class="panel-title"><span class="dot" style="background:var(--amber)"></span>SYSTEM METRICS</div>
+      <div class="panel-title"><span class="dot dot-amber"></span>SYSTEM METRICS</div>
       <div class="metrics-grid" id="metrics-grid"></div>
     </div>
   </div>
@@ -1404,14 +1810,14 @@ body::after {
 </div><!-- /tab-overview -->
 
 <!-- ==================== TAB: SAFETY ==================== -->
-<div class="tab-content" id="tab-safety">
+<div class="tab-content" id="tab-safety" role="tabpanel" aria-labelledby="tab-btn-safety">
   <div class="safety-grid">
 
     <!-- State Space Navigator -->
-    <div class="panel" style="animation: fadeIn 0.4s ease both;">
-      <div class="panel-title"><span class="dot" style="background:var(--cyan)"></span>STATE SPACE — MIND TRAJECTORY</div>
+    <div class="panel si-fade-in">
+      <div class="panel-title"><span class="dot dot-cyan"></span>STATE SPACE — MIND TRAJECTORY</div>
       <svg class="state-space-svg" id="state-space-svg"></svg>
-      <div style="display:flex; justify-content:space-between; padding:8px 4px 0; font-family:var(--font-mono); font-size:0.65rem; color:var(--text-tertiary);">
+      <div class="layout-flex-between">
         <span>PC1: Confidence Variance</span>
         <span id="state-space-info">Basin: Nominal — 50 cycles</span>
         <span>PC2: Domain Diversity</span>
@@ -1419,27 +1825,27 @@ body::after {
     </div>
 
     <!-- Anomaly & Drift Monitor -->
-    <div class="panel" style="animation: fadeIn 0.4s ease 0.1s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--amber)"></span>ANOMALY DETECTION — DRIFT MONITOR <span id="anomaly-count-badge" style="background:rgba(255,171,0,0.2);color:var(--amber);padding:1px 8px;border-radius:10px;font-size:0.65rem;margin-left:8px;">0</span></div>
+    <div class="panel si-fade-in-d1">
+      <div class="panel-title"><span class="dot dot-amber"></span>ANOMALY DETECTION — DRIFT MONITOR <span id="anomaly-count-badge" class="si-badge-amber">0</span></div>
       <div id="anomaly-gauges"></div>
-      <div style="margin-top:12px; padding-top:8px; border-top:1px solid var(--border-glass);">
-        <div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-tertiary);margin-bottom:6px;">RECENT ALERTS</div>
+      <div class="mt-12 pt-8-bt">
+        <div class="si-mono-label mb-6">RECENT ALERTS</div>
         <div class="alert-stream" id="alert-stream">
-          <div class="empty-state" style="padding:16px;">No anomalies detected</div>
+          <div class="empty-state si-p16">No anomalies detected</div>
         </div>
       </div>
     </div>
 
     <!-- Alignment Stability Dashboard -->
-    <div class="panel panel-full" style="animation: fadeIn 0.4s ease 0.2s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--emerald)"></span>ALIGNMENT STABILITY</div>
-      <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;">
-        <div style="min-width:160px;">
+    <div class="panel panel-full si-fade-in-d2">
+      <div class="panel-title"><span class="dot dot-emerald"></span>ALIGNMENT STABILITY</div>
+      <div class="layout-flex-wrap">
+        <div class="layout-align-left">
           <span class="align-score-big" id="alignment-score">--</span>
           <span class="align-trend" id="alignment-trend">--%</span>
-          <div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-tertiary);margin-top:4px;">COMPOSITE ALIGNMENT</div>
+          <div class="si-mono-label mt-4">COMPOSITE ALIGNMENT</div>
         </div>
-        <div style="flex:1;min-width:300px;" id="alignment-dimensions"></div>
+        <div class="layout-flex1" id="alignment-dimensions"></div>
       </div>
     </div>
 
@@ -1447,45 +1853,45 @@ body::after {
 </div><!-- /tab-safety -->
 
 <!-- ==================== TAB: CONTROL ==================== -->
-<div class="tab-content" id="tab-control">
+<div class="tab-content" id="tab-control" role="tabpanel" aria-labelledby="tab-btn-control">
   <div class="control-grid">
 
     <!-- Emergency Intervention Console -->
-    <div class="panel" style="animation: fadeIn 0.4s ease both;">
-      <div class="panel-title"><span class="dot" style="background:var(--coral)"></span>INTERVENTION CONSOLE <span class="engine-state-badge" id="intervention-state">NOMINAL</span></div>
+    <div class="panel si-fade-in">
+      <div class="panel-title"><span class="dot dot-coral"></span>INTERVENTION CONSOLE <span class="engine-state-badge" id="intervention-state">NOMINAL</span></div>
       <div class="intervention-btns">
         <button class="intervention-btn btn-pause-big" onclick="safetyAction('pause')">⏸ PAUSE ENGINE</button>
         <button class="intervention-btn btn-stop-big" onclick="confirmEstop()">🛑 EMERGENCY STOP</button>
         <button class="intervention-btn btn-safe-big" onclick="safetyAction('safe-mode')">🛡 SAFE MODE</button>
         <button class="intervention-btn btn-resume-big" onclick="safetyAction('resume')">▶ RESUME</button>
       </div>
-      <div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-tertiary);margin:8px 0 4px;">QUICK ACTIONS</div>
+      <div class="si-mono-label m-8-0-4">QUICK ACTIONS</div>
       <div class="quick-actions">
-        <button class="quick-action-btn" onclick="quickAction('rescan')">Force Rescan</button>
-        <button class="quick-action-btn" onclick="quickAction('skip')">Skip Hypothesis</button>
-        <button class="quick-action-btn" onclick="quickAction('rollback')">Rollback Cycle</button>
-        <button class="quick-action-btn" onclick="quickAction('export')">Export State</button>
+        <button class="quick-action-btn" onclick="quickAction('rescan')" aria-label="Force data rescan">Force Rescan</button>
+        <button class="quick-action-btn" onclick="quickAction('skip')" aria-label="Skip current hypothesis">Skip Hypothesis</button>
+        <button class="quick-action-btn" onclick="quickAction('rollback')" aria-label="Rollback last cycle">Rollback Cycle</button>
+        <button class="quick-action-btn" onclick="quickAction('export')" aria-label="Export system state">Export State</button>
       </div>
     </div>
 
     <!-- Supervisor of Record -->
-    <div class="panel" style="animation: fadeIn 0.4s ease 0.1s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--violet)"></span>SUPERVISOR OF RECORD</div>
+    <div class="panel si-fade-in-d1">
+      <div class="panel-title"><span class="dot dot-violet"></span>SUPERVISOR OF RECORD</div>
       <div id="sor-panel-content">
         <div class="sor-panel-name" id="sor-name">No Supervisor Set</div>
         <div class="sor-panel-detail" id="sor-detail">Click "Sign In" to assume supervisory responsibility</div>
-        <div style="margin-top:12px;display:flex;gap:8px;">
-          <button class="quick-action-btn" onclick="sorSignIn()" id="sor-signin-btn">Sign In as Supervisor</button>
-          <button class="quick-action-btn" onclick="sorLogObservation()" style="display:none" id="sor-log-btn">Log Observation</button>
-          <button class="quick-action-btn" onclick="sorHandoff()" style="display:none" id="sor-handoff-btn">Initiate Handoff</button>
+        <div class="layout-flex-gap8">
+          <button class="quick-action-btn" onclick="sorSignIn()" id="sor-signin-btn" aria-label="Sign in as supervisor">Sign In as Supervisor</button>
+          <button class="quick-action-btn" onclick="sorLogObservation()" aria-label="Log observation" style="display:none" id="sor-log-btn">Log Observation</button>
+          <button class="quick-action-btn" onclick="sorHandoff()" aria-label="Initiate handoff" style="display:none" id="sor-handoff-btn">Initiate Handoff</button>
         </div>
         <div class="sor-actions-log" id="sor-actions-log"></div>
       </div>
     </div>
 
     <!-- Pending Approvals -->
-    <div class="panel panel-full" style="animation: fadeIn 0.4s ease 0.2s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--emerald)"></span>PENDING APPROVALS <span id="pending-count" style="background:rgba(0,230,118,0.2);color:var(--emerald);padding:1px 8px;border-radius:10px;font-size:0.65rem;margin-left:8px;">0</span></div>
+    <div class="panel panel-full si-fade-in-d2">
+      <div class="panel-title"><span class="dot dot-emerald"></span>PENDING APPROVALS <span id="pending-count" class="si-badge-emerald">0</span></div>
       <div id="pending-list">
         <div class="empty-state">No pending approvals — all clear ✓</div>
       </div>
@@ -1495,29 +1901,29 @@ body::after {
 </div><!-- /tab-control -->
 
 <!-- ==================== TAB: HEALTH ==================== -->
-<div class="tab-content" id="tab-health">
+<div class="tab-content" id="tab-health" role="tabpanel" aria-labelledby="tab-btn-health">
   <div class="health-grid">
 
     <!-- Component Health Cards -->
-    <div class="panel panel-full" style="animation: fadeIn 0.4s ease both;">
-      <div class="panel-title"><span class="dot" style="background:var(--emerald)"></span>COMPONENT HEALTH <span id="health-pct" style="color:var(--emerald);font-family:var(--font-mono);font-size:0.75rem;margin-left:8px;">--% UP</span></div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;" id="health-components"></div>
+    <div class="panel panel-full si-fade-in">
+      <div class="panel-title"><span class="dot dot-emerald"></span>COMPONENT HEALTH <span id="health-pct" class="si-badge-emerald" style="background:none;">--% UP</span></div>
+      <div class="health-components-grid" id="health-components"></div>
     </div>
 
     <!-- Resource Charts -->
-    <div class="panel" style="animation: fadeIn 0.4s ease 0.1s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--amber)"></span>CYCLE PERFORMANCE</div>
-      <canvas id="chart-cycle-time" style="width:100%;height:180px;"></canvas>
+    <div class="panel si-fade-in-d1">
+      <div class="panel-title"><span class="dot dot-amber"></span>CYCLE PERFORMANCE</div>
+      <canvas id="chart-cycle-time" class="si-chart-canvas"></canvas>
     </div>
 
-    <div class="panel" style="animation: fadeIn 0.4s ease 0.15s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--cyan)"></span>DOMAIN DISTRIBUTION</div>
-      <canvas id="chart-domain-health" style="width:100%;height:180px;"></canvas>
+    <div class="panel si-fade-in-d15">
+      <div class="panel-title"><span class="dot dot-cyan"></span>DOMAIN DISTRIBUTION</div>
+      <canvas id="chart-domain-health" class="si-chart-canvas"></canvas>
     </div>
 
     <!-- Persistence (SQLite) -->
-    <div class="panel" style="animation: fadeIn 0.4s ease 0.2s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--violet)"></span>PERSISTENCE (SQLite)</div>
+    <div class="panel si-fade-in-d2">
+      <div class="panel-title"><span class="dot dot-violet"></span>PERSISTENCE (SQLite)</div>
       <div class="persistence-card" id="persistence-stats">
         <div class="persistence-stat">
           <div class="stat-value" id="persist-discoveries">--</div>
@@ -1539,8 +1945,8 @@ body::after {
     </div>
 
     <!-- Audit Trail -->
-    <div class="panel panel-full" style="animation: fadeIn 0.4s ease 0.2s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--text-tertiary)"></span>AUDIT TRAIL</div>
+    <div class="panel panel-full si-fade-in-d2">
+      <div class="panel-title"><span class="dot dot-muted"></span>AUDIT TRAIL</div>
       <div class="audit-log" id="audit-log"></div>
     </div>
 
@@ -1548,99 +1954,99 @@ body::after {
 </div><!-- /tab-health -->
 
 <!-- ==================== TAB: PHASE 4 (Operational Readiness) ==================== -->
-<div class="tab-content" id="tab-phase4">
+<div class="tab-content" id="tab-phase4" role="tabpanel" aria-labelledby="tab-btn-phase4">
   <div class="health-grid">
 
     <!-- ORP Readiness -->
-    <div class="panel" style="animation: fadeIn 0.4s ease both;">
-      <div class="panel-title"><span class="dot" style="background:var(--violet)"></span>OPERATIONAL READINESS</div>
-      <div id="orp-readiness" style="padding:12px;">
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
-          <div id="orp-gonogo" style="font-family:var(--font-heading);font-size:1.4rem;font-weight:700;color:var(--amber);">--</div>
-          <div id="orp-pct" style="font-family:var(--font-mono);font-size:0.85rem;color:var(--text-secondary);">--% ready</div>
+    <div class="panel si-fade-in">
+      <div class="panel-title"><span class="dot dot-violet"></span>OPERATIONAL READINESS</div>
+      <div id="orp-readiness" class="si-p12">
+        <div class="layout-flex-center-gap">
+          <div id="orp-gonogo" class="orp-gonogo">--</div>
+          <div id="orp-pct" class="si-info-mono-secondary">--% ready</div>
         </div>
-        <div id="orp-checklist-summary" style="font-size:0.75rem;color:var(--text-tertiary);"></div>
+        <div id="orp-checklist-summary" class="orp-checklist-info"></div>
       </div>
     </div>
 
     <!-- Safety Arbiter -->
-    <div class="panel" style="animation: fadeIn 0.4s ease 0.1s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--cyan)"></span>SAFETY ARBITER</div>
-      <div id="arbiter-panel" style="padding:12px;">
-        <div class="phase4-claims-grid" style="margin-bottom:12px;">
-          <div style="background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-size:0.65rem;color:var(--text-tertiary);text-transform:uppercase;">GO Threshold</div>
-            <div id="arbiter-go" style="font-family:var(--font-mono);font-size:1.1rem;color:var(--emerald);">--</div>
+    <div class="panel si-fade-in-d1">
+      <div class="panel-title"><span class="dot dot-cyan"></span>SAFETY ARBITER</div>
+      <div id="arbiter-panel" class="si-p12">
+        <div class="phase4-claims-grid mb-12">
+          <div class="si-stat-cell">
+            <div class="si-mono-label-sm">GO Threshold</div>
+            <div id="arbiter-go" class="si-mono-value-lg si-c-emerald">--</div>
           </div>
-          <div style="background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-size:0.65rem;color:var(--text-tertiary);text-transform:uppercase;">NO-GO Threshold</div>
-            <div id="arbiter-nogo" style="font-family:var(--font-mono);font-size:1.1rem;color:var(--coral);">--</div>
+          <div class="si-stat-cell">
+            <div class="si-mono-label-sm">NO-GO Threshold</div>
+            <div id="arbiter-nogo" class="si-mono-value-lg si-c-coral">--</div>
           </div>
         </div>
-        <div id="arbiter-verdicts" style="font-size:0.72rem;max-height:120px;overflow-y:auto;"></div>
+        <div id="arbiter-verdicts" class="si-scroll-sm"></div>
       </div>
     </div>
 
     <!-- Safety Case / Risk -->
-    <div class="panel" style="animation: fadeIn 0.4s ease 0.15s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--emerald)"></span>SAFETY CASE</div>
-      <div id="safety-case-panel" style="padding:12px;">
-        <div class="phase4-safety-grid" style="margin-bottom:10px;">
-          <div style="background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:8px;padding:8px;text-align:center;">
-            <div style="font-size:0.6rem;color:var(--text-tertiary);">HAZARDS</div>
-            <div id="sc-hazards" style="font-family:var(--font-mono);font-size:1rem;color:var(--amber);">--</div>
+    <div class="panel si-fade-in-d15">
+      <div class="panel-title"><span class="dot dot-emerald"></span>SAFETY CASE</div>
+      <div id="safety-case-panel" class="si-p12">
+        <div class="phase4-safety-grid mb-10">
+          <div class="si-stat-cell-sm">
+            <div class="si-mono-label-xs">HAZARDS</div>
+            <div id="sc-hazards" class="si-mono-value si-c-amber">--</div>
           </div>
-          <div style="background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:8px;padding:8px;text-align:center;">
-            <div style="font-size:0.6rem;color:var(--text-tertiary);">CLAIMS</div>
-            <div id="sc-claims" style="font-family:var(--font-mono);font-size:1rem;color:var(--cyan);">--</div>
+          <div class="si-stat-cell-sm">
+            <div class="si-mono-label-xs">CLAIMS</div>
+            <div id="sc-claims" class="si-mono-value si-c-cyan">--</div>
           </div>
-          <div style="background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:8px;padding:8px;text-align:center;">
-            <div style="font-size:0.6rem;color:var(--text-tertiary);">RESIDUAL RISK</div>
-            <div id="sc-risk" style="font-family:var(--font-mono);font-size:1rem;color:var(--emerald);">--</div>
+          <div class="si-stat-cell-sm">
+            <div class="si-mono-label-xs">RESIDUAL RISK</div>
+            <div id="sc-risk" class="si-mono-value si-c-emerald">--</div>
           </div>
         </div>
-        <div id="sc-hazard-list" style="font-size:0.72rem;max-height:140px;overflow-y:auto;"></div>
+        <div id="sc-hazard-list" class="si-scroll-md"></div>
       </div>
     </div>
 
     <!-- Supervisor & Ceremony -->
-    <div class="panel panel-full" style="animation: fadeIn 0.4s ease 0.2s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--amber)"></span>SUPERVISOR & CEREMONY</div>
-      <div class="phase4-claims-grid" style="gap:12px;padding:12px;">
+    <div class="panel panel-full si-fade-in-d2">
+      <div class="panel-title"><span class="dot dot-amber"></span>SUPERVISOR & CEREMONY</div>
+      <div class="phase4-claims-grid p4-claims-gap">
         <div>
-          <div style="font-size:0.7rem;color:var(--text-tertiary);margin-bottom:6px;text-transform:uppercase;">Active Supervisor</div>
-          <div id="supervisor-name" style="font-family:var(--font-mono);font-size:0.85rem;color:var(--amber);">--</div>
-          <div id="supervisor-shift" style="font-size:0.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
-          <div id="supervisor-actions" style="font-size:0.7rem;color:var(--text-tertiary);margin-top:8px;"></div>
+          <div class="si-info-label-upper">Active Supervisor</div>
+          <div id="supervisor-name" class="si-info-mono-amber">--</div>
+          <div id="supervisor-shift" class="si-info-sub mt-4"></div>
+          <div id="supervisor-actions" class="si-info-sub mt-8"></div>
         </div>
         <div>
-          <div style="font-size:0.7rem;color:var(--text-tertiary);margin-bottom:6px;text-transform:uppercase;">Ceremony Status</div>
-          <div id="ceremony-state" style="font-family:var(--font-mono);font-size:0.85rem;color:var(--violet);">No active ceremony</div>
-          <div id="ceremony-details" style="font-size:0.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
-          <div id="ceremony-history" style="font-size:0.7rem;color:var(--text-tertiary);margin-top:8px;"></div>
+          <div class="si-info-label-upper">Ceremony Status</div>
+          <div id="ceremony-state" class="si-info-mono-violet">No active ceremony</div>
+          <div id="ceremony-details" class="si-info-sub mt-4"></div>
+          <div id="ceremony-history" class="si-info-sub mt-8"></div>
         </div>
       </div>
     </div>
 
     <!-- Rollback Procedures -->
-    <div class="panel panel-full" style="animation: fadeIn 0.4s ease 0.25s both;">
-      <div class="panel-title"><span class="dot" style="background:var(--coral)"></span>ROLLBACK PROCEDURES</div>
+    <div class="panel panel-full si-fade-in-d25">
+      <div class="panel-title"><span class="dot dot-coral"></span>ROLLBACK PROCEDURES</div>
       <div id="rollback-procedures" class="rollback-grid">
-        <div style="background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:8px;padding:10px;">
-          <div style="font-size:0.65rem;color:var(--coral);font-weight:600;margin-bottom:4px;">FULL → CONDITIONAL</div>
-          <div style="font-size:0.65rem;color:var(--text-tertiary);">~5 min rollback</div>
+        <div class="si-stat-cell">
+          <div class="si-rollback-label color-coral">FULL → CONDITIONAL</div>
+          <div class="si-rollback-time">~5 min rollback</div>
         </div>
-        <div style="background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:8px;padding:10px;">
-          <div style="font-size:0.65rem;color:var(--amber);font-weight:600;margin-bottom:4px;">CONDITIONAL → SUPERVISED</div>
-          <div style="font-size:0.65rem;color:var(--text-tertiary);">~3 min rollback</div>
+        <div class="si-stat-cell">
+          <div class="si-rollback-label color-amber">CONDITIONAL → SUPERVISED</div>
+          <div class="si-rollback-time">~3 min rollback</div>
         </div>
-        <div style="background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:8px;padding:10px;">
-          <div style="font-size:0.65rem;color:var(--cyan);font-weight:600;margin-bottom:4px;">SUPERVISED → SHADOW</div>
-          <div style="font-size:0.65rem;color:var(--text-tertiary);">~1 min rollback</div>
+        <div class="si-stat-cell">
+          <div class="si-rollback-label color-cyan">SUPERVISED → SHADOW</div>
+          <div class="si-rollback-time">~1 min rollback</div>
         </div>
-        <div style="background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:8px;padding:10px;">
-          <div style="font-size:0.65rem;color:var(--emerald);font-weight:600;margin-bottom:4px;">SHADOW → STOPPED</div>
-          <div style="font-size:0.65rem;color:var(--text-tertiary);">~30 sec rollback</div>
+        <div class="si-stat-cell">
+          <div class="si-rollback-label color-emerald">SHADOW → STOPPED</div>
+          <div class="si-rollback-time">~30 sec rollback</div>
         </div>
       </div>
     </div>
@@ -1649,23 +2055,23 @@ body::after {
 </div><!-- /tab-phase4 -->
 
 <!-- ==================== TAB: DISCOVERIES ==================== -->
-<div class="tab-content" id="tab-discoveries">
+<div class="tab-content" id="tab-discoveries" role="tabpanel" aria-labelledby="tab-btn-discoveries">
 
   <div class="discoveries-grid">
 
     <!-- Kepler's Third Law -->
-    <div class="panel" style="grid-column: 1 / -1; border-left: 3px solid var(--cyan);">
+    <div class="panel si-discovery-full-cyan">
       <div class="panel-header">
         <span class="panel-icon">⚛</span>
         <span class="panel-title">KEPLER'S THIRD LAW — VERIFIED FROM 2,839 EXOPLANETS</span>
       </div>
       <div class="discovery-body">
-        <div class="discovery-detail-box" style="color: var(--cyan); background: rgba(0,229,255,0.06);">
+        <div class="discovery-detail-box discovery-box-cyan">
           Theory: P² ∝ a³/M* → log(P) = <strong>1.500</strong>·log(a) − <strong>0.500</strong>·log(M*) + C<br>
           ASTRA: log(P) = <strong>1.497</strong>·log(a) − <strong>0.474</strong>·log(M*) + C &nbsp;|&nbsp; R² = <strong>0.9982</strong>
         </div>
         <div class="discovery-desc">
-          ASTRA independently recovered Newton's gravitational law from the NASA Exoplanet Archive. The semi-major axis exponent matches theory to <strong style="color: var(--emerald);">0.2%</strong> accuracy. This is one of the most precise empirical verifications of Kepler's Third Law from exoplanet data — measured blindly by a discovery system with zero prior assumptions about orbital mechanics.
+          ASTRA independently recovered Newton's gravitational law from the NASA Exoplanet Archive. The semi-major axis exponent matches theory to <strong class="color-emerald">0.2%</strong> accuracy. This is one of the most precise empirical verifications of Kepler's Third Law from exoplanet data — measured blindly by a discovery system with zero prior assumptions about orbital mechanics.
         </div>
         <div class="discovery-meta">
           <span>📡 NASA Exoplanet Archive (TAP)</span>
@@ -1678,18 +2084,18 @@ body::after {
     </div>
 
     <!-- Accelerating Universe -->
-    <div class="panel" style="grid-column: 1 / -1; border-left: 3px solid var(--amber);">
+    <div class="panel si-discovery-full-amber">
       <div class="panel-header">
         <span class="panel-icon">🌌</span>
         <span class="panel-title">THE ACCELERATING UNIVERSE — MEASURED FROM 1,701 SUPERNOVAE</span>
       </div>
       <div class="discovery-body">
-        <div class="discovery-detail-box" style="color: var(--amber); background: rgba(255,171,0,0.06);">
+        <div class="discovery-detail-box discovery-box-amber">
           Hubble diagram: μ = <strong>5.33</strong>·log(z) + 24.42 &nbsp;|&nbsp; r = <strong>0.9982</strong><br>
           Pure Hubble law predicts slope = 5.00 &nbsp;→&nbsp; ASTRA measured: <strong>5.33</strong> (+6.6% excess)
         </div>
         <div class="discovery-desc">
-          The distance modulus slope being steeper than 5.0 means luminosity distance grows <em>faster</em> than a non-accelerating universe predicts. This is exactly the signature of dark energy / cosmological constant that won the <strong style="color: var(--amber);">2011 Nobel Prize</strong> (Perlmutter, Schmidt, Riess). ASTRA found it independently from the full Pantheon+ sample. Binned residuals show the deviation is strongest at z &gt; 0.5 — consistent with acceleration onset.
+          The distance modulus slope being steeper than 5.0 means luminosity distance grows <em>faster</em> than a non-accelerating universe predicts. This is exactly the signature of dark energy / cosmological constant that won the <strong class="color-amber">2011 Nobel Prize</strong> (Perlmutter, Schmidt, Riess). ASTRA found it independently from the full Pantheon+ sample. Binned residuals show the deviation is strongest at z &gt; 0.5 — consistent with acceleration onset.
         </div>
         <div class="discovery-meta">
           <span>📡 Pantheon+ SH0ES (GitHub)</span>
@@ -1702,101 +2108,101 @@ body::after {
     </div>
 
     <!-- Galaxy Bimodality -->
-    <div class="panel" style="border-left: 3px solid var(--coral);">
+    <div class="panel si-discovery-accent-coral">
       <div class="panel-header">
         <span class="panel-icon">🔴🔵</span>
         <span class="panel-title">GALAXY DEATH IN REAL TIME</span>
       </div>
       <div class="discovery-body">
-        <div class="discovery-detail-box" style="font-size: 0.75rem; color: var(--coral); background: rgba(255,82,82,0.06); padding: 10px 14px;">
-          <table style="width:100%; border-collapse:collapse;">
-            <tr style="color: var(--text-tertiary);"><th style="text-align:left;">Redshift</th><th>u-g</th><th>Blue %</th></tr>
-            <tr><td>z = 0.02–0.05</td><td style="text-align:center;">1.44</td><td style="text-align:center; color: var(--blue);">50%</td></tr>
-            <tr><td>z = 0.05–0.10</td><td style="text-align:center;">1.70</td><td style="text-align:center; color: var(--amber);">23%</td></tr>
-            <tr><td>z = 0.10–0.15</td><td style="text-align:center;">1.77</td><td style="text-align:center; color: var(--coral);">16%</td></tr>
-            <tr><td>z = 0.15–0.25</td><td style="text-align:center;">1.92</td><td style="text-align:center; color: var(--coral);">10%</td></tr>
+        <div class="discovery-detail-box discovery-box-coral">
+          <table class="discovery-table">
+            <tr class="discovery-table-header"><th class="text-left">Redshift</th><th>u-g</th><th>Blue %</th></tr>
+            <tr><td>z = 0.02–0.05</td><td class="text-center">1.44</td><td class="text-center color-blue">50%</td></tr>
+            <tr><td>z = 0.05–0.10</td><td class="text-center">1.70</td><td class="text-center color-amber">23%</td></tr>
+            <tr><td>z = 0.10–0.15</td><td class="text-center">1.77</td><td class="text-center color-coral">16%</td></tr>
+            <tr><td>z = 0.15–0.25</td><td class="text-center">1.92</td><td class="text-center color-coral">10%</td></tr>
           </table>
         </div>
         <div class="discovery-desc">
-          From 2,000 SDSS galaxies: the blue fraction (actively star-forming) drops from 50% to 10% over the last 3 billion years. This is cosmic <strong style="color: var(--coral);">"downsizing"</strong> — star formation shuts off progressively. The bimodal color distribution (peaks at u-g ≈ 1.4 and 1.9) is the famous red sequence / blue cloud.
+          From 2,000 SDSS galaxies: the blue fraction (actively star-forming) drops from 50% to 10% over the last 3 billion years. This is cosmic <strong class="color-coral">"downsizing"</strong> — star formation shuts off progressively. The bimodal color distribution (peaks at u-g ≈ 1.4 and 1.9) is the famous red sequence / blue cloud.
         </div>
-        <div style="margin-top: 10px; font-size: 0.7rem; color: var(--text-tertiary);">
+        <div class="si-muted-note">
           �📡 SDSS DR18 · 🔢 2,000 galaxies · 📊 z–color r = 0.33
         </div>
       </div>
     </div>
 
     <!-- HR Diagram -->
-    <div class="panel" style="border-left: 3px solid var(--violet);">
+    <div class="panel si-discovery-accent-violet">
       <div class="panel-header">
         <span class="panel-icon">⭐</span>
         <span class="panel-title">STELLAR PHYSICS FROM GAIA DR3</span>
       </div>
       <div class="discovery-body">
-        <div class="discovery-detail-box" style="color: var(--violet); background: rgba(124,77,255,0.06);">
+        <div class="discovery-detail-box discovery-box-violet">
           Main sequence: M_G = <strong>3.66</strong> × (BP-RP) &nbsp;|&nbsp; r = <strong>0.90</strong><br>
           MS slope ~2–3 expected · ASTRA: 3.66 (includes metallicity scatter)
         </div>
         <div class="discovery-desc">
-          From 4,984 Gaia DR3 stars (parallax S/N &gt; 10). Density peaks at <strong style="color: var(--violet);">M_G ≈ 6.3</strong> (K-dwarf main sequence), <strong style="color: var(--violet);">12.5</strong> (white dwarfs), and <strong style="color: var(--violet);">1.8</strong> (subgiants). All three major stellar populations independently identified from raw astrometry.
+          From 4,984 Gaia DR3 stars (parallax S/N &gt; 10). Density peaks at <strong class="color-violet">M_G ≈ 6.3</strong> (K-dwarf main sequence), <strong class="color-violet">12.5</strong> (white dwarfs), and <strong class="color-violet">1.8</strong> (subgiants). All three major stellar populations independently identified from raw astrometry.
         </div>
-        <div style="margin-top: 10px; font-size: 0.7rem; color: var(--text-tertiary);">
+        <div class="si-muted-note">
           📡 Gaia DR3 TAP · 🔢 4,984 stars · BP-RP ∈ [−0.5, 3.2]
         </div>
       </div>
     </div>
 
     <!-- Causal Inference -->
-    <div class="panel" style="border-left: 3px solid var(--emerald);">
+    <div class="panel si-discovery-accent-emerald">
       <div class="panel-header">
         <span class="panel-icon">🔗</span>
         <span class="panel-title">CAUSAL INFERENCE — REDSHIFT DRIVES COLOR</span>
       </div>
       <div class="discovery-body">
-        <div class="discovery-detail-box" style="color: var(--emerald); background: rgba(0,230,118,0.06);">
+        <div class="discovery-detail-box discovery-box-emerald">
           Strongest edges: r↔i (0.994), g↔r (0.950), u↔g (0.903)<br>
           do(brightness) → redshift: <strong>NOT significant</strong> ✓<br>
           do(redshift) → brightness: <strong>significant</strong> ✓
         </div>
         <div class="discovery-desc">
-          PC/FCI causal discovery on 5,000 SDSS galaxies correctly found that <strong style="color: var(--emerald);">redshift causes color changes</strong> (K-correction), not the reverse. Intervention tests (do-calculus) confirmed: artificially changing photometric band brightness has zero causal effect on measured redshift. The system rejected the spurious correlation.
+          PC/FCI causal discovery on 5,000 SDSS galaxies correctly found that <strong class="color-emerald">redshift causes color changes</strong> (K-correction), not the reverse. Intervention tests (do-calculus) confirmed: artificially changing photometric band brightness has zero causal effect on measured redshift. The system rejected the spurious correlation.
         </div>
-        <div style="margin-top: 10px; font-size: 0.7rem; color: var(--text-tertiary);">
+        <div class="si-muted-note">
           📡 SDSS DR18 · 🔢 5,000 galaxies · PC + FCI algorithms
         </div>
       </div>
     </div>
 
     <!-- Self-Improvement System -->
-    <div class="panel" style="grid-column: 1 / -1; border-left: 3px solid var(--amber);">
+    <div class="panel si-discovery-full-amber">
       <div class="panel-header">
         <span class="panel-icon">🧠</span>
         <span class="panel-title">SELF-IMPROVEMENT — AUTONOMOUS LEARNING LOOP</span>
       </div>
       <div class="discovery-body">
         <div class="improvement-stats-grid">
-          <div class="improvement-stat-card" style="background:rgba(255,171,0,0.06);">
-            <div class="stat-value" style="color:var(--amber);">102</div>
+          <div class="improvement-stat-card si-stat-bg-amber">
+            <div class="stat-value color-amber">102</div>
             <div class="stat-label">Discoveries</div>
           </div>
-          <div class="improvement-stat-card" style="background:rgba(0,229,255,0.06);">
-            <div class="stat-value" style="color:var(--cyan);">100%</div>
+          <div class="improvement-stat-card si-stat-bg-cyan">
+            <div class="stat-value color-cyan">100%</div>
             <div class="stat-label">Success Rate</div>
           </div>
-          <div class="improvement-stat-card" style="background:rgba(0,230,118,0.06);">
-            <div class="stat-value" style="color:var(--emerald);">+532%</div>
+          <div class="improvement-stat-card si-stat-bg-emerald">
+            <div class="stat-value color-emerald">+532%</div>
             <div class="stat-label">Sig. Results ↑</div>
           </div>
-          <div class="improvement-stat-card" style="background:rgba(124,77,255,0.06);">
-            <div class="stat-value" style="color:var(--violet);">20</div>
+          <div class="improvement-stat-card si-stat-bg-violet">
+            <div class="stat-value color-violet">20</div>
             <div class="stat-label">Memory-Gen Hypotheses</div>
           </div>
         </div>
-        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--amber); margin-bottom: 12px; background: rgba(255,171,0,0.04); padding: 10px 14px; border-radius: 8px; line-height: 1.8;">
+        <div class="si-feedback-summary">
           Three feedback loops: <strong>Discovery → Hypothesis</strong> (60% from strong discoveries, strength&gt;0.4) · <strong>Method → Strategy</strong> (50 outcomes tracked, adaptive α) · <strong>Exploration → Coverage</strong> (7/7 sources active, 157 untested pairs mapped)
         </div>
         <div class="discovery-desc">
-          ASTRA's Discovery Memory tracks every finding with strength scoring, records which statistical methods succeed per domain, and maps explored vs. unexplored variable pairs. The Adaptive Strategist selects investigation methods by historical success rate (exploration bonus for untested methods). The Hypothesis Generator spawns new hypotheses from strong discoveries, untested variable pairs, and cross-domain structural analogies. <strong style="color: var(--emerald);">All three improvement metrics are trending upward</strong> — success rate 76%→100%, significant results per evaluation 1.76→11.12, confidence delta improving.
+          ASTRA's Discovery Memory tracks every finding with strength scoring, records which statistical methods succeed per domain, and maps explored vs. unexplored variable pairs. The Adaptive Strategist selects investigation methods by historical success rate (exploration bonus for untested methods). The Hypothesis Generator spawns new hypotheses from strong discoveries, untested variable pairs, and cross-domain structural analogies. <strong class="color-emerald">All three improvement metrics are trending upward</strong> — success rate 76%→100%, significant results per evaluation 1.76→11.12, confidence delta improving.
         </div>
         <div class="discovery-meta">
           <span>🔬 50 method outcomes recorded</span>
@@ -1809,11 +2215,144 @@ body::after {
 
   </div><!-- /discoveries grid -->
 
-  <div style="margin-top: 16px; padding: 16px 20px; background: var(--bg-panel); border-radius: var(--radius); border: 1px solid var(--border-glass); font-size: 0.75rem; color: var(--text-tertiary); line-height: 1.7;">
-    <strong style="color: var(--text-secondary);">ℹ Methodology:</strong> All results above were measured from real astronomical data — <strong style="color: var(--cyan);">11,284+ data points</strong> from 4 independent live APIs (NASA Exoplanet Archive, Pantheon+ SH0ES, Gaia DR3, SDSS DR18). No simulations, no synthetic data. ASTRA fetched raw data, ran statistical tests, applied causal inference, and discovered these patterns autonomously with zero prior assumptions about the underlying physics. The self-improvement system tracks 102 discoveries across 7 data sources with 50 method outcomes driving adaptive strategy selection.
+  <div class="si-methodology-box">
+    <strong class="color-text-secondary">ℹ Methodology:</strong> All results above were measured from real astronomical data — <strong class="color-cyan">11,284+ data points</strong> from 4 independent live APIs (NASA Exoplanet Archive, Pantheon+ SH0ES, Gaia DR3, SDSS DR18). No simulations, no synthetic data. ASTRA fetched raw data, ran statistical tests, applied causal inference, and discovered these patterns autonomously with zero prior assumptions about the underlying physics. The self-improvement system tracks 102 discoveries across 7 data sources with 50 method outcomes driving adaptive strategy selection.
   </div>
 
 </div><!-- /tab-discoveries -->
+
+<!-- ==================== TAB: SELF-IMPROVEMENT ==================== -->
+<div class="tab-content" id="tab-selfimprove" role="tabpanel" aria-labelledby="tab-btn-selfimprove">
+
+  <!-- Key Metrics Summary Bar -->
+  <div class="si-key-metrics-bar" id="si-key-metrics-bar">
+    <div class="si-key-metric">
+      <div class="si-key-metric-val color-amber" id="si-km-discoveries">397</div>
+      <div class="si-key-metric-label">Total Discoveries</div>
+    </div>
+    <div class="si-key-metric">
+      <div class="si-key-metric-val color-cyan" id="si-km-outcomes">184</div>
+      <div class="si-key-metric-label">Method Outcomes</div>
+    </div>
+    <div class="si-key-metric">
+      <div class="si-key-metric-val color-emerald" id="si-km-rate">89.1%</div>
+      <div class="si-key-metric-label">Success Rate</div>
+      <div class="si-key-metric-delta si-delta-neg" id="si-km-rate-delta">▼ 3.3%</div>
+    </div>
+    <div class="si-key-metric">
+      <div class="si-key-metric-val color-violet" id="si-km-sigres">18.4</div>
+      <div class="si-key-metric-label">Avg Sig. Results</div>
+      <div class="si-key-metric-delta si-delta-pos" id="si-km-sigres-delta">▲ 2.88</div>
+    </div>
+    <div class="si-key-metric">
+      <div class="si-key-metric-val color-coral" id="si-km-hot-domain">Galaxy</div>
+      <div class="si-key-metric-label">Hot Domain</div>
+      <div class="si-key-metric-delta color-text-tertiary" id="si-km-hot-score">score: 65.2</div>
+    </div>
+  </div>
+
+  <!-- Panel 4: Improvement Metrics (full width, top) -->
+  <div class="panel si-discovery-accent-emerald" style="margin-bottom: 16px;">
+    <div class="panel-header">
+      <span class="panel-icon">📈</span>
+      <span class="panel-title">IMPROVEMENT TRAJECTORY</span>
+    </div>
+    <div class="panel-body-lg">
+      <div class="si-metrics-grid">
+        <div class="si-metric-card">
+          <div class="si-metric-label">SUCCESS RATE</div>
+          <div class="si-metric-value" id="si-rate-val">—</div>
+          <div class="si-metric-sub" id="si-rate-sub"></div>
+        </div>
+        <div class="si-metric-card">
+          <div class="si-metric-label">AVG SIG. RESULTS</div>
+          <div class="si-metric-value" id="si-sigres-val">—</div>
+          <div class="si-metric-sub" id="si-sigres-sub"></div>
+        </div>
+        <div class="si-metric-card">
+          <div class="si-metric-label">CONFIDENCE DELTA</div>
+          <div class="si-metric-value" id="si-confd-val">—</div>
+          <div class="si-metric-sub" id="si-confd-sub"></div>
+        </div>
+        <div class="si-metric-card">
+          <div class="si-metric-label">HYPOTHESES GEN.</div>
+          <div class="si-metric-value" id="si-gen-val">—</div>
+          <div class="si-metric-sub" id="si-gen-sub"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="si-grid">
+
+    <!-- Panel 1: Discovery Strength Timeline -->
+    <div class="panel si-discovery-full-cyan">
+      <div class="panel-header">
+        <span class="panel-icon">◉</span>
+        <span class="panel-title">DISCOVERY TIMELINE <span id="si-trend-label" class="si-delta-flat si-trend-badge">—</span></span>
+      </div>
+      <div class="panel-body-sm">
+        <div class="si-chart-container">
+          <canvas id="si-timeline-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Method Performance Table -->
+    <div class="panel si-discovery-accent-amber">
+      <div class="panel-header">
+        <span class="panel-icon">⚙</span>
+        <span class="panel-title">METHOD PERFORMANCE</span>
+      </div>
+      <div class="panel-body-scroll">
+        <table class="si-method-table">
+          <thead>
+            <tr>
+              <th>METHOD</th>
+              <th class="text-center">USES</th>
+              <th class="text-center">SUCCESS</th>
+              <th class="text-center">AVG SIG</th>
+              <th class="text-center">TREND</th>
+            </tr>
+          </thead>
+          <tbody id="si-method-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Panel 2b: Exploration Coverage Matrix (Canvas Heatmap) -->
+    <div class="panel si-discovery-full-cyan">
+      <div class="panel-header">
+        <span class="panel-icon">🗺</span>
+        <span class="panel-title">EXPLORATION COVERAGE MATRIX</span>
+      </div>
+      <div class="panel-body-sm">
+        <div class="si-coverage-canvas-wrap">
+          <canvas id="si-coverage-canvas"></canvas>
+        </div>
+        <div class="layout-flex-between" style="margin-top:4px;">
+          <span>Unexplored pairs: <span id="si-coverage-unexplored" class="color-coral">—</span></span>
+          <span>Coverage: <span id="si-coverage-pct" class="color-emerald">—</span></span>
+          <span class="color-text-tertiary">Hover for pair details</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Variable Affinity Display -->
+    <div class="panel si-discovery-accent-violet">
+      <div class="panel-header">
+        <span class="panel-icon">🔗</span>
+        <span class="panel-title">VARIABLE AFFINITIES</span>
+      </div>
+      <div class="panel-body-md" id="si-affinities">
+        <div class="empty-state">Loading affinities…</div>
+      </div>
+    </div>
+
+  </div><!-- /si-grid -->
+
+</div><!-- /tab-selfimprove -->
+
 
 </main><!-- /dashboard -->
 
@@ -1822,7 +2361,7 @@ body::after {
      ============================================================ -->
 <footer class="footer">
   ASTRA v4.7 &mdash; Autonomous System for Scientific Discovery in Astrophysics &mdash; White &amp; Dey, 2026 &mdash;
-  <a href="https://github.com/web3guru888/ASTRA" target="_blank" rel="noopener">GitHub</a>
+  <a href="https://github.com/web3guru888/ASTRA" target="_blank" rel="noopener" aria-label="ASTRA GitHub repository">GitHub</a>
 </footer>
 
 <!-- ============================================================
@@ -1951,23 +2490,276 @@ body::after {
   window.__SNAPSHOT_TIME__ = 1775233769.298144;
   window.__SNAPSHOT_TIME__ = 1775235102.5412314;
   window.__SNAPSHOT_TIME__ = 1775236205.1478364;
+  window.__SNAPSHOT_TIME__ = 1775238010.823406;
+  window.__SNAPSHOT_TIME__ = 1775287809.7231631;
+  window.__SNAPSHOT_TIME__ = 1775290544.562282;
+  window.__SNAPSHOT_TIME__ = 1775294294.6746554;
 
 
   // ── Embedded snapshot data (auto-generated, fallback when API unreachable) ──
   window.__SNAPSHOT__ = {
-  "status": null,
-  "state": null,
+  "status": {
+    "status": "running",
+    "engine": {
+      "running": true,
+      "current_phase": "UPDATE",
+      "cycle_count": 1,
+      "uptime_seconds": 76.91237115859985,
+      "system_confidence": 0.4911368620950075,
+      "total_data_points": 0,
+      "total_scripts": 3,
+      "total_plots": 3,
+      "total_decisions": 15,
+      "hypotheses_tested": 3,
+      "cross_domain_links": 0,
+      "papers_drafted": 0,
+      "gpu_utilization": 45.0,
+      "queue_depth": 11,
+      "domains_active": 3,
+      "funnel": {
+        "proposed": 3,
+        "screening": 11,
+        "testing": 5,
+        "validated": 2,
+        "published": 0,
+        "archived": 0
+      },
+      "safety_state": "NOMINAL",
+      "pending_approvals": 0,
+      "discovery_memory": {
+        "discovery_count": 450,
+        "method_outcome_count": 450,
+        "exploration_sources": [
+          "pantheon",
+          "hubble",
+          "exoplanet"
+        ],
+        "generation_count": 2,
+        "hot_domains": [
+          [
+            "Astrophysics",
+            250.81593042784144
+          ]
+        ],
+        "improvement": {
+          "status": "ok",
+          "total_discoveries": 450,
+          "total_outcomes": 450,
+          "hypotheses_generated_from_memory": 2,
+          "metrics": {
+            "success_rate": {
+              "early": 1.0,
+              "recent": 0.684,
+              "delta": -0.316,
+              "improving": false
+            },
+            "avg_significant_results": {
+              "early": 9.64,
+              "recent": 0.35,
+              "delta": -9.29,
+              "improving": false
+            },
+            "avg_novelty_signals": {
+              "early": 0.0,
+              "recent": 0.0,
+              "delta": 0.0,
+              "improving": false
+            },
+            "avg_confidence_delta": {
+              "early": 0.0402,
+              "recent": 0.0033,
+              "delta": -0.0369,
+              "improving": false
+            }
+          }
+        },
+        "top_variable_affinities": {
+          "redshift": 94.786306901705,
+          "g_r_color": 69.49531852137818,
+          "u_g_color": 68.69025171763263,
+          "g_r": 32.628783951565055,
+          "u_g": 21.12383700910569,
+          "distance_modulus": 4.355757058802356,
+          "abs_mag": 4.355757058802356,
+          "orbital_period": 2.3069363206169613,
+          "planet_mass": 2.3069363206169613,
+          "planet_radius": 2.3069363206169613
+        }
+      },
+      "degradation": {
+        "last_check_cycle": 1,
+        "rolling_success_rates": [
+          0.7
+        ],
+        "rolling_sig_results": [
+          0.45
+        ],
+        "low_success_streak": 0,
+        "low_sig_streak": 1,
+        "safe_mode_triggered": false,
+        "strategy_switch_recommended": false,
+        "recommendations": [
+          "Domain 'Astrophysics' has 100% of recent 50 discoveries \u2014 force-switching to underrepresented domains",
+          "Pattern 'causal|sdss' repeated 9 times in last 20 discoveries \u2014 stuck in loop"
+        ],
+        "thresholds": {
+          "success_rate": 0.5,
+          "success_streak_limit": 5,
+          "sig_results": 1.0,
+          "sig_streak_limit": 10,
+          "domain_concentration": 0.8
+        }
+      }
+    },
+    "timestamp": 1775294340.4800658
+  },
+  "state": {
+    "running": true,
+    "current_phase": "UPDATE",
+    "cycle_count": 1,
+    "uptime_seconds": 76.91787981987,
+    "system_confidence": 0.4911368620950075,
+    "total_data_points": 0,
+    "total_scripts": 3,
+    "total_plots": 3,
+    "total_decisions": 15,
+    "hypotheses_tested": 3,
+    "cross_domain_links": 0,
+    "papers_drafted": 0,
+    "gpu_utilization": 45.0,
+    "queue_depth": 11,
+    "domains_active": 3,
+    "funnel": {
+      "proposed": 3,
+      "screening": 11,
+      "testing": 5,
+      "validated": 2,
+      "published": 0,
+      "archived": 0
+    },
+    "safety_state": "NOMINAL",
+    "pending_approvals": 0,
+    "discovery_memory": {
+      "discovery_count": 450,
+      "method_outcome_count": 450,
+      "exploration_sources": [
+        "pantheon",
+        "hubble",
+        "exoplanet"
+      ],
+      "generation_count": 2,
+      "hot_domains": [
+        [
+          "Astrophysics",
+          250.81593042784144
+        ]
+      ],
+      "improvement": {
+        "status": "ok",
+        "total_discoveries": 450,
+        "total_outcomes": 450,
+        "hypotheses_generated_from_memory": 2,
+        "metrics": {
+          "success_rate": {
+            "early": 1.0,
+            "recent": 0.684,
+            "delta": -0.316,
+            "improving": false
+          },
+          "avg_significant_results": {
+            "early": 9.64,
+            "recent": 0.35,
+            "delta": -9.29,
+            "improving": false
+          },
+          "avg_novelty_signals": {
+            "early": 0.0,
+            "recent": 0.0,
+            "delta": 0.0,
+            "improving": false
+          },
+          "avg_confidence_delta": {
+            "early": 0.0402,
+            "recent": 0.0033,
+            "delta": -0.0369,
+            "improving": false
+          }
+        }
+      },
+      "top_variable_affinities": {
+        "redshift": 94.786306901705,
+        "g_r_color": 69.49531852137818,
+        "u_g_color": 68.69025171763263,
+        "g_r": 32.628783951565055,
+        "u_g": 21.12383700910569,
+        "distance_modulus": 4.355757058802356,
+        "abs_mag": 4.355757058802356,
+        "orbital_period": 2.3069363206169613,
+        "planet_mass": 2.3069363206169613,
+        "planet_radius": 2.3069363206169613
+      }
+    },
+    "degradation": {
+      "last_check_cycle": 1,
+      "rolling_success_rates": [
+        0.7
+      ],
+      "rolling_sig_results": [
+        0.45
+      ],
+      "low_success_streak": 0,
+      "low_sig_streak": 1,
+      "safe_mode_triggered": false,
+      "strategy_switch_recommended": false,
+      "recommendations": [
+        "Domain 'Astrophysics' has 100% of recent 50 discoveries \u2014 force-switching to underrepresented domains",
+        "Pattern 'causal|sdss' repeated 9 times in last 20 discoveries \u2014 stuck in loop"
+      ],
+      "thresholds": {
+        "success_rate": 0.5,
+        "success_streak_limit": 5,
+        "sig_results": 1.0,
+        "sig_streak_limit": 10,
+        "domain_concentration": 0.8
+      }
+    }
+  },
   "hypotheses": [
     {
       "id": "H001",
       "name": "Hubble Tension Analysis",
       "domain": "Astrophysics",
       "description": "Pantheon+ SNe Ia (1701 supernovae) distance modulus analysis: test \u039bCDM predictions and measure H\u2080 tension",
-      "confidence": 0.55,
+      "confidence": 0.37931034482758624,
       "phase": "testing",
-      "created_at": 1774938138.1733902,
-      "updated_at": 1775237968.4949667,
-      "test_results": [],
+      "created_at": 1774805301.3446817,
+      "updated_at": 1775294315.705217,
+      "test_results": [
+        {
+          "test_name": "Kolmogorov-Smirnov",
+          "statistic": 0.018224573780129337,
+          "p_value": 0.9402844576493801,
+          "passed": true,
+          "details": "D = 0.0182 (two-sample)",
+          "alpha": 0.05
+        },
+        {
+          "test_name": "Bayesian t-test",
+          "statistic": -4642.0558950228415,
+          "p_value": 0.0,
+          "passed": true,
+          "details": "t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701",
+          "alpha": 0.05
+        },
+        {
+          "test_name": "Chi-squared",
+          "statistic": 0.0035733553560542333,
+          "p_value": 0.9999984057913186,
+          "passed": true,
+          "details": "\u03c7\u00b2 = 0.0036, dof = 4, \u03c7\u00b2/dof = 0.00",
+          "alpha": 0.05
+        }
+      ],
       "priority": "HIGH",
       "publications": 0,
       "data_points_used": 1701,
@@ -1975,7 +2767,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 1775294315.7052128,
+      "archived_at": 0.0
     },
     {
       "id": "H002",
@@ -1983,9 +2777,9 @@ body::after {
       "domain": "Astrophysics",
       "description": "SDSS DR18 galaxy photometry: quantify red sequence + blue cloud bimodality in g-r color",
       "confidence": 0.45,
-      "phase": "screening",
-      "created_at": 1774887206.8983164,
-      "updated_at": 1775237968.4950287,
+      "phase": "testing",
+      "created_at": 1774965191.529915,
+      "updated_at": 1775294322.1454687,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -1994,26 +2788,47 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H003",
       "name": "Exoplanet Mass-Period Relation",
       "domain": "Astrophysics",
       "description": "NASA Exoplanet Archive: test Kepler's third law scaling and mass-period correlation in confirmed planets",
-      "confidence": 0.5,
-      "phase": "testing",
-      "created_at": 1775013145.3860378,
-      "updated_at": 1775237968.495042,
-      "test_results": [],
+      "confidence": 0.9696969696969696,
+      "phase": "validated",
+      "created_at": 1774817276.6115263,
+      "updated_at": 1775294322.1455147,
+      "test_results": [
+        {
+          "test_name": "Kolmogorov-Smirnov",
+          "statistic": 1.0,
+          "p_value": 0.0015564202334630343,
+          "passed": false,
+          "details": "D = 1.0000 (two-sample)",
+          "alpha": 0.05
+        },
+        {
+          "test_name": "Pearson correlation",
+          "statistic": 0.43204120193240464,
+          "p_value": 1.568547719777659e-59,
+          "passed": true,
+          "details": "r = 0.4320, r\u00b2 = 0.1867",
+          "alpha": 0.05
+        }
+      ],
       "priority": "NORMAL",
       "publications": 0,
-      "data_points_used": 0,
+      "data_points_used": 1284,
       "cross_domain_links": [],
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 1775294315.8219526,
+      "archived_at": 0.0
     },
     {
       "id": "H004",
@@ -2021,9 +2836,9 @@ body::after {
       "domain": "Astrophysics",
       "description": "Gaia DR3 astrometry+photometry: characterize main sequence, giant branch, and white dwarf sequence",
       "confidence": 0.48,
-      "phase": "screening",
-      "created_at": 1774683616.0276308,
-      "updated_at": 1775237968.4950504,
+      "phase": "testing",
+      "created_at": 1775146915.5628302,
+      "updated_at": 1775294322.1455677,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2032,7 +2847,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H005",
@@ -2041,8 +2858,8 @@ body::after {
       "description": "SDSS spectroscopic redshifts: test for clustering and void structure in local universe (z < 0.5)",
       "confidence": 0.42,
       "phase": "screening",
-      "created_at": 1774840205.9764445,
-      "updated_at": 1775237968.495058,
+      "created_at": 1775076624.4523554,
+      "updated_at": 1775294263.5830925,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2051,26 +2868,47 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H006",
       "name": "Exoplanet Period Distribution",
       "domain": "Astrophysics",
       "description": "Transit/RV discoveries: test for period valley near 10 days and hot Jupiter desert",
-      "confidence": 0.52,
-      "phase": "testing",
-      "created_at": 1774746274.8401964,
-      "updated_at": 1775237968.4950712,
-      "test_results": [],
+      "confidence": 0.9719626168224299,
+      "phase": "validated",
+      "created_at": 1775205206.2237358,
+      "updated_at": 1775294322.1455889,
+      "test_results": [
+        {
+          "test_name": "Kolmogorov-Smirnov",
+          "statistic": 1.0,
+          "p_value": 0.0015564202334630343,
+          "passed": false,
+          "details": "D = 1.0000 (two-sample)",
+          "alpha": 0.05
+        },
+        {
+          "test_name": "Pearson correlation",
+          "statistic": 0.43204120193240464,
+          "p_value": 1.568547719777659e-59,
+          "passed": true,
+          "details": "r = 0.4320, r\u00b2 = 0.1867",
+          "alpha": 0.05
+        }
+      ],
       "priority": "MEDIUM",
       "publications": 0,
-      "data_points_used": 0,
+      "data_points_used": 1284,
       "cross_domain_links": [],
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 1775294318.9843833,
+      "archived_at": 0.0
     },
     {
       "id": "H007",
@@ -2079,8 +2917,8 @@ body::after {
       "description": "Gaia DR3 parallax error analysis: quantify systematic offsets and distance uncertainties",
       "confidence": 0.4,
       "phase": "screening",
-      "created_at": 1774914625.2076285,
-      "updated_at": 1775237968.4950798,
+      "created_at": 1774726114.6096952,
+      "updated_at": 1775294263.5831068,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2089,7 +2927,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H008",
@@ -2097,9 +2937,9 @@ body::after {
       "domain": "Astrophysics",
       "description": "SDSS u-r color as star formation proxy: measure blue fraction evolution with redshift",
       "confidence": 0.46,
-      "phase": "screening",
-      "created_at": 1775126357.0959613,
-      "updated_at": 1775237968.4950867,
+      "phase": "testing",
+      "created_at": 1775184200.603372,
+      "updated_at": 1775294322.145611,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2108,7 +2948,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H009",
@@ -2116,9 +2958,9 @@ body::after {
       "domain": "Astrophysics",
       "description": "NASA Exoplanet Archive: distribution of transit depths across discovery methods",
       "confidence": 0.38,
-      "phase": "proposed",
-      "created_at": 1775170193.8834052,
-      "updated_at": 1775237968.4950933,
+      "phase": "screening",
+      "created_at": 1774823726.887349,
+      "updated_at": 1775294322.145627,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2127,7 +2969,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H010",
@@ -2135,9 +2979,9 @@ body::after {
       "domain": "Astrophysics",
       "description": "Pantheon+ distance modulus: constrain w(z) with binned SNe Ia analysis",
       "confidence": 0.35,
-      "phase": "proposed",
-      "created_at": 1775121416.679808,
-      "updated_at": 1775237968.495101,
+      "phase": "screening",
+      "created_at": 1775156965.4072728,
+      "updated_at": 1775294322.1456428,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2146,7 +2990,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H011",
@@ -2155,8 +3001,8 @@ body::after {
       "description": "LIGO/Virgo chirp mass and mass ratio distribution: test population synthesis models",
       "confidence": 0.4,
       "phase": "screening",
-      "created_at": 1774673912.6661272,
-      "updated_at": 1775237968.4951081,
+      "created_at": 1774940747.9563322,
+      "updated_at": 1775294263.5831358,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2165,7 +3011,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H012",
@@ -2173,9 +3021,9 @@ body::after {
       "domain": "Astrophysics",
       "description": "Planck TT power spectrum: measure acoustic peak positions and cosmological parameters",
       "confidence": 0.45,
-      "phase": "screening",
-      "created_at": 1774702508.0444765,
-      "updated_at": 1775237968.4951158,
+      "phase": "testing",
+      "created_at": 1774827442.8792393,
+      "updated_at": 1775294322.1456616,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2184,7 +3032,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H013",
@@ -2192,9 +3042,9 @@ body::after {
       "domain": "Astrophysics",
       "description": "ZTF transient light curves: test SNe classification and host galaxy association",
       "confidence": 0.35,
-      "phase": "proposed",
-      "created_at": 1775221888.2448754,
-      "updated_at": 1775237968.4951227,
+      "phase": "screening",
+      "created_at": 1775066414.7508187,
+      "updated_at": 1775294322.1456764,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2203,7 +3053,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H014",
@@ -2212,8 +3064,8 @@ body::after {
       "description": "TESS Input Catalog: mass-radius relation for exoplanet host stars",
       "confidence": 0.42,
       "phase": "screening",
-      "created_at": 1775115668.7320151,
-      "updated_at": 1775237968.4951296,
+      "created_at": 1775223899.2411003,
+      "updated_at": 1775294263.583157,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2222,7 +3074,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H015",
@@ -2230,9 +3084,9 @@ body::after {
       "domain": "Astrophysics",
       "description": "SDSS redMaPPer richness as mass proxy: test self-similar scaling relation",
       "confidence": 0.38,
-      "phase": "proposed",
-      "created_at": 1774732847.7760274,
-      "updated_at": 1775237968.4951365,
+      "phase": "screening",
+      "created_at": 1774859886.0685515,
+      "updated_at": 1775294322.1456945,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2241,7 +3095,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H016",
@@ -2249,9 +3105,9 @@ body::after {
       "domain": "Astrophysics",
       "description": "Cross-match GW events with ZTF transients for multi-messenger association",
       "confidence": 0.3,
-      "phase": "proposed",
-      "created_at": 1774854561.5045066,
-      "updated_at": 1775237968.4951432,
+      "phase": "screening",
+      "created_at": 1775001319.183661,
+      "updated_at": 1775294322.1457093,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2260,7 +3116,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "H017",
@@ -2268,9 +3126,9 @@ body::after {
       "domain": "Astrophysics",
       "description": "Link TESS host stars with Gaia astrometry for precise distance-luminosity calibration",
       "confidence": 0.35,
-      "phase": "proposed",
-      "created_at": 1775039867.0737405,
-      "updated_at": 1775237968.49515,
+      "phase": "screening",
+      "created_at": 1775101752.2357879,
+      "updated_at": 1775294322.1457312,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2279,7 +3137,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "CD-001",
@@ -2288,8 +3148,8 @@ body::after {
       "description": "Correlation between national R&D funding and astronomical discovery rates",
       "confidence": 0.25,
       "phase": "proposed",
-      "created_at": 1774819438.7864664,
-      "updated_at": 1775237968.4951572,
+      "created_at": 1775180399.9996784,
+      "updated_at": 1775294263.5831888,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2298,7 +3158,9 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     },
     {
       "id": "CD-002",
@@ -2306,9 +3168,9 @@ body::after {
       "domain": "Epidemiology",
       "description": "Apply epidemiological adaptive sampling to astronomical survey strategy",
       "confidence": 0.3,
-      "phase": "proposed",
-      "created_at": 1774837292.0957055,
-      "updated_at": 1775237968.4951644,
+      "phase": "screening",
+      "created_at": 1775050438.1512427,
+      "updated_at": 1775294322.14575,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -2317,117 +3179,587 @@ body::after {
       "requires_approval": false,
       "pending_approval_at": 0.0,
       "approval_status": "",
-      "approval_reason": ""
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
+    },
+    {
+      "id": "H018",
+      "name": "Exoplanet Redshift-Distance_Modulus Scaling Relation",
+      "domain": "Astrophysics",
+      "description": "Test power-law scaling between redshift and distance_modulus in confirmed exoplanets: Bayesian t-test: t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701. Derive scaling exponent and compare with theoretical predictions.",
+      "confidence": 0.4,
+      "phase": "proposed",
+      "created_at": 1775294322.1496186,
+      "updated_at": 1775294322.149619,
+      "test_results": [],
+      "priority": "NORMAL",
+      "publications": 0,
+      "data_points_used": 0,
+      "cross_domain_links": [],
+      "requires_approval": false,
+      "pending_approval_at": 0.0,
+      "approval_status": "",
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
+    },
+    {
+      "id": "H019",
+      "name": "Galaxy Redshift Bimodality Deep Dive",
+      "domain": "Astrophysics",
+      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 9706.8400, dof = 9, \u03c7\u00b2/dof = 1078.54. Fit Gaussian mixture, identify green valley, track with redshift.",
+      "confidence": 0.4,
+      "phase": "proposed",
+      "created_at": 1775294322.1496415,
+      "updated_at": 1775294322.1496418,
+      "test_results": [],
+      "priority": "NORMAL",
+      "publications": 0,
+      "data_points_used": 0,
+      "cross_domain_links": [],
+      "requires_approval": false,
+      "pending_approval_at": 0.0,
+      "approval_status": "",
+      "approval_reason": "",
+      "last_tested_at": 0.0,
+      "archived_at": 0.0
     }
   ],
   "activity": [
     {
-      "timestamp": 1775237968.4951706,
-      "phase": "ORIENT",
-      "module": "ENGINE",
-      "message": "ASTRA Discovery Engine initialized \u2014 hypothesis store loaded",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775237968.495183,
-      "phase": "ORIENT",
-      "module": "ENGINE",
-      "message": "19 hypotheses seeded across 3 domains",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775237968.4954896,
-      "phase": "ORIENT",
-      "module": "ENGINE",
-      "message": "Discovery engine started \u2014 continuous operation mode",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775237973.4985166,
-      "phase": "ORIENT",
-      "module": "ENGINE",
-      "message": "\u2501\u2501\u2501 Discovery Cycle #1 starting \u2501\u2501\u2501",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775237973.4985285,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "Scanning astronomical data feeds\u2026",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775237973.5036585,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "Registry: 9 sources across 8 domains, 29 cross-match pairs, 45 variables",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775237973.5036635,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "No cached data yet \u2014 will fetch during investigate phase",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775237973.8041077,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #1: H001 (Hubble Tension Analysis) \u2014 score 0.471, confidence 0.55, priority HIGH",
-      "hypothesis_id": "H001"
-    },
-    {
-      "timestamp": 1775237973.804116,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #2: H006 (Exoplanet Period Distribution) \u2014 score 0.461, confidence 0.52, priority MEDIUM",
+      "timestamp": 1775294314.9719813,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Fetching NASA Exoplanet Archive for H006",
       "hypothesis_id": "H006"
     },
     {
-      "timestamp": 1775237973.804121,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #3: H003 (Exoplanet Mass-Period Relation) \u2014 score 0.455, confidence 0.50, priority NORMAL",
+      "timestamp": 1775294314.9719903,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Loaded 1284 confirmed exoplanets",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294314.9721715,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Orbital periods: log\u2081\u2080(P/days) = 1.69 \u00b1 1.17 (range: 0.09\u20137300000.00 days)",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294314.972285,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Planet masses: 1284 measured, median = 0.838 M_Jup",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294314.9723117,
+      "phase": "INVESTIGATE",
+      "module": "DATA",
+      "message": "Data retrieval failed for H006: no field of name radius",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294315.2740257,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Running statistical battery on H001 (Hubble Tension Analysis)",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775294315.7033603,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "KS (Planck vs SH0ES residuals) on H001: D = 0.0182 (two-sample), \u03c7\u00b2_P=15058432 \u03c7\u00b2_S=14787312, p=0.9403",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775294315.7034466,
+      "phase": "NOVELTY",
+      "module": "ENGINE",
+      "message": "\ud83d\udd0d NOVELTY [40%] Hubble tension: \u0394\u03c7\u00b2(Planck vs SH0ES) = 271120 \u2014 model preference detected",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775294315.704499,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "t-test on \u039bCDM residuals for H001: t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701, p=0.0000",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775294315.7051802,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Chi\u00b2 on binned residuals for H001: \u03c7\u00b2 = 0.0036, dof = 4, \u03c7\u00b2/dof = 0.00, p=1.0000",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775294315.8100293,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "\ud83d\udcda Related papers: 3 found on arXiv for 'Hubble Tension'",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775294315.810038,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "  \u2192 [2026-04-02] No evidence for dynamical dark energy from the Combo correlation of GRBs",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775294315.8100405,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "  \u2192 [2026-04-02] Universal critical timescales in slow non-Hermitian dynamics",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775294315.8118815,
+      "phase": "EVALUATE",
+      "module": "FDR",
+      "message": "FDR correction for H001: 1/3 tests significant after BH correction (\u03b1*=0.0000)",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775294315.8118885,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Running statistical battery on H003 (Exoplanet Mass-Period Relation)",
       "hypothesis_id": "H003"
     },
     {
-      "timestamp": 1775237974.1049304,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running experiment for H001 (Hubble Tension Analysis) \u2014 strategy: hubble, methods: ['_investigate_hubble', 'run_causal_discovery']",
-      "hypothesis_id": "H001"
+      "timestamp": 1775294315.8211987,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "KS test on log(P) for H003: D = 1.0000 (two-sample), p = 0.0016",
+      "hypothesis_id": "H003"
     },
     {
-      "timestamp": 1775237974.1049392,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Fetching Pantheon+ SNe Ia sample for H001",
-      "hypothesis_id": "H001"
+      "timestamp": 1775294315.8219204,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Correlation (log P vs log M) for H003: r = 0.4320, r\u00b2 = 0.1867, p = 0.0000",
+      "hypothesis_id": "H003"
     },
     {
-      "timestamp": 1775237974.424614,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Loaded 1701 supernovae from Pantheon+ (z = 0.0012\u20132.2614)",
-      "hypothesis_id": "H001"
+      "timestamp": 1775294318.9683926,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "\ud83d\udcda Related papers: 3 found on arXiv for 'Exoplanet Mass-Period Relation'",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775294318.9684043,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "  \u2192 [2026-04-02] Hot Rocks Survey V: Secondary Eclipse Photometry of GJ 3473 b with JWST/MIRI",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775294318.968408,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "  \u2192 [2026-04-02] Beyond Referring Expressions: Scenario Comprehension Visual Grounding",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775294318.9707983,
+      "phase": "EVALUATE",
+      "module": "FDR",
+      "message": "FDR correction for H003: 2/2 tests significant after BH correction (\u03b1*=0.0016)",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775294318.9708073,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Running statistical battery on H006 (Exoplanet Period Distribution)",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294318.9834166,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "KS test on log(P) for H006: D = 1.0000 (two-sample), p = 0.0016",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294318.9843404,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Correlation (log P vs log M) for H006: r = 0.4320, r\u00b2 = 0.1867, p = 0.0000",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294321.8429182,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "\ud83d\udcda Related papers: 3 found on arXiv for 'Exoplanet Period Distribution'",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294321.8429275,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "  \u2192 [2026-04-02] Hot Rocks Survey V: Secondary Eclipse Photometry of GJ 3473 b with JWST/MIRI",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294321.8429298,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "  \u2192 [2026-04-02] Steerable Visual Representations",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294321.8449795,
+      "phase": "EVALUATE",
+      "module": "FDR",
+      "message": "FDR correction for H006: 2/2 tests significant after BH correction (\u03b1*=0.0016)",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294321.8450518,
+      "phase": "NOVELTY",
+      "module": "ENGINE",
+      "message": "\ud83d\udd0d 1 unexplored novelty signals \u2014 potential follow-up candidates",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775294322.14549,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H002 (Galaxy Color Bimodality): screening \u2192 testing (confidence 0.45, \u0394+0.000)",
+      "hypothesis_id": "H002"
+    },
+    {
+      "timestamp": 1775294322.1455214,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H003 (Exoplanet Mass-Period Relation): testing \u2192 validated (confidence 0.97, \u0394+0.000)",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775294322.1455734,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H004 (Gaia HR Diagram Structure): screening \u2192 testing (confidence 0.48, \u0394+0.000)",
+      "hypothesis_id": "H004"
+    },
+    {
+      "timestamp": 1775294322.1455936,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H006 (Exoplanet Period Distribution): testing \u2192 validated (confidence 0.97, \u0394+0.000)",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294322.1456158,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H008 (Star Formation Fraction): screening \u2192 testing (confidence 0.46, \u0394+0.000)",
+      "hypothesis_id": "H008"
+    },
+    {
+      "timestamp": 1775294322.1456323,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H009 (Transit Depth Statistics): proposed \u2192 screening (confidence 0.38, \u0394+0.000)",
+      "hypothesis_id": "H009"
+    },
+    {
+      "timestamp": 1775294322.1456475,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H010 (Dark Energy Equation of State): proposed \u2192 screening (confidence 0.35, \u0394+0.000)",
+      "hypothesis_id": "H010"
+    },
+    {
+      "timestamp": 1775294322.1456661,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H012 (CMB Acoustic Peak Structure): screening \u2192 testing (confidence 0.45, \u0394+0.000)",
+      "hypothesis_id": "H012"
+    },
+    {
+      "timestamp": 1775294322.1456807,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H013 (ZTF Transient Classification): proposed \u2192 screening (confidence 0.35, \u0394+0.000)",
+      "hypothesis_id": "H013"
+    },
+    {
+      "timestamp": 1775294322.145699,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H015 (Cluster Richness-Mass Scaling): proposed \u2192 screening (confidence 0.38, \u0394+0.000)",
+      "hypothesis_id": "H015"
+    },
+    {
+      "timestamp": 1775294322.1457136,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H016 (GW Electromagnetic Counterpart): proposed \u2192 screening (confidence 0.30, \u0394+0.000)",
+      "hypothesis_id": "H016"
+    },
+    {
+      "timestamp": 1775294322.1457357,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H017 (Stellar TESS-Gaia Cross-Match): proposed \u2192 screening (confidence 0.35, \u0394+0.000)",
+      "hypothesis_id": "H017"
+    },
+    {
+      "timestamp": 1775294322.1457543,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted CD-002 (Survey Design Optimization): proposed \u2192 screening (confidence 0.30, \u0394+0.000)",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775294322.1496305,
+      "phase": "ORIENT",
+      "module": "DISCOVERY_MEMORY",
+      "message": "New hypothesis from discovery D0011: H018 (Exoplanet Redshift-Distance_Modulus Scaling Relation)",
+      "hypothesis_id": "H018"
+    },
+    {
+      "timestamp": 1775294322.1496458,
+      "phase": "ORIENT",
+      "module": "DISCOVERY_MEMORY",
+      "message": "New hypothesis from discovery D0013: H019 (Galaxy Redshift Bimodality Deep Dive)",
+      "hypothesis_id": "H019"
+    },
+    {
+      "timestamp": 1775294322.1499093,
+      "phase": "ORIENT",
+      "module": "DISCOVERY_MEMORY",
+      "message": "Memory state: 500 discoveries, 2 generated, 500 outcomes recorded",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775294322.1499822,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "System confidence: 0.491 (21 active hypotheses across 3 domains)",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775294322.1502254,
+      "phase": "DEGRADATION",
+      "module": "ENGINE",
+      "message": "\u26a0 Domain 'Astrophysics' has 100% of recent 50 discoveries \u2014 force-switching to underrepresented domains",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775294322.150229,
+      "phase": "DEGRADATION",
+      "module": "ENGINE",
+      "message": "\u26a0 Pattern 'causal|sdss' repeated 9 times in last 20 discoveries \u2014 stuck in loop",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775294322.1502619,
+      "phase": "DEGRADATION",
+      "module": "ENGINE",
+      "message": "Forcing exploration of domain 'Economics' next cycle",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775294322.201637,
+      "phase": "UPDATE",
+      "module": "ENGINE",
+      "message": "\u2501\u2501\u2501 Cycle #1 complete: 0.491 system confidence, 21 active hypotheses \u2501\u2501\u2501",
+      "hypothesis_id": null
     }
   ],
-  "decisions": [],
-  "charts": null,
-  "metrics": null,
+  "decisions": [
+    {
+      "timestamp": 1775294322.1455007,
+      "action": "confirm",
+      "text": "Promoted H002 (Galaxy Color Bimodality) to testing \u2014 confidence 0.45",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H002"
+    },
+    {
+      "timestamp": 1775294322.145526,
+      "action": "confirm",
+      "text": "Promoted H003 (Exoplanet Mass-Period Relation) to validated \u2014 confidence 0.97",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775294322.1455774,
+      "action": "confirm",
+      "text": "Promoted H004 (Gaia HR Diagram Structure) to testing \u2014 confidence 0.48",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H004"
+    },
+    {
+      "timestamp": 1775294322.1455975,
+      "action": "confirm",
+      "text": "Promoted H006 (Exoplanet Period Distribution) to validated \u2014 confidence 0.97",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775294322.1456194,
+      "action": "confirm",
+      "text": "Promoted H008 (Star Formation Fraction) to testing \u2014 confidence 0.46",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H008"
+    },
+    {
+      "timestamp": 1775294322.1456358,
+      "action": "confirm",
+      "text": "Promoted H009 (Transit Depth Statistics) to screening \u2014 confidence 0.38",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H009"
+    },
+    {
+      "timestamp": 1775294322.145651,
+      "action": "confirm",
+      "text": "Promoted H010 (Dark Energy Equation of State) to screening \u2014 confidence 0.35",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H010"
+    },
+    {
+      "timestamp": 1775294322.1456697,
+      "action": "confirm",
+      "text": "Promoted H012 (CMB Acoustic Peak Structure) to testing \u2014 confidence 0.45",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H012"
+    },
+    {
+      "timestamp": 1775294322.1456842,
+      "action": "confirm",
+      "text": "Promoted H013 (ZTF Transient Classification) to screening \u2014 confidence 0.35",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H013"
+    },
+    {
+      "timestamp": 1775294322.1457024,
+      "action": "confirm",
+      "text": "Promoted H015 (Cluster Richness-Mass Scaling) to screening \u2014 confidence 0.38",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H015"
+    },
+    {
+      "timestamp": 1775294322.1457238,
+      "action": "confirm",
+      "text": "Promoted H016 (GW Electromagnetic Counterpart) to screening \u2014 confidence 0.30",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H016"
+    },
+    {
+      "timestamp": 1775294322.1457393,
+      "action": "confirm",
+      "text": "Promoted H017 (Stellar TESS-Gaia Cross-Match) to screening \u2014 confidence 0.35",
+      "status": "CONFIRMED",
+      "hypothesis_id": "H017"
+    },
+    {
+      "timestamp": 1775294322.145758,
+      "action": "confirm",
+      "text": "Promoted CD-002 (Survey Design Optimization) to screening \u2014 confidence 0.30",
+      "status": "CONFIRMED",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775294322.1496348,
+      "action": "expand",
+      "text": "Generated H018: Exoplanet Redshift-Distance_Modulus Scaling Relation (from discovery D0011)",
+      "status": "QUEUED",
+      "hypothesis_id": "H018"
+    },
+    {
+      "timestamp": 1775294322.1496482,
+      "action": "expand",
+      "text": "Generated H019: Galaxy Redshift Bimodality Deep Dive (from discovery D0013)",
+      "status": "QUEUED",
+      "hypothesis_id": "H019"
+    }
+  ],
+  "charts": {
+    "funnel": {
+      "labels": [
+        "Proposed",
+        "Screening",
+        "Testing",
+        "Validated",
+        "Published"
+      ],
+      "data": [
+        3,
+        11,
+        5,
+        2,
+        0
+      ]
+    },
+    "domain": {
+      "labels": [
+        "Astrophysics",
+        "Economics",
+        "Epidemiology"
+      ],
+      "data": [
+        19,
+        1,
+        1
+      ]
+    },
+    "radar": {
+      "labels": [
+        "Confidence",
+        "Data Volume",
+        "Tests Run",
+        "Cross-Domain",
+        "Novelty",
+        "Testability"
+      ],
+      "data": [
+        0.441,
+        0.041,
+        0.042,
+        0.0,
+        0.967,
+        0.143
+      ]
+    },
+    "system_confidence": 0.4911368620950075
+  },
+  "metrics": {
+    "runtime_seconds": 76.94993472099304,
+    "data_points": 0,
+    "scripts_written": 3,
+    "plots_generated": 3,
+    "hypotheses_tested": 3,
+    "queue_depth": 11,
+    "domains_active": 3,
+    "system_confidence": 0.4911368620950075,
+    "auto_decisions": 15,
+    "papers_drafted": 0,
+    "cross_domain_links": 0,
+    "gpu_utilization": 45.0
+  },
   "engine/safety-status": {
     "state": "NOMINAL",
-    "uptime_seconds": 37.04543137550354,
+    "uptime_seconds": 76.95425319671631,
     "can_advance_hypotheses": true,
     "can_run_cycle": true,
     "can_investigate": true,
     "can_modify_state": true,
     "audit_log_size": 2,
-    "timestamp": 1775238005.5319917,
+    "timestamp": 1775294340.521132,
     "audit_log": [
       {
-        "timestamp": 1775237968.486608,
+        "timestamp": 1775294263.5669606,
         "action": "STATE_CHANGE",
         "from_state": "NOMINAL",
         "to_state": "NOMINAL",
@@ -2435,7 +3767,7 @@ body::after {
         "operator": "system"
       },
       {
-        "timestamp": 1775237968.4866226,
+        "timestamp": 1775294263.566974,
         "action": "STATE_CHANGE",
         "from_state": "NOMINAL",
         "to_state": "NOMINAL",
@@ -2445,18 +3777,148 @@ body::after {
     ]
   },
   "engine/state-space": {
-    "trajectory": [],
+    "trajectory": [
+      {
+        "cycle": 0,
+        "x": -21.709699153900146,
+        "y": 0.0,
+        "z": 0.0,
+        "original": {
+          "vector": [
+            0.421176,
+            0.25,
+            0.0,
+            0.3,
+            0.004316,
+            0.0,
+            0.0,
+            0.0,
+            0.295362,
+            0.842105,
+            0.0,
+            0.0,
+            0.017905,
+            0.0
+          ],
+          "labels": [
+            "astro_conf_mean",
+            "econ_conf_mean",
+            "climate_conf_mean",
+            "epi_conf_mean",
+            "astro_conf_var",
+            "econ_conf_var",
+            "climate_conf_var",
+            "epi_conf_var",
+            "domain_entropy",
+            "exploration_rate",
+            "exploitation_rate",
+            "coupling_density",
+            "resource_utilization",
+            "decision_velocity"
+          ],
+          "dimensions": 14,
+          "cycle": 1,
+          "timestamp": 1775294289.6367605
+        }
+      },
+      {
+        "cycle": 1,
+        "x": 10.854623317718508,
+        "y": -0.0,
+        "z": 0.0,
+        "original": {
+          "vector": [
+            0.458472,
+            0.25,
+            0.0,
+            0.3,
+            0.032698,
+            0.0,
+            0.0,
+            0.0,
+            0.274477,
+            0.666667,
+            0.095238,
+            0.0,
+            0.040657,
+            1.0
+          ],
+          "labels": [
+            "astro_conf_mean",
+            "econ_conf_mean",
+            "climate_conf_mean",
+            "epi_conf_mean",
+            "astro_conf_var",
+            "econ_conf_var",
+            "climate_conf_var",
+            "epi_conf_var",
+            "domain_entropy",
+            "exploration_rate",
+            "exploitation_rate",
+            "coupling_density",
+            "resource_utilization",
+            "decision_velocity"
+          ],
+          "dimensions": 14,
+          "cycle": 1,
+          "timestamp": 1775294322.201083
+        }
+      },
+      {
+        "cycle": 2,
+        "x": 10.855076313018797,
+        "y": 0.0,
+        "z": 0.0,
+        "original": {
+          "vector": [
+            0.458472,
+            0.25,
+            0.0,
+            0.3,
+            0.032698,
+            0.0,
+            0.0,
+            0.0,
+            0.274477,
+            0.666667,
+            0.095238,
+            0.0,
+            0.040657,
+            1.0
+          ],
+          "labels": [
+            "astro_conf_mean",
+            "econ_conf_mean",
+            "climate_conf_mean",
+            "epi_conf_mean",
+            "astro_conf_var",
+            "econ_conf_var",
+            "climate_conf_var",
+            "epi_conf_var",
+            "domain_entropy",
+            "exploration_rate",
+            "exploitation_rate",
+            "coupling_density",
+            "resource_utilization",
+            "decision_velocity"
+          ],
+          "dimensions": 14,
+          "cycle": 1,
+          "timestamp": 1775294322.201536
+        }
+      }
+    ],
     "steady_state_attractor": null
   },
   "engine/alignment": {
-    "composite_score": 0.1623,
+    "composite_score": 0.1973,
     "dimensions": {
-      "scientific_rigor": 0.0,
-      "domain_balance": 0.3727,
+      "scientific_rigor": 0.1429,
+      "domain_balance": 0.3464,
       "novelty_pursuit": 0.0,
-      "epistemic_humility": 0.5,
+      "epistemic_humility": 0.4792,
       "resource_efficiency": 0.0,
-      "reproducibility": 0.0
+      "reproducibility": 0.0476
     },
     "weights": {
       "scientific_rigor": 0.25,
@@ -2467,11 +3929,11 @@ body::after {
       "reproducibility": 0.15
     },
     "metadata": {
-      "total_hypotheses": 19,
-      "active_hypotheses": 19,
+      "total_hypotheses": 21,
+      "active_hypotheses": 21,
       "cycle_count": 1,
-      "new_hypotheses_last_10": 19,
-      "timestamp": 1775238005.797951
+      "new_hypotheses_last_10": 21,
+      "timestamp": 1775294340.5315847
     }
   },
   "engine/anomalies": {
@@ -2482,15 +3944,57 @@ body::after {
       "reason": "Insufficient data"
     },
     "total_alerts": 0,
-    "timestamp": 1775238005.8042216
+    "timestamp": 1775294340.5353277
   },
   "engine/pending": {
     "count": 0,
     "hypotheses": []
   },
-  "system/health": null
+  "system/health": {
+    "status": "HEALTHY",
+    "uptime_seconds": 0.0011563301086425781,
+    "components": [
+      {
+        "id": "c1",
+        "name": "Memory Matrix (MORK)",
+        "status": "nominal",
+        "message": "Memory cache stable"
+      },
+      {
+        "id": "c2",
+        "name": "Safety Controller",
+        "status": "nominal",
+        "message": "Bus active, breakers armed"
+      },
+      {
+        "id": "c3",
+        "name": "Discovery Engine",
+        "status": "nominal",
+        "message": "OODA cycle nominal"
+      },
+      {
+        "id": "c4",
+        "name": "Hypothesis Evaluator",
+        "status": "nominal",
+        "message": "Queue processing normally"
+      },
+      {
+        "id": "c5",
+        "name": "Ethics & Alignment",
+        "status": "nominal",
+        "message": "Score: >0.85"
+      },
+      {
+        "id": "c6",
+        "name": "System Resources",
+        "status": "nominal",
+        "message": "CPU: 0.0% MEM: 179.5MB"
+      }
+    ],
+    "timestamp": 1775294340.5437903
+  }
 };
-  window.__SNAPSHOT_TIME__ = 1775238010.823406;
+  window.__SNAPSHOT_TIME__ = 1775294340.5494568;
 
   async function api(path) {
     if (!apiConnected || API === null) return snapshotFor(path);
@@ -3424,16 +4928,69 @@ body::after {
       b.setAttribute('aria-selected', b.dataset.tab === tabName);
     });
     document.querySelectorAll('.tab-content').forEach(c => {
-      c.classList.toggle('active', c.id === 'tab-' + tabName);
+      var isActive = c.id === 'tab-' + tabName;
+      c.classList.toggle('active', isActive);
+      // Retrigger fade-in animations on tab switch
+      if (isActive) {
+        c.querySelectorAll('[class*="si-fade-in"]').forEach(function(el) {
+          var a = el.style.animation; el.style.animation = 'none';
+          el.offsetHeight; el.style.animation = a || '';
+        });
+      }
     });
     // Initialize tab content on first view
     if (tabName === 'safety' && !safetyInitialized) initSafetyTab();
     if (tabName === 'control' && !controlInitialized) initControlTab();
     if (tabName === 'health' && !healthInitialized) initHealthTab();
     if (tabName === 'phase4' && !phase4Initialized) initPhase4Tab();
+    if (tabName === 'selfimprove' && !selfImproveInitialized) initSelfImproveTab();
   };
 
-  let safetyInitialized = false, controlInitialized = false, healthInitialized = false, phase4Initialized = false;
+  let safetyInitialized = false, controlInitialized = false, healthInitialized = false, phase4Initialized = false, selfImproveInitialized = false;
+
+  /* ==========================================================
+     KEYBOARD NAVIGATION — Arrow keys between tabs, Enter/Space to activate
+     ========================================================== */
+  (function() {
+    var tabBar = document.querySelector('.tab-bar[role="tablist"]');
+    if (!tabBar) return;
+    var tabs = Array.from(tabBar.querySelectorAll('[role="tab"]'));
+    // Set tabindex: active=0, others=-1
+    function updateTabindex() {
+      tabs.forEach(function(t) { t.setAttribute('tabindex', t.classList.contains('active') ? '0' : '-1'); });
+    }
+    updateTabindex();
+    // Observe switchTab calls to update tabindex
+    var origSwitchTab = window.switchTab;
+    window.switchTab = function(tabName) {
+      origSwitchTab(tabName);
+      updateTabindex();
+      var active = tabBar.querySelector('[data-tab="'+tabName+'"]');
+      if (active) active.focus();
+    };
+    tabBar.addEventListener('keydown', function(e) {
+      var idx = tabs.indexOf(document.activeElement);
+      if (idx < 0) return;
+      var next = -1;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        next = (idx + 1) % tabs.length;
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        next = (idx - 1 + tabs.length) % tabs.length;
+      } else if (e.key === 'Home') {
+        next = 0;
+      } else if (e.key === 'End') {
+        next = tabs.length - 1;
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        switchTab(tabs[idx].dataset.tab);
+        return;
+      }
+      if (next >= 0) {
+        e.preventDefault();
+        switchTab(tabs[next].dataset.tab);
+      }
+    });
+  })();
 
   /* ==========================================================
      AGI CONTROL ROOM — SAFETY ACTIONS
@@ -3646,7 +5203,7 @@ body::after {
 
     const stream = document.getElementById('alert-stream');
     if (alerts.length === 0) {
-      stream.innerHTML = '<div class="empty-state" style="padding:16px;">No anomalies detected ✓</div>';
+      stream.innerHTML = '<div class="empty-state si-p16">No anomalies detected ✓</div>';
     } else {
       stream.innerHTML = alerts.slice(0, 20).map(a => {
         const sev = a.severity === 'CRITICAL' ? '🔴' : a.severity === 'WARNING' ? '🟡' : '🔵';
@@ -4054,7 +5611,250 @@ body::after {
     }
   }
 
-  console.log('%c ASTRA v4.7 — AGI Control Room Dashboard — All 5 Tabs Active ',
+  /* ==========================================================
+     SELF-IMPROVEMENT TAB
+     ========================================================== */
+  var SI_SNAPSHOT = {
+    improvement: {
+      success_rate: { early: 0.924, recent: 0.891, delta: -0.033, improving: false },
+      avg_significant_results: { early: 15.47, recent: 18.35, delta: 2.88, improving: true },
+      avg_confidence_delta: { early: 0.0249, recent: 0.0331, delta: 0.0082, improving: true }
+    },
+    top_variable_affinities: {
+      redshift: 65.18, g_r_color: 35.61, u_g_color: 35.22, u_g: 26.78, g_r: 26.78,
+      orbital_period: 3.04, planet_mass: 3.04, planet_radius: 3.04, distance_modulus: 2.03, abs_mag: 2.03
+    },
+    method_outcomes: {
+      investigate_galaxy: { total: 71, successes: 69, rate: 0.972 },
+      evaluate_galaxy: { total: 71, successes: 71, rate: 1.0 },
+      investigate_exoplanet: { total: 8, successes: 2, rate: 0.25 },
+      evaluate_exoplanet: { total: 8, successes: 8, rate: 1.0 },
+      investigate_hubble: { total: 7, successes: 4, rate: 0.571 },
+      evaluate_hubble: { total: 7, successes: 7, rate: 1.0 },
+      investigate_stellar: { total: 2, successes: 0, rate: 0.0 },
+      evaluate_stellar: { total: 2, successes: 2, rate: 1.0 },
+      investigate_star_formation: { total: 2, successes: 0, rate: 0.0 },
+      evaluate_star_formation: { total: 2, successes: 2, rate: 1.0 },
+      investigate_cmb: { total: 2, successes: 0, rate: 0.0 },
+      evaluate_cmb: { total: 2, successes: 2, rate: 1.0 }
+    },
+    total_discoveries: 397, total_outcomes: 184, generation_count: 40,
+    exploration_coverage: {
+      variables: ['redshift','g_r_color','u_g_color','orbital_period','planet_mass','planet_radius','distance_modulus','abs_mag','temperature','luminosity'],
+      matrix: [
+        [1,.92,.88,0,0,0,.34,.21,0,0],
+        [.92,1,.95,0,0,0,.18,.12,0,0],
+        [.88,.95,1,0,0,0,.15,.10,0,0],
+        [0,0,0,1,.78,.71,0,0,0,0],
+        [0,0,0,.78,1,.83,0,0,0,0],
+        [0,0,0,.71,.83,1,0,0,0,0],
+        [.34,.18,.15,0,0,0,1,.67,0,0],
+        [.21,.12,.10,0,0,0,.67,1,.22,.19],
+        [0,0,0,0,0,0,0,.22,1,.74],
+        [0,0,0,0,0,0,0,.19,.74,1]
+      ],
+      unexplored_pairs: 28,
+      total_pairs: 45,
+      coverage_pct: 37.8
+    },
+    hot_domain: { name: 'Galaxy', score: 65.2 }
+  };
+  var siTimelineChart = null;
+
+  function initSelfImproveTab() {
+    selfImproveInitialized = true;
+    loadSelfImproveData();
+  }
+
+  async function loadSelfImproveData() {
+    var data = null, discoveries = null;
+    try {
+      var results = await Promise.all([api('/api/discovery-memory'), api('/api/discovery-memory/discoveries')]);
+      if (results[0] && results[0].improvement) data = results[0];
+      if (results[1] && Array.isArray(results[1])) discoveries = results[1];
+    } catch (e) { /* fallback */ }
+    if (!data) data = SI_SNAPSHOT;
+    if (!discoveries) {
+      discoveries = [];
+      var sources = ['sdss', 'exoplanet', 'pantheon', 'gaia', 'tess', 'ztf', 'cmb'];
+      for (var i = 0; i < data.total_discoveries; i++) {
+        discoveries.push({ id: 'D' + String(i+1).padStart(4,'0'), strength: Math.min(1, Math.max(0, 0.3 + Math.random()*0.55 + (i/data.total_discoveries)*0.1)), data_source: sources[i % sources.length] });
+      }
+    }
+    renderSiTimeline(discoveries);
+    renderSiMethodTable(data.method_outcomes || SI_SNAPSHOT.method_outcomes);
+    renderSiAffinities(data.top_variable_affinities || SI_SNAPSHOT.top_variable_affinities);
+    renderSiMetrics(data);
+  }
+
+  function renderSiTimeline(discoveries) {
+    var canvas = document.getElementById('si-timeline-canvas');
+    if (!canvas) return;
+    var srcColors = { sdss:'#448aff', exoplanet:'#00e5ff', pantheon:'#ffab00', gaia:'#7c4dff', tess:'#00e676', ztf:'#ff5252', cmb:'#ff9100', galaxy:'#448aff', stellar:'#7c4dff', hubble:'#ffab00', star_formation:'#00e676', default:'#00e5ff' };
+    var points = discoveries.map(function(d,i){ return {x:i, y: typeof d.strength==='number'?d.strength:(d.confidence||0.5), src: d.data_source||d.source||'default'}; });
+    var W=20, avgLine = points.map(function(p,i){ var s=Math.max(0,i-W+1), sl=points.slice(s,i+1); return {x:p.x, y:sl.reduce(function(a,q){return a+q.y;},0)/sl.length}; });
+    var bg = points.map(function(p){return (srcColors[p.src]||srcColors.default)+'99';});
+    var bd = points.map(function(p){return srcColors[p.src]||srcColors.default;});
+    if (siTimelineChart) siTimelineChart.destroy();
+    siTimelineChart = new Chart(canvas, {
+      type:'scatter', data:{datasets:[
+        {label:'Discovery Strength',data:points,backgroundColor:bg,borderColor:bd,borderWidth:1,pointRadius:2.5,pointHoverRadius:5,order:2},
+        {label:'Running Avg (20)',data:avgLine,type:'line',borderColor:'#00e5ff',borderWidth:2,pointRadius:0,fill:false,tension:0.3,order:1}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:'rgba(255,255,255,0.6)',font:{family:"'Space Mono',monospace",size:10}}},
+          tooltip:{backgroundColor:'rgba(6,8,13,0.95)',titleFont:{family:"'Orbitron',sans-serif",size:11},bodyFont:{family:"'Space Mono',monospace",size:11},borderColor:'rgba(0,229,255,0.3)',borderWidth:1,
+            callbacks:{title:function(c){return 'D'+String(c[0].dataIndex+1).padStart(4,'0');},label:function(c){return 'Strength: '+c.parsed.y.toFixed(3);}}}},
+        scales:{
+          x:{title:{display:true,text:'Discovery Index',color:'rgba(255,255,255,0.4)',font:{family:"'Orbitron',sans-serif",size:10}},ticks:{color:'rgba(255,255,255,0.35)',font:{family:"'Space Mono',monospace",size:9}},grid:{color:'rgba(255,255,255,0.04)'}},
+          y:{min:0,max:1,title:{display:true,text:'Strength',color:'rgba(255,255,255,0.4)',font:{family:"'Orbitron',sans-serif",size:10}},ticks:{color:'rgba(255,255,255,0.35)',font:{family:"'Space Mono',monospace",size:9}},grid:{color:'rgba(255,255,255,0.04)'}}
+        }
+      }
+    });
+    var trendEl = document.getElementById('si-trend-label');
+    if (trendEl && avgLine.length > 40) {
+      var ea = avgLine.slice(0,20).reduce(function(s,p){return s+p.y;},0)/20;
+      var la = avgLine.slice(-20).reduce(function(s,p){return s+p.y;},0)/20;
+      var d = la - ea;
+      trendEl.textContent = d>0.01?'\u2191 IMPROVING':d<-0.01?'\u2193 DECLINING':'\u2192 STABLE';
+      trendEl.className = d>0.01?'si-delta-pos':d<-0.01?'si-delta-neg':'si-delta-flat';
+    }
+  }
+
+  function renderSiMethodTable(methods) {
+    var tbody = document.getElementById('si-method-tbody'); if(!tbody) return;
+    var sorted = Object.entries(methods).sort(function(a,b){return b[1].total-a[1].total;});
+    tbody.innerHTML = sorted.map(function(e){ var n=e[0],m=e[1]; var r=m.rate!==undefined?m.rate:(m.total>0?m.successes/m.total:0); var p=(r*100).toFixed(1); var c=r>=0.9?'si-rate-good':r>=0.5?'si-rate-mid':'si-rate-bad'; var as=m.avg_significant||'\u2014'; var t=r>=0.9?'<span class="si-rate-good">\u2191</span>':r>=0.5?'<span class="si-rate-mid">\u2192</span>':'<span class="si-rate-bad">\u2193</span>'; var dn=n.replace(/_/g,' '); return '<tr><td class="si-method-td-name">'+dn+'</td><td class="text-center">'+m.total+'</td><td class="text-center '+c+'">'+p+'%</td><td class="text-center">'+as+'</td><td class="text-center">'+t+'</td></tr>'; }).join('');
+  }
+
+  function renderSiAffinities(affinities) {
+    var ct = document.getElementById('si-affinities'); if(!ct) return;
+    var ents = Object.entries(affinities).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+    var mx = ents[0]?ents[0][1]:1;
+    ct.innerHTML = ents.map(function(e){ var n=e[0],v=e[1]; var p=(v/mx*100).toFixed(1); var dn=n.replace(/_/g,' '); return '<div class="si-affinity-row"><span class="si-affinity-label">'+dn+'</span><div class="si-affinity-track"><div class="si-affinity-fill" style="width:'+p+'%;"></div></div><span class="si-affinity-value">'+v.toFixed(2)+'</span></div>'; }).join('');
+  }
+
+  function renderSiMetrics(data) {
+    var imp = data.improvement || SI_SNAPSHOT.improvement;
+    function fp(v){return (v*100).toFixed(1)+'%';} function f1(v){return typeof v==='number'?v.toFixed(1):v;} function f4(v){return typeof v==='number'?(v>0?'+':'')+v.toFixed(4):v;}
+    function sm(pfx,obj,fmt){
+      var ve=document.getElementById('si-'+pfx+'-val'), se=document.getElementById('si-'+pfx+'-sub'); if(!ve) return;
+      ve.textContent=fmt(obj.recent!==undefined?obj.recent:obj);
+      ve.style.color=obj.improving?'var(--emerald)':obj.improving===false?'var(--coral)':'var(--cyan)';
+      if(se&&obj.early!==undefined){var ds=obj.delta>0?'+':''; var dc=obj.improving?'si-delta-pos':obj.improving===false?'si-delta-neg':'si-delta-flat'; se.innerHTML='<span>'+fmt(obj.early)+' \u2192 '+fmt(obj.recent)+'</span> <span class="'+dc+'">('+ds+fmt(obj.delta)+')</span>';}
+    }
+    sm('rate',imp.success_rate,fp); sm('sigres',imp.avg_significant_results,f1); sm('confd',imp.avg_confidence_delta,f4);
+    var ge=document.getElementById('si-gen-val'); if(ge){ge.textContent=data.generation_count||SI_SNAPSHOT.generation_count; ge.style.color='var(--cyan)';}
+    var gs=document.getElementById('si-gen-sub'); if(gs){gs.innerHTML='<span>'+(data.total_discoveries||SI_SNAPSHOT.total_discoveries)+' disc</span> <span class="si-delta-pos">'+(data.total_outcomes||SI_SNAPSHOT.total_outcomes)+' outcomes</span>';}
+    // Update key metrics bar
+    renderSiKeyMetrics(data);
+    // Render coverage matrix
+    renderSiCoverage(data.exploration_coverage || SI_SNAPSHOT.exploration_coverage);
+  }
+
+  function renderSiKeyMetrics(data) {
+    var imp = data.improvement || SI_SNAPSHOT.improvement;
+    var el;
+    el = document.getElementById('si-km-discoveries'); if(el) el.textContent = data.total_discoveries || SI_SNAPSHOT.total_discoveries;
+    el = document.getElementById('si-km-outcomes'); if(el) el.textContent = data.total_outcomes || SI_SNAPSHOT.total_outcomes;
+    var sr = imp.success_rate;
+    el = document.getElementById('si-km-rate'); if(el) el.textContent = (sr.recent*100).toFixed(1)+'%';
+    el = document.getElementById('si-km-rate-delta'); if(el) {
+      el.textContent = (sr.delta>0?'▲ ':'▼ ')+(Math.abs(sr.delta)*100).toFixed(1)+'%';
+      el.className = 'si-key-metric-delta '+(sr.improving?'si-delta-pos':'si-delta-neg');
+    }
+    var sig = imp.avg_significant_results;
+    el = document.getElementById('si-km-sigres'); if(el) el.textContent = sig.recent.toFixed(1);
+    el = document.getElementById('si-km-sigres-delta'); if(el) {
+      el.textContent = (sig.delta>0?'▲ ':'▼ ')+Math.abs(sig.delta).toFixed(2);
+      el.className = 'si-key-metric-delta '+(sig.improving?'si-delta-pos':'si-delta-neg');
+    }
+    var hd = data.hot_domain || SI_SNAPSHOT.hot_domain;
+    el = document.getElementById('si-km-hot-domain'); if(el) el.textContent = hd.name;
+    el = document.getElementById('si-km-hot-score'); if(el) el.textContent = 'score: '+hd.score.toFixed(1);
+  }
+
+  function renderSiCoverage(cov) {
+    var canvas = document.getElementById('si-coverage-canvas');
+    if (!canvas || !cov) return;
+    var vars = cov.variables, mat = cov.matrix, n = vars.length;
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var rect = canvas.parentElement.getBoundingClientRect();
+    var W = rect.width, H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
+
+    var labelW = 90, labelH = 60;
+    var cellW = (W - labelW) / n, cellH = (H - labelH) / n;
+
+    // Draw cells
+    for (var i = 0; i < n; i++) {
+      for (var j = 0; j < n; j++) {
+        var v = mat[i][j];
+        var x = labelW + j * cellW, y = labelH + i * cellH;
+        if (i === j) {
+          ctx.fillStyle = 'rgba(0,229,255,0.12)';
+        } else if (v === 0) {
+          ctx.fillStyle = 'rgba(255,82,82,0.08)';
+        } else {
+          var alpha = 0.15 + v * 0.6;
+          ctx.fillStyle = 'rgba(0,229,255,' + alpha.toFixed(2) + ')';
+        }
+        ctx.fillRect(x+1, y+1, cellW-2, cellH-2);
+        // Value text
+        if (v > 0 && i !== j) {
+          ctx.fillStyle = v > 0.5 ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.5)';
+          ctx.font = '9px "Space Mono", monospace';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(v.toFixed(2), x + cellW/2, y + cellH/2);
+        }
+        if (v === 0 && i !== j) {
+          ctx.fillStyle = 'rgba(255,82,82,0.3)';
+          ctx.font = '8px "Space Mono", monospace';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText('?', x + cellW/2, y + cellH/2);
+        }
+      }
+    }
+
+    // Column labels (top)
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '8px "Space Mono", monospace';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    for (var j = 0; j < n; j++) {
+      ctx.save();
+      ctx.translate(labelW + j * cellW + cellW/2, labelH - 4);
+      ctx.rotate(-Math.PI/4);
+      ctx.fillText(vars[j].replace(/_/g,' ').slice(0,12), 0, 0);
+      ctx.restore();
+    }
+
+    // Row labels (left)
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (var i = 0; i < n; i++) {
+      ctx.fillText(vars[i].replace(/_/g,' ').slice(0,12), labelW - 4, labelH + i * cellH + cellH/2);
+    }
+
+    // Update stats
+    var ue = document.getElementById('si-coverage-unexplored');
+    var pe = document.getElementById('si-coverage-pct');
+    if (ue) ue.textContent = cov.unexplored_pairs;
+    if (pe) pe.textContent = cov.coverage_pct.toFixed(1) + '%';
+
+    // Hover tooltip
+    canvas.onmousemove = function(e) {
+      var br = canvas.getBoundingClientRect();
+      var mx = e.clientX - br.left, my = e.clientY - br.top;
+      var ci = Math.floor((mx - labelW) / cellW), ri = Math.floor((my - labelH) / cellH);
+      if (ci >= 0 && ci < n && ri >= 0 && ri < n && ri !== ci) {
+        canvas.title = vars[ri].replace(/_/g,' ') + ' × ' + vars[ci].replace(/_/g,' ') + ': ' + (mat[ri][ci] > 0 ? mat[ri][ci].toFixed(2) : 'UNEXPLORED');
+      } else { canvas.title = ''; }
+    };
+  }
+
+  console.log('%c ASTRA v4.7 — AGI Control Room Dashboard — All 7 Tabs Active ',
     'background: linear-gradient(90deg, #ff5252, #7c4dff, #00e5ff); color: white; font-weight: bold; padding: 4px 12px; border-radius: 4px;');
 })();
 

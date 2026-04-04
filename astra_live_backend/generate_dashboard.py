@@ -18,7 +18,7 @@ def fetch_all_data():
     data = {}
     for ep in ['status', 'state', 'hypotheses', 'activity', 'decisions', 'charts', 'metrics', 'engine/safety-status', 'engine/state-space', 'engine/alignment', 'engine/anomalies', 'engine/pending', 'system/health']:
         try:
-            r = requests.get(f"{API_BASE}/api/{ep}", timeout=5)
+            r = requests.get(f"{API_BASE}/api/{ep}", timeout=15)
             data[ep] = r.json()
         except Exception as e:
             print(f"  Warning: /api/{ep} failed: {e}")
