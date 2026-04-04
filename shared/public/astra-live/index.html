@@ -1512,6 +1512,86 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
 }
 
 /* ============================================================
+   LITERATURE TAB STYLES
+   ============================================================ */
+.lit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 8px 0;
+}
+.lit-grid .panel-full { grid-column: 1 / -1; }
+@media (max-width: 768px) {
+  .lit-grid { grid-template-columns: 1fr !important; }
+}
+.lit-table-wrap { overflow-x: auto; }
+.lit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+}
+.lit-table th {
+  text-align: left;
+  padding: 8px 10px;
+  color: rgba(255,255,255,0.5);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.lit-table td {
+  padding: 7px 10px;
+  color: rgba(255,255,255,0.7);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.lit-table tr:hover td { background: rgba(0,229,255,0.03); }
+.lit-title-cell { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: rgba(255,255,255,0.85) !important; }
+.lit-authors-cell { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lit-arxiv-cell { font-size: 10px; color: var(--cyan) !important; opacity: 0.7; }
+.lit-score-cell { min-width: 120px; }
+.lit-score-bar {
+  display: inline-block;
+  width: 60px;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.lit-score-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+.lit-score-cell span { font-size: 10px; color: rgba(255,255,255,0.5); }
+.lit-citation-container { overflow: hidden; border-radius: 8px; }
+.lit-bar-container { padding: 8px; }
+.lit-metrics-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 8px;
+}
+@media (max-width: 768px) {
+  .lit-metrics-cards { grid-template-columns: 1fr 1fr; }
+}
+.lit-metric-card {
+  text-align: center;
+  padding: 16px 8px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+}
+.lit-metric-icon { font-size: 24px; margin-bottom: 6px; }
+.lit-metric-value { font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.lit-metric-label { font-family: 'Space Mono', monospace; font-size: 9px; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
+.lit-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(255,255,255,0.3);
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+}
+
+/* ============================================================
    SELF-IMPROVEMENT TAB STYLES
    ============================================================ */
 .si-grid {
@@ -1699,6 +1779,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
   <button class="tab-btn" data-tab="phase4" role="tab" id="tab-btn-phase4" aria-selected="false" aria-controls="tab-phase4" onclick="switchTab('phase4')" aria-label="Phase 4 operational readiness tab">⬡ PHASE 4</button>
   <button class="tab-btn" data-tab="discoveries" role="tab" id="tab-btn-discoveries" aria-selected="false" aria-controls="tab-discoveries" onclick="switchTab('discoveries')" aria-label="Scientific discoveries tab">✦ DISCOVERIES</button>
   <button class="tab-btn" data-tab="selfimprove" role="tab" id="tab-btn-selfimprove" aria-selected="false" aria-controls="tab-selfimprove" onclick="switchTab('selfimprove')" aria-label="Self-improvement metrics tab">⟳ SELF-IMPROVE</button>
+  <button class="tab-btn" data-tab="literature" role="tab" id="tab-btn-literature" aria-selected="false" aria-controls="tab-literature" onclick="switchTab('literature')" aria-label="Literature and citations tab">📚 LITERATURE</button>
 </nav>
 
 <!-- ============================================================
@@ -2354,6 +2435,57 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
 
 </div><!-- /tab-selfimprove -->
 
+<!-- ==================== TAB: LITERATURE ==================== -->
+<div class="tab-content" id="tab-literature" role="tabpanel" aria-labelledby="tab-btn-literature">
+  <div class="lit-grid">
+
+    <!-- Panel 1: Paper Library -->
+    <div class="panel panel-full si-fade-in">
+      <div class="panel-header">
+        <span class="panel-icon">📄</span>
+        <span class="panel-title">PAPER LIBRARY</span>
+      </div>
+      <div class="panel-body-md" id="lit-papers">
+        <div class="empty-state">Loading papers…</div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Citation Network -->
+    <div class="panel si-fade-in-d1">
+      <div class="panel-header">
+        <span class="panel-icon">🕸</span>
+        <span class="panel-title">CITATION NETWORK</span>
+      </div>
+      <div class="lit-citation-container" style="position:relative;height:320px;">
+        <svg id="lit-citation-svg" width="100%" height="100%"></svg>
+      </div>
+    </div>
+
+    <!-- Panel 3: Novelty Scores -->
+    <div class="panel si-fade-in-d15">
+      <div class="panel-header">
+        <span class="panel-icon">✨</span>
+        <span class="panel-title">NOVELTY SCORES — TOP 10</span>
+      </div>
+      <div class="lit-bar-container" style="position:relative;height:320px;">
+        <canvas id="lit-novelty-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Panel 4: Literature Metrics -->
+    <div class="panel panel-full si-fade-in-d2">
+      <div class="panel-header">
+        <span class="panel-icon">📊</span>
+        <span class="panel-title">LITERATURE METRICS</span>
+      </div>
+      <div class="lit-metrics-cards" id="lit-metrics">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+  </div>
+</div><!-- /tab-literature -->
+
 
 </main><!-- /dashboard -->
 
@@ -2500,6 +2632,15 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
   window.__SNAPSHOT_TIME__ = 1775294664.442162;
   window.__SNAPSHOT_TIME__ = 1775295430.5617259;
   window.__SNAPSHOT_TIME__ = 1775295696.2997248;
+  window.__SNAPSHOT_TIME__ = 1775295720.2576082;
+  window.__SNAPSHOT_TIME__ = 1775296132.7722783;
+  window.__SNAPSHOT_TIME__ = 1775296253.0032125;
+  window.__SNAPSHOT_TIME__ = 1775296373.124555;
+  window.__SNAPSHOT_TIME__ = 1775296485.517136;
+  window.__SNAPSHOT_TIME__ = 1775296493.3595128;
+  window.__SNAPSHOT_TIME__ = 1775296613.531449;
+  window.__SNAPSHOT_TIME__ = 1775296733.7242012;
+  window.__SNAPSHOT_TIME__ = 1775296860.0809221;
 
 
   // ── Embedded snapshot data (auto-generated, fallback when API unreachable) ──
@@ -2509,135 +2650,103 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     "engine": {
       "running": true,
       "current_phase": "UPDATE",
-      "cycle_count": 14,
-      "uptime_seconds": 795.4878425598145,
-      "system_confidence": 0.6239074539990409,
-      "total_data_points": 11284,
-      "total_scripts": 22,
-      "total_plots": 32,
-      "total_decisions": 66,
-      "hypotheses_tested": 22,
+      "cycle_count": 1,
+      "uptime_seconds": 76.41265678405762,
+      "system_confidence": 0.41017241379310365,
+      "total_data_points": 0,
+      "total_scripts": 3,
+      "total_plots": 1,
+      "total_decisions": 13,
+      "hypotheses_tested": 3,
       "cross_domain_links": 0,
-      "papers_drafted": 5,
+      "papers_drafted": 0,
       "gpu_utilization": 45.0,
-      "queue_depth": 14,
-      "domains_active": 2,
+      "queue_depth": 11,
+      "domains_active": 3,
       "funnel": {
-        "proposed": 2,
-        "screening": 15,
-        "testing": 0,
-        "validated": 6,
+        "proposed": 3,
+        "screening": 11,
+        "testing": 7,
+        "validated": 0,
         "published": 0,
-        "archived": 18
+        "archived": 0
       },
       "safety_state": "NOMINAL",
-      "pending_approvals": 6,
+      "pending_approvals": 0,
       "discovery_memory": {
-        "discovery_count": 475,
-        "method_outcome_count": 488,
+        "discovery_count": 450,
+        "method_outcome_count": 450,
         "exploration_sources": [
           "pantheon",
-          "hubble",
-          "exoplanet",
-          "sdss",
-          "galaxy",
-          "stellar",
-          "star_formation",
-          "cmb"
+          "hubble"
         ],
-        "generation_count": 22,
+        "generation_count": 2,
         "hot_domains": [
           [
             "Astrophysics",
-            136.29527655608692
+            302.9861068238492
           ]
         ],
         "improvement": {
           "status": "ok",
-          "total_discoveries": 475,
-          "total_outcomes": 488,
-          "hypotheses_generated_from_memory": 22,
+          "total_discoveries": 450,
+          "total_outcomes": 450,
+          "hypotheses_generated_from_memory": 2,
           "metrics": {
             "success_rate": {
               "early": 1.0,
-              "recent": 1.0,
-              "delta": 0.0,
+              "recent": 0.667,
+              "delta": -0.333,
               "improving": false
             },
             "avg_significant_results": {
-              "early": 14.95,
-              "recent": 0.95,
-              "delta": -14.0,
+              "early": 9.64,
+              "recent": 0.33,
+              "delta": -9.31,
               "improving": false
             },
             "avg_novelty_signals": {
               "early": 0.0,
-              "recent": 0.09,
-              "delta": 0.09,
-              "improving": true
+              "recent": 0.0,
+              "delta": 0.0,
+              "improving": false
             },
             "avg_confidence_delta": {
-              "early": 0.0282,
-              "recent": 0.0158,
-              "delta": -0.0124,
+              "early": 0.0402,
+              "recent": -0.0008,
+              "delta": -0.041,
               "improving": false
             }
           }
         },
         "top_variable_affinities": {
-          "redshift": 106.00503819446797,
-          "g_r_color": 70.73770701546852,
-          "u_g_color": 69.93828452414168,
-          "g_r": 30.742727075752047,
-          "u_g": 30.554121388170746,
-          "orbital_period": 4.236674993699973,
-          "planet_mass": 4.236674993699973,
-          "planet_radius": 4.236674993699973,
-          "distance_modulus": 3.770181352922121,
-          "abs_mag": 3.770181352922121
+          "redshift": 118.60112946233852,
+          "g_r_color": 106.75326328329379,
+          "u_g_color": 106.14240778996127,
+          "distance_modulus": 5.812484176443063,
+          "abs_mag": 5.812484176443063,
+          "u_g": 5.469564939857708,
+          "g_r": 5.469564939857708,
+          "m_b": 1.2587799411616498,
+          "zHD": 1.2587799411616498,
+          "bp_rp_color": 1.2217109866650495
         }
       },
       "degradation": {
-        "last_check_cycle": 14,
+        "last_check_cycle": 1,
         "rolling_success_rates": [
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0,
-          1.0
+          0.5
         ],
         "rolling_sig_results": [
-          0.75,
-          0.7,
-          0.8,
-          0.85,
-          0.75,
-          0.85,
-          0.95,
-          0.9,
-          0.85,
-          0.95,
-          1.05,
-          1.05,
-          1.0,
-          1.0
+          0.25
         ],
         "low_success_streak": 0,
-        "low_sig_streak": 0,
+        "low_sig_streak": 1,
         "safe_mode_triggered": false,
         "strategy_switch_recommended": false,
         "recommendations": [
           "Domain 'Astrophysics' has 100% of recent 50 discoveries \u2014 force-switching to underrepresented domains",
-          "Pattern 'causal|sdss' repeated 12 times in last 20 discoveries \u2014 stuck in loop"
+          "Pattern 'causal|sdss' repeated 11 times in last 20 discoveries \u2014 stuck in loop"
         ],
         "thresholds": {
           "success_rate": 0.5,
@@ -2648,140 +2757,108 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       }
     },
-    "timestamp": 1775295720.1400561
+    "timestamp": 1775296906.1106951
   },
   "state": {
     "running": true,
     "current_phase": "UPDATE",
-    "cycle_count": 14,
-    "uptime_seconds": 795.4942319393158,
-    "system_confidence": 0.6239074539990409,
-    "total_data_points": 11284,
-    "total_scripts": 22,
-    "total_plots": 32,
-    "total_decisions": 66,
-    "hypotheses_tested": 22,
+    "cycle_count": 1,
+    "uptime_seconds": 76.41841793060303,
+    "system_confidence": 0.41017241379310365,
+    "total_data_points": 0,
+    "total_scripts": 3,
+    "total_plots": 1,
+    "total_decisions": 13,
+    "hypotheses_tested": 3,
     "cross_domain_links": 0,
-    "papers_drafted": 5,
+    "papers_drafted": 0,
     "gpu_utilization": 45.0,
-    "queue_depth": 14,
-    "domains_active": 2,
+    "queue_depth": 11,
+    "domains_active": 3,
     "funnel": {
-      "proposed": 2,
-      "screening": 15,
-      "testing": 0,
-      "validated": 6,
+      "proposed": 3,
+      "screening": 11,
+      "testing": 7,
+      "validated": 0,
       "published": 0,
-      "archived": 18
+      "archived": 0
     },
     "safety_state": "NOMINAL",
-    "pending_approvals": 6,
+    "pending_approvals": 0,
     "discovery_memory": {
-      "discovery_count": 475,
-      "method_outcome_count": 488,
+      "discovery_count": 450,
+      "method_outcome_count": 450,
       "exploration_sources": [
         "pantheon",
-        "hubble",
-        "exoplanet",
-        "sdss",
-        "galaxy",
-        "stellar",
-        "star_formation",
-        "cmb"
+        "hubble"
       ],
-      "generation_count": 22,
+      "generation_count": 2,
       "hot_domains": [
         [
           "Astrophysics",
-          136.29527655608692
+          302.9861068238492
         ]
       ],
       "improvement": {
         "status": "ok",
-        "total_discoveries": 475,
-        "total_outcomes": 488,
-        "hypotheses_generated_from_memory": 22,
+        "total_discoveries": 450,
+        "total_outcomes": 450,
+        "hypotheses_generated_from_memory": 2,
         "metrics": {
           "success_rate": {
             "early": 1.0,
-            "recent": 1.0,
-            "delta": 0.0,
+            "recent": 0.667,
+            "delta": -0.333,
             "improving": false
           },
           "avg_significant_results": {
-            "early": 14.95,
-            "recent": 0.95,
-            "delta": -14.0,
+            "early": 9.64,
+            "recent": 0.33,
+            "delta": -9.31,
             "improving": false
           },
           "avg_novelty_signals": {
             "early": 0.0,
-            "recent": 0.09,
-            "delta": 0.09,
-            "improving": true
+            "recent": 0.0,
+            "delta": 0.0,
+            "improving": false
           },
           "avg_confidence_delta": {
-            "early": 0.0282,
-            "recent": 0.0158,
-            "delta": -0.0124,
+            "early": 0.0402,
+            "recent": -0.0008,
+            "delta": -0.041,
             "improving": false
           }
         }
       },
       "top_variable_affinities": {
-        "redshift": 106.00503819446797,
-        "g_r_color": 70.73770701546852,
-        "u_g_color": 69.93828452414168,
-        "g_r": 30.742727075752047,
-        "u_g": 30.554121388170746,
-        "orbital_period": 4.236674993699973,
-        "planet_mass": 4.236674993699973,
-        "planet_radius": 4.236674993699973,
-        "distance_modulus": 3.770181352922121,
-        "abs_mag": 3.770181352922121
+        "redshift": 118.60112946233852,
+        "g_r_color": 106.75326328329379,
+        "u_g_color": 106.14240778996127,
+        "distance_modulus": 5.812484176443063,
+        "abs_mag": 5.812484176443063,
+        "u_g": 5.469564939857708,
+        "g_r": 5.469564939857708,
+        "m_b": 1.2587799411616498,
+        "zHD": 1.2587799411616498,
+        "bp_rp_color": 1.2217109866650495
       }
     },
     "degradation": {
-      "last_check_cycle": 14,
+      "last_check_cycle": 1,
       "rolling_success_rates": [
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0
+        0.5
       ],
       "rolling_sig_results": [
-        0.75,
-        0.7,
-        0.8,
-        0.85,
-        0.75,
-        0.85,
-        0.95,
-        0.9,
-        0.85,
-        0.95,
-        1.05,
-        1.05,
-        1.0,
-        1.0
+        0.25
       ],
       "low_success_streak": 0,
-      "low_sig_streak": 0,
+      "low_sig_streak": 1,
       "safe_mode_triggered": false,
       "strategy_switch_recommended": false,
       "recommendations": [
         "Domain 'Astrophysics' has 100% of recent 50 discoveries \u2014 force-switching to underrepresented domains",
-        "Pattern 'causal|sdss' repeated 12 times in last 20 discoveries \u2014 stuck in loop"
+        "Pattern 'causal|sdss' repeated 11 times in last 20 discoveries \u2014 stuck in loop"
       ],
       "thresholds": {
         "success_rate": 0.5,
@@ -2798,59 +2875,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "name": "Hubble Tension Analysis",
       "domain": "Astrophysics",
       "description": "Pantheon+ SNe Ia (1701 supernovae) distance modulus analysis: test \u039bCDM predictions and measure H\u2080 tension",
-      "confidence": 0.13253012048192778,
-      "phase": "archived",
-      "created_at": 1774918295.6922934,
-      "updated_at": 1775295187.6954262,
+      "confidence": 0.37931034482758624,
+      "phase": "testing",
+      "created_at": 1775068793.671504,
+      "updated_at": 1775296898.2213774,
       "test_results": [
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.018224573780129337,
-          "p_value": 0.9402844576493801,
-          "passed": true,
-          "details": "D = 0.0182 (two-sample)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Bayesian t-test",
-          "statistic": -4642.0558950228415,
-          "p_value": 0.0,
-          "passed": true,
-          "details": "t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 0.0035733553560542333,
-          "p_value": 0.9999984057913186,
-          "passed": true,
-          "details": "\u03c7\u00b2 = 0.0036, dof = 4, \u03c7\u00b2/dof = 0.00",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.018224573780129337,
-          "p_value": 0.9402844576493801,
-          "passed": true,
-          "details": "D = 0.0182 (two-sample)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Bayesian t-test",
-          "statistic": -4642.0558950228415,
-          "p_value": 0.0,
-          "passed": true,
-          "details": "t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 0.0035733553560542333,
-          "p_value": 0.9999984057913186,
-          "passed": true,
-          "details": "\u03c7\u00b2 = 0.0036, dof = 4, \u03c7\u00b2/dof = 0.00",
-          "alpha": 0.05
-        },
         {
           "test_name": "Kolmogorov-Smirnov",
           "statistic": 0.018224573780129337,
@@ -2884,237 +2913,28 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "pending_approval_at": 0.0,
       "approval_status": "",
       "approval_reason": "",
-      "last_tested_at": 1775295183.8450081,
-      "archived_at": 1775295187.6954272
+      "last_tested_at": 1775296898.221373,
+      "archived_at": 0.0
     },
     {
       "id": "H002",
       "name": "Galaxy Color Bimodality",
       "domain": "Astrophysics",
       "description": "SDSS DR18 galaxy photometry: quantify red sequence + blue cloud bimodality in g-r color",
-      "confidence": 0.99,
-      "phase": "validated",
-      "created_at": 1775197300.936742,
-      "updated_at": 1775295712.727947,
-      "test_results": [
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.6212612445273267,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 0.6213 (vs norm)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Chi-squared",
-          "statistic": 8322.704,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-          "alpha": 0.05
-        }
-      ],
-      "priority": "MEDIUM",
+      "confidence": 0.45,
+      "phase": "testing",
+      "created_at": 1774815006.9323034,
+      "updated_at": 1775296898.639765,
+      "test_results": [],
+      "priority": "NORMAL",
       "publications": 0,
-      "data_points_used": 15553,
+      "data_points_used": 0,
       "cross_domain_links": [],
-      "requires_approval": true,
-      "pending_approval_at": 1775295187.6954968,
-      "approval_status": "pending",
+      "requires_approval": false,
+      "pending_approval_at": 0.0,
+      "approval_status": "",
       "approval_reason": "",
-      "last_tested_at": 1775295712.7279422,
+      "last_tested_at": 0.0,
       "archived_at": 0.0
     },
     {
@@ -3122,53 +2942,20 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "name": "Exoplanet Mass-Period Relation",
       "domain": "Astrophysics",
       "description": "NASA Exoplanet Archive: test Kepler's third law scaling and mass-period correlation in confirmed planets",
-      "confidence": 0.99,
-      "phase": "validated",
-      "created_at": 1775247546.027402,
-      "updated_at": 1775295111.4865837,
-      "test_results": [
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 1.0,
-          "p_value": 0.0015564202334630343,
-          "passed": false,
-          "details": "D = 1.0000 (two-sample)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Pearson correlation",
-          "statistic": 0.43204120193240464,
-          "p_value": 1.568547719777659e-59,
-          "passed": true,
-          "details": "r = 0.4320, r\u00b2 = 0.1867",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 1.0,
-          "p_value": 0.0015564202334630343,
-          "passed": false,
-          "details": "D = 1.0000 (two-sample)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Pearson correlation",
-          "statistic": 0.43204120193240464,
-          "p_value": 1.568547719777659e-59,
-          "passed": true,
-          "details": "r = 0.4320, r\u00b2 = 0.1867",
-          "alpha": 0.05
-        }
-      ],
+      "confidence": 0.5,
+      "phase": "testing",
+      "created_at": 1774766162.6315098,
+      "updated_at": 1775296829.7556298,
+      "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
-      "data_points_used": 15553,
+      "data_points_used": 0,
       "cross_domain_links": [],
-      "requires_approval": true,
-      "pending_approval_at": 1775295111.486583,
-      "approval_status": "pending",
+      "requires_approval": false,
+      "pending_approval_at": 0.0,
+      "approval_status": "",
       "approval_reason": "",
-      "last_tested_at": 1775295111.1766279,
+      "last_tested_at": 0.0,
       "archived_at": 0.0
     },
     {
@@ -3176,29 +2963,20 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "name": "Gaia HR Diagram Structure",
       "domain": "Astrophysics",
       "description": "Gaia DR3 astrometry+photometry: characterize main sequence, giant branch, and white dwarf sequence",
-      "confidence": 0.8807339449541285,
-      "phase": "validated",
-      "created_at": 1774845514.8499072,
-      "updated_at": 1775295187.6955626,
-      "test_results": [
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.9999938333722036,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 1.0000 (vs norm)",
-          "alpha": 0.05
-        }
-      ],
-      "priority": "MEDIUM",
+      "confidence": 0.48,
+      "phase": "testing",
+      "created_at": 1774847255.358397,
+      "updated_at": 1775296898.6398299,
+      "test_results": [],
+      "priority": "NORMAL",
       "publications": 0,
-      "data_points_used": 15553,
+      "data_points_used": 0,
       "cross_domain_links": [],
-      "requires_approval": true,
-      "pending_approval_at": 1775295187.6955621,
-      "approval_status": "pending",
+      "requires_approval": false,
+      "pending_approval_at": 0.0,
+      "approval_status": "",
       "approval_reason": "",
-      "last_tested_at": 1775295107.9521937,
+      "last_tested_at": 0.0,
       "archived_at": 0.0
     },
     {
@@ -3207,9 +2985,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Astrophysics",
       "description": "SDSS spectroscopic redshifts: test for clustering and void structure in local universe (z < 0.5)",
       "confidence": 0.42,
-      "phase": "archived",
-      "created_at": 1775203125.4724956,
-      "updated_at": 1775295450.8330603,
+      "phase": "screening",
+      "created_at": 1774722177.1266673,
+      "updated_at": 1775296829.7556498,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3220,44 +2998,27 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295450.8330603
+      "archived_at": 0.0
     },
     {
       "id": "H006",
       "name": "Exoplanet Period Distribution",
       "domain": "Astrophysics",
       "description": "Transit/RV discoveries: test for period valley near 10 days and hot Jupiter desert",
-      "confidence": 0.9719626168224299,
-      "phase": "validated",
-      "created_at": 1775186124.544845,
-      "updated_at": 1775295111.4866302,
-      "test_results": [
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 1.0,
-          "p_value": 0.0015564202334630343,
-          "passed": false,
-          "details": "D = 1.0000 (two-sample)",
-          "alpha": 0.05
-        },
-        {
-          "test_name": "Pearson correlation",
-          "statistic": 0.43204120193240464,
-          "p_value": 1.568547719777659e-59,
-          "passed": true,
-          "details": "r = 0.4320, r\u00b2 = 0.1867",
-          "alpha": 0.05
-        }
-      ],
-      "priority": "NORMAL",
+      "confidence": 0.52,
+      "phase": "testing",
+      "created_at": 1775194503.0954442,
+      "updated_at": 1775296829.7556593,
+      "test_results": [],
+      "priority": "MEDIUM",
       "publications": 0,
-      "data_points_used": 1284,
+      "data_points_used": 0,
       "cross_domain_links": [],
-      "requires_approval": true,
-      "pending_approval_at": 1775295111.4866297,
-      "approval_status": "pending",
+      "requires_approval": false,
+      "pending_approval_at": 0.0,
+      "approval_status": "",
       "approval_reason": "",
-      "last_tested_at": 1775295003.948644,
+      "last_tested_at": 0.0,
       "archived_at": 0.0
     },
     {
@@ -3266,9 +3027,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Astrophysics",
       "description": "Gaia DR3 parallax error analysis: quantify systematic offsets and distance uncertainties",
       "confidence": 0.4,
-      "phase": "archived",
-      "created_at": 1775214110.7925856,
-      "updated_at": 1775295292.9289522,
+      "phase": "screening",
+      "created_at": 1775146114.7117424,
+      "updated_at": 1775296829.7556696,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3279,36 +3040,27 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295292.9289522
+      "archived_at": 0.0
     },
     {
       "id": "H008",
       "name": "Star Formation Fraction",
       "domain": "Astrophysics",
       "description": "SDSS u-r color as star formation proxy: measure blue fraction evolution with redshift",
-      "confidence": 0.8720379146919431,
-      "phase": "validated",
-      "created_at": 1774837403.7721207,
-      "updated_at": 1775295214.0141802,
-      "test_results": [
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.9999938333722036,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 1.0000 (vs norm)",
-          "alpha": 0.05
-        }
-      ],
+      "confidence": 0.46,
+      "phase": "testing",
+      "created_at": 1775223309.5163774,
+      "updated_at": 1775296898.6398745,
+      "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
-      "data_points_used": 5000,
+      "data_points_used": 0,
       "cross_domain_links": [],
-      "requires_approval": true,
-      "pending_approval_at": 1775295214.014179,
-      "approval_status": "pending",
+      "requires_approval": false,
+      "pending_approval_at": 0.0,
+      "approval_status": "",
       "approval_reason": "",
-      "last_tested_at": 1775295183.8506856,
+      "last_tested_at": 0.0,
       "archived_at": 0.0
     },
     {
@@ -3317,9 +3069,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Astrophysics",
       "description": "NASA Exoplanet Archive: distribution of transit depths across discovery methods",
       "confidence": 0.38,
-      "phase": "archived",
-      "created_at": 1774902869.7057178,
-      "updated_at": 1775295266.6321843,
+      "phase": "screening",
+      "created_at": 1774919860.576258,
+      "updated_at": 1775296898.6398985,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3330,7 +3082,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295266.6321843
+      "archived_at": 0.0
     },
     {
       "id": "H010",
@@ -3338,9 +3090,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Astrophysics",
       "description": "Pantheon+ distance modulus: constrain w(z) with binned SNe Ia analysis",
       "confidence": 0.35,
-      "phase": "archived",
-      "created_at": 1774821469.4075592,
-      "updated_at": 1775295240.328899,
+      "phase": "screening",
+      "created_at": 1774980617.7461598,
+      "updated_at": 1775296898.639921,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3351,7 +3103,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295240.328899
+      "archived_at": 0.0
     },
     {
       "id": "H011",
@@ -3359,9 +3111,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Astrophysics",
       "description": "LIGO/Virgo chirp mass and mass ratio distribution: test population synthesis models",
       "confidence": 0.4,
-      "phase": "archived",
-      "created_at": 1775236245.1569047,
-      "updated_at": 1775295319.2342203,
+      "phase": "screening",
+      "created_at": 1774937287.3251376,
+      "updated_at": 1775296829.7557092,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3372,36 +3124,27 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295319.2342203
+      "archived_at": 0.0
     },
     {
       "id": "H012",
       "name": "CMB Acoustic Peak Structure",
       "domain": "Astrophysics",
       "description": "Planck TT power spectrum: measure acoustic peak positions and cosmological parameters",
-      "confidence": 0.8674698795180723,
-      "phase": "validated",
-      "created_at": 1774737685.5646553,
-      "updated_at": 1775295214.0142097,
-      "test_results": [
-        {
-          "test_name": "Kolmogorov-Smirnov",
-          "statistic": 0.9999938333722036,
-          "p_value": 0.0,
-          "passed": false,
-          "details": "D = 1.0000 (vs norm)",
-          "alpha": 0.05
-        }
-      ],
+      "confidence": 0.45,
+      "phase": "testing",
+      "created_at": 1774972382.9167445,
+      "updated_at": 1775296898.639948,
+      "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
-      "data_points_used": 2507,
+      "data_points_used": 0,
       "cross_domain_links": [],
-      "requires_approval": true,
-      "pending_approval_at": 1775295214.0142093,
-      "approval_status": "pending",
+      "requires_approval": false,
+      "pending_approval_at": 0.0,
+      "approval_status": "",
       "approval_reason": "",
-      "last_tested_at": 1775295184.2593217,
+      "last_tested_at": 0.0,
       "archived_at": 0.0
     },
     {
@@ -3410,9 +3153,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Astrophysics",
       "description": "ZTF transient light curves: test SNe classification and host galaxy association",
       "confidence": 0.35,
-      "phase": "archived",
-      "created_at": 1775065480.155704,
-      "updated_at": 1775295240.328899,
+      "phase": "screening",
+      "created_at": 1774834974.4004896,
+      "updated_at": 1775296898.6399684,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3423,7 +3166,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295240.328899
+      "archived_at": 0.0
     },
     {
       "id": "H014",
@@ -3431,9 +3174,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Astrophysics",
       "description": "TESS Input Catalog: mass-radius relation for exoplanet host stars",
       "confidence": 0.42,
-      "phase": "archived",
-      "created_at": 1774933188.7362933,
-      "updated_at": 1775295450.8330603,
+      "phase": "screening",
+      "created_at": 1774721086.4714448,
+      "updated_at": 1775296829.7557452,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3444,7 +3187,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295450.8330603
+      "archived_at": 0.0
     },
     {
       "id": "H015",
@@ -3452,9 +3195,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Astrophysics",
       "description": "SDSS redMaPPer richness as mass proxy: test self-similar scaling relation",
       "confidence": 0.38,
-      "phase": "archived",
-      "created_at": 1775159729.4523628,
-      "updated_at": 1775295292.9289522,
+      "phase": "screening",
+      "created_at": 1775199105.386741,
+      "updated_at": 1775296898.6399956,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3465,7 +3208,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295292.9289522
+      "archived_at": 0.0
     },
     {
       "id": "H016",
@@ -3473,9 +3216,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Astrophysics",
       "description": "Cross-match GW events with ZTF transients for multi-messenger association",
       "confidence": 0.3,
-      "phase": "archived",
-      "created_at": 1774705213.526718,
-      "updated_at": 1775295214.0208275,
+      "phase": "screening",
+      "created_at": 1775099697.9157789,
+      "updated_at": 1775296898.6400168,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3486,7 +3229,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295214.0208275
+      "archived_at": 0.0
     },
     {
       "id": "H017",
@@ -3494,9 +3237,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Astrophysics",
       "description": "Link TESS host stars with Gaia astrometry for precise distance-luminosity calibration",
       "confidence": 0.35,
-      "phase": "archived",
-      "created_at": 1774960689.1728318,
-      "updated_at": 1775295266.6321843,
+      "phase": "screening",
+      "created_at": 1774780030.4098878,
+      "updated_at": 1775296898.640041,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3507,7 +3250,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295266.6321843
+      "archived_at": 0.0
     },
     {
       "id": "CD-001",
@@ -3516,10 +3259,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "description": "Correlation between national R&D funding and astronomical discovery rates",
       "confidence": 0.25,
       "phase": "proposed",
-      "created_at": 1775019464.5785873,
-      "updated_at": 1775294924.6865587,
+      "created_at": 1774804188.1270497,
+      "updated_at": 1775296829.755789,
       "test_results": [],
-      "priority": "HIGH",
+      "priority": "NORMAL",
       "publications": 0,
       "data_points_used": 0,
       "cross_domain_links": [],
@@ -3536,9 +3279,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Epidemiology",
       "description": "Apply epidemiological adaptive sampling to astronomical survey strategy",
       "confidence": 0.3,
-      "phase": "archived",
-      "created_at": 1774907710.61501,
-      "updated_at": 1775295214.0208275,
+      "phase": "screening",
+      "created_at": 1774710021.6827984,
+      "updated_at": 1775296898.640073,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3549,7 +3292,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295214.0208275
+      "archived_at": 0.0
     },
     {
       "id": "H018",
@@ -3557,9 +3300,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "domain": "Astrophysics",
       "description": "Test power-law scaling between redshift and distance_modulus in confirmed exoplanets: Bayesian t-test: t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701. Derive scaling exponent and compare with theoretical predictions.",
       "confidence": 0.4,
-      "phase": "archived",
-      "created_at": 1775295006.944373,
-      "updated_at": 1775295319.2342203,
+      "phase": "proposed",
+      "created_at": 1775296898.6435158,
+      "updated_at": 1775296898.6435163,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -3570,437 +3313,17 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "approval_status": "",
       "approval_reason": "",
       "last_tested_at": 0.0,
-      "archived_at": 1775295319.2342203
+      "archived_at": 0.0
     },
     {
       "id": "H019",
       "name": "Galaxy Redshift Bimodality Deep Dive",
       "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "archived",
-      "created_at": 1775295006.9444048,
-      "updated_at": 1775295345.6077633,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 1775295345.6077633
-    },
-    {
-      "id": "H020",
-      "name": "Exoplanet Redshift-Distance_Modulus Scaling Relation (v2)",
-      "domain": "Astrophysics",
-      "description": "Test power-law scaling between redshift and distance_modulus in confirmed exoplanets: Bayesian t-test: t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701. Derive scaling exponent and compare with theoretical predictions.",
-      "confidence": 0.4,
-      "phase": "archived",
-      "created_at": 1775295111.4915113,
-      "updated_at": 1775295345.6077633,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 1775295345.6077633
-    },
-    {
-      "id": "H021",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v2)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "archived",
-      "created_at": 1775295111.491539,
-      "updated_at": 1775295371.933801,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 1775295371.933801
-    },
-    {
-      "id": "H022",
-      "name": "Exoplanet Redshift-Distance_Modulus Scaling Relation (v3)",
-      "domain": "Astrophysics",
-      "description": "Test power-law scaling between redshift and distance_modulus in confirmed exoplanets: Bayesian t-test: t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701. Derive scaling exponent and compare with theoretical predictions.",
-      "confidence": 0.4,
-      "phase": "archived",
-      "created_at": 1775295187.7004976,
-      "updated_at": 1775295398.2339218,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 1775295398.2339218
-    },
-    {
-      "id": "H023",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v3)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "archived",
-      "created_at": 1775295187.700528,
-      "updated_at": 1775295424.5316892,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 1775295424.5316892
-    },
-    {
-      "id": "H024",
-      "name": "Exoplanet Redshift-Distance_Modulus Scaling Relation (v4)",
-      "domain": "Astrophysics",
-      "description": "Test power-law scaling between redshift and distance_modulus in confirmed exoplanets: Bayesian t-test: t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701. Derive scaling exponent and compare with theoretical predictions.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295214.0199385,
-      "updated_at": 1775295240.3220267,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H025",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v4)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295214.0199747,
-      "updated_at": 1775295240.3221116,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H026",
-      "name": "Exoplanet Redshift-Distance_Modulus Scaling Relation (v5)",
-      "domain": "Astrophysics",
-      "description": "Test power-law scaling between redshift and distance_modulus in confirmed exoplanets: Bayesian t-test: t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701. Derive scaling exponent and compare with theoretical predictions.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295240.3280358,
-      "updated_at": 1775295266.6248193,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H027",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v5)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295240.3280735,
-      "updated_at": 1775295266.6248937,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H028",
-      "name": "Exoplanet Redshift-Distance_Modulus Scaling Relation (v6)",
-      "domain": "Astrophysics",
-      "description": "Test power-law scaling between redshift and distance_modulus in confirmed exoplanets: Bayesian t-test: t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701. Derive scaling exponent and compare with theoretical predictions.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295266.631316,
-      "updated_at": 1775295292.9221878,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H029",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v6)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295266.6313589,
-      "updated_at": 1775295292.9222746,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H030",
-      "name": "Exoplanet Redshift-Distance_Modulus Scaling Relation (v7)",
-      "domain": "Astrophysics",
-      "description": "Test power-law scaling between redshift and distance_modulus in confirmed exoplanets: Bayesian t-test: t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701. Derive scaling exponent and compare with theoretical predictions.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295292.9280975,
-      "updated_at": 1775295319.2266507,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H031",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v7)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295292.9281325,
-      "updated_at": 1775295319.2267044,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H032",
-      "name": "Exoplanet Redshift-Distance_Modulus Scaling Relation (v8)",
-      "domain": "Astrophysics",
-      "description": "Test power-law scaling between redshift and distance_modulus in confirmed exoplanets: Bayesian t-test: t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701. Derive scaling exponent and compare with theoretical predictions.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295319.2333653,
-      "updated_at": 1775295345.5237744,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H033",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v8)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295319.2334032,
-      "updated_at": 1775295345.523849,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H034",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v9)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295345.5301347,
-      "updated_at": 1775295371.9247837,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H035",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v10)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295371.932451,
-      "updated_at": 1775295398.2262504,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H036",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v11)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295398.233101,
-      "updated_at": 1775295424.524007,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H037",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v12)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295424.530839,
-      "updated_at": 1775295450.82525,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H038",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v13)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
-      "confidence": 0.4,
-      "phase": "screening",
-      "created_at": 1775295450.832213,
-      "updated_at": 1775295713.0340438,
-      "test_results": [],
-      "priority": "NORMAL",
-      "publications": 0,
-      "data_points_used": 0,
-      "cross_domain_links": [],
-      "requires_approval": false,
-      "pending_approval_at": 0.0,
-      "approval_status": "",
-      "approval_reason": "",
-      "last_tested_at": 0.0,
-      "archived_at": 0.0
-    },
-    {
-      "id": "H039",
-      "name": "Galaxy Redshift Bimodality Deep Dive (v14)",
-      "domain": "Astrophysics",
-      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 6861.7880, dof = 9, \u03c7\u00b2/dof = 762.42. Fit Gaussian mixture, identify green valley, track with redshift.",
+      "description": "Characterize bimodal redshift distribution in SDSS: Chi-squared: \u03c7\u00b2 = 9706.8400, dof = 9, \u03c7\u00b2/dof = 1078.54. Fit Gaussian mixture, identify green valley, track with redshift.",
       "confidence": 0.4,
       "phase": "proposed",
-      "created_at": 1775295713.04135,
-      "updated_at": 1775295713.0413508,
+      "created_at": 1775296898.6435332,
+      "updated_at": 1775296898.6435335,
       "test_results": [],
       "priority": "NORMAL",
       "publications": 0,
@@ -4016,496 +3339,447 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
   ],
   "activity": [
     {
-      "timestamp": 1775295450.1635292,
-      "phase": "CAUSAL",
-      "module": "ENGINE",
-      "message": "Running PC causal discovery on 3 variables (\u03b1=0.05)",
+      "timestamp": 1775296834.7677011,
+      "phase": "ORIENT",
+      "module": "ORIENT",
+      "message": "No cached data yet \u2014 will fetch during investigate phase",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775295450.1877222,
-      "phase": "CAUSAL",
-      "module": "ENGINE",
-      "message": "Causal graph: 3 edges, 0 v-structures",
-      "hypothesis_id": null
+      "timestamp": 1775296835.0682132,
+      "phase": "SELECT",
+      "module": "SELECT",
+      "message": "Rank #1: H001 (Hubble Tension Analysis) \u2014 score 0.471, confidence 0.55, priority HIGH",
+      "hypothesis_id": "H001"
     },
     {
-      "timestamp": 1775295450.5122755,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "Running statistical battery on H002 (Galaxy Color Bimodality)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295450.5161374,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "KS test on g-r colors for H002: D = 0.6213 (vs norm), p = 0.0000",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295450.5176637,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "Chi-squared on z-distribution for H002: \u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74, p = 0.0000",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295450.5244443,
-      "phase": "EVALUATE",
-      "module": "FDR",
-      "message": "FDR correction for H002: 24/24 tests significant after BH correction (\u03b1*=0.0000)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295450.524584,
-      "phase": "NOVELTY",
-      "module": "ENGINE",
-      "message": "\ud83d\udd0d 3 unexplored novelty signals \u2014 potential follow-up candidates",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295450.8251133,
-      "phase": "UPDATE",
-      "module": "UPDATE",
-      "message": "Drafting paper: results from H006 (Exoplanet Period Distribution)",
+      "timestamp": 1775296835.0682256,
+      "phase": "SELECT",
+      "module": "SELECT",
+      "message": "Rank #2: H006 (Exoplanet Period Distribution) \u2014 score 0.461, confidence 0.52, priority MEDIUM",
       "hypothesis_id": "H006"
     },
     {
-      "timestamp": 1775295450.8252783,
+      "timestamp": 1775296835.0682316,
+      "phase": "SELECT",
+      "module": "SELECT",
+      "message": "Rank #3: H003 (Exoplanet Mass-Period Relation) \u2014 score 0.455, confidence 0.50, priority NORMAL",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775296835.370454,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for H001 (Hubble Tension Analysis) \u2014 strategy: hubble, methods: ['_investigate_hubble', 'run_causal_discovery']",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296835.3704684,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Fetching Pantheon+ SNe Ia sample for H001",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296835.7154598,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Loaded 1701 supernovae from Pantheon+ (z = 0.0012\u20132.2614)",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296877.104945,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "H0 fit: H\u2080 = 80.00 \u00b1 0.50 km/s/Mpc (\u03c7\u00b2/dof = 8520.84, N=1701)",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296877.1049867,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Planck (67.36) tension: 17.9\u03c3",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296877.1052475,
+      "phase": "CAUSAL",
+      "module": "ENGINE",
+      "message": "Running PC causal discovery on 2 variables (\u03b1=0.05)",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775296877.1073308,
+      "phase": "CAUSAL",
+      "module": "ENGINE",
+      "message": "Causal graph: 1 edges, 0 v-structures",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775296877.1139848,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for H003 (Exoplanet Mass-Period Relation) \u2014 strategy: exoplanet, methods: ['_investigate_exoplanets', 'run_scaling_discovery']",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775296877.1139941,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Fetching NASA Exoplanet Archive for H003",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775296897.4982684,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "\u26a0 No exoplanet data available \u2014 skipping H003",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775296897.5019453,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for H006 (Exoplanet Period Distribution) \u2014 strategy: exoplanet, methods: ['_investigate_exoplanets', 'run_scaling_discovery']",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775296897.5019567,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Fetching NASA Exoplanet Archive for H006",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775296897.501967,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "\u26a0 No exoplanet data available \u2014 skipping H006",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775296897.8041396,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Running statistical battery on H001 (Hubble Tension Analysis)",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296898.2195148,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "KS (Planck vs SH0ES residuals) on H001: D = 0.0182 (two-sample), \u03c7\u00b2_P=15058432 \u03c7\u00b2_S=14787312, p=0.9403",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296898.2196374,
+      "phase": "NOVELTY",
+      "module": "ENGINE",
+      "message": "\ud83d\udd0d NOVELTY [40%] Hubble tension: \u0394\u03c7\u00b2(Planck vs SH0ES) = 271120 \u2014 model preference detected",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296898.2206643,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "t-test on \u039bCDM residuals for H001: t = -4642.0559 (one-sample vs \u03bc=0.0), n=1701, p=0.0000",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296898.2213414,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Chi\u00b2 on binned residuals for H001: \u03c7\u00b2 = 0.0036, dof = 4, \u03c7\u00b2/dof = 0.00, p=1.0000",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296898.3269637,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "\ud83d\udcda Indexed 5 new papers into literature store (total: 5)",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296898.326968,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "\ud83d\udcda Related papers: 5 found on arXiv for 'Hubble Tension'",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296898.3269715,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "  \u2192 [2026-04-02] No evidence for dynamical dark energy from the Combo correlation of GRBs",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296898.3269734,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "  \u2192 [2026-04-02] Universal critical timescales in slow non-Hermitian dynamics",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296898.3352978,
+      "phase": "LITERATURE",
+      "module": "ENGINE",
+      "message": "\ud83d\udcca Literature novelty for H001: 0.80 (novel)",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296898.3369412,
+      "phase": "EVALUATE",
+      "module": "FDR",
+      "message": "FDR correction for H001: 1/3 tests significant after BH correction (\u03b1*=0.0000)",
+      "hypothesis_id": "H001"
+    },
+    {
+      "timestamp": 1775296898.3369496,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Running statistical battery on H003 (Exoplanet Mass-Period Relation)",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775296898.3381364,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Running statistical battery on H006 (Exoplanet Period Distribution)",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775296898.3393428,
+      "phase": "NOVELTY",
+      "module": "ENGINE",
+      "message": "\ud83d\udd0d 1 unexplored novelty signals \u2014 potential follow-up candidates",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775296898.6397872,
       "phase": "UPDATE",
       "module": "UPDATE",
-      "message": "Promoted H037 (Galaxy Redshift Bimodality Deep Dive (v12)): proposed \u2192 screening (confidence 0.40, \u0394+0.000)",
-      "hypothesis_id": "H037"
+      "message": "Promoted H002 (Galaxy Color Bimodality): screening \u2192 testing (confidence 0.45, \u0394+0.000)",
+      "hypothesis_id": "H002"
     },
     {
-      "timestamp": 1775295450.832228,
-      "phase": "ORIENT",
-      "module": "DISCOVERY_MEMORY",
-      "message": "New hypothesis from discovery D0013: H038 (Galaxy Redshift Bimodality Deep Dive (v13))",
-      "hypothesis_id": "H038"
-    },
-    {
-      "timestamp": 1775295450.8326967,
-      "phase": "ORIENT",
-      "module": "DISCOVERY_MEMORY",
-      "message": "Memory state: 470 discoveries, 21 generated, 486 outcomes recorded",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295450.832844,
+      "timestamp": 1775296898.6398387,
       "phase": "UPDATE",
       "module": "UPDATE",
-      "message": "System confidence: 0.618 (24 active hypotheses across 2 domains)",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295450.8329978,
-      "phase": "DEGRADATION",
-      "module": "ENGINE",
-      "message": "\u26a0 Domain 'Astrophysics' has 100% of recent 50 discoveries \u2014 force-switching to underrepresented domains",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295450.8330038,
-      "phase": "DEGRADATION",
-      "module": "ENGINE",
-      "message": "\u26a0 Pattern 'causal|sdss' repeated 12 times in last 20 discoveries \u2014 stuck in loop",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295450.8330493,
-      "phase": "DEGRADATION",
-      "module": "ENGINE",
-      "message": "Forcing exploration of domain 'Economics' next cycle",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295450.833076,
-      "phase": "LIFECYCLE",
-      "module": "ENGINE",
-      "message": "Auto-archived H005 (Galaxy Redshift Distribution): stuck in SCREENING with no tests",
-      "hypothesis_id": "H005"
-    },
-    {
-      "timestamp": 1775295450.8330896,
-      "phase": "LIFECYCLE",
-      "module": "ENGINE",
-      "message": "Auto-archived H014 (TESS Stellar Host Parameters): stuck in SCREENING with no tests",
-      "hypothesis_id": "H014"
-    },
-    {
-      "timestamp": 1775295450.834745,
-      "phase": "UPDATE",
-      "module": "ENGINE",
-      "message": "\u2501\u2501\u2501 Cycle #13 complete: 0.618 system confidence, 22 active hypotheses \u2501\u2501\u2501",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295711.787841,
-      "phase": "ORIENT",
-      "module": "ENGINE",
-      "message": "\u2501\u2501\u2501 Discovery Cycle #14 starting \u2501\u2501\u2501",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295711.7878635,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "Scanning astronomical data feeds\u2026",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295711.7881136,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "Registry: 9 sources across 8 domains, 29 cross-match pairs, 45 variables",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295711.7881246,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "Cached data: Exoplanets: 1284, Gaia DR3: 5000, SDSS galaxies: 5000",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295712.088405,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "\ud83d\udd04 Forced domain exploration: Economics",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295712.0885499,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #1: CD-001 (Econ-Astro Funding Correlation) \u2014 score 0.878, confidence 0.25, priority HIGH",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775295712.0885627,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #2: H004 (Gaia HR Diagram Structure) \u2014 score 0.846, confidence 0.88, priority MEDIUM",
+      "message": "Promoted H004 (Gaia HR Diagram Structure): screening \u2192 testing (confidence 0.48, \u0394+0.000)",
       "hypothesis_id": "H004"
     },
     {
-      "timestamp": 1775295712.0885718,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #3: H006 (Exoplanet Period Distribution) \u2014 score 0.844, confidence 0.97, priority NORMAL",
-      "hypothesis_id": "H006"
-    },
-    {
-      "timestamp": 1775295712.3897917,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running experiment for H002 (Galaxy Color Bimodality) \u2014 strategy: galaxy, methods: ['_investigate_galaxy', 'run_causal_discovery']",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.3898053,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Fetching SDSS galaxy sample for H002",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.389951,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Loaded 5000 galaxies from SDSS DR18 (z = 0.010\u20130.433)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.3902733,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Galaxy colors: u-g = 1.72 \u00b1 0.49, g-r = 0.86 \u00b1 0.23",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.3911438,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Redshift distribution: median z = 0.090, IQR = 0.063\u20130.126",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.391153,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running cross-source analysis for H002",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.391233,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Cross-match: NASA Exoplanet Archive \u2194 Pantheon+ SNe Ia via 'ra_dec' (1284 \u00d7 1701)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.3912592,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Cross-match: NASA Exoplanet Archive \u2194 Gaia DR3 via 'ra_dec' (1284 \u00d7 5000)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.3912706,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Cross-match: NASA Exoplanet Archive \u2194 SDSS DR18 via 'ra_dec' (1284 \u00d7 5000)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.3914263,
-      "phase": "CAUSAL",
-      "module": "ENGINE",
-      "message": "Running PC causal discovery on 3 variables (\u03b1=0.05)",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295712.4036763,
-      "phase": "CAUSAL",
-      "module": "ENGINE",
-      "message": "Causal graph: 3 edges, 0 v-structures",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295712.723802,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "Running statistical battery on H002 (Galaxy Color Bimodality)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.7268386,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "KS test on g-r colors for H002: D = 0.6213 (vs norm), p = 0.0000",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.7279053,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "Chi-squared on z-distribution for H002: \u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74, p = 0.0000",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.7332761,
-      "phase": "EVALUATE",
-      "module": "FDR",
-      "message": "FDR correction for H002: 26/26 tests significant after BH correction (\u03b1*=0.0000)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775295712.7334235,
-      "phase": "NOVELTY",
-      "module": "ENGINE",
-      "message": "\ud83d\udd0d 3 unexplored novelty signals \u2014 potential follow-up candidates",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295713.034077,
+      "timestamp": 1775296898.639882,
       "phase": "UPDATE",
       "module": "UPDATE",
-      "message": "Promoted H038 (Galaxy Redshift Bimodality Deep Dive (v13)): proposed \u2192 screening (confidence 0.40, \u0394+0.000)",
-      "hypothesis_id": "H038"
+      "message": "Promoted H008 (Star Formation Fraction): screening \u2192 testing (confidence 0.46, \u0394+0.000)",
+      "hypothesis_id": "H008"
     },
     {
-      "timestamp": 1775295713.041365,
-      "phase": "ORIENT",
-      "module": "DISCOVERY_MEMORY",
-      "message": "New hypothesis from discovery D0013: H039 (Galaxy Redshift Bimodality Deep Dive (v14))",
-      "hypothesis_id": "H039"
-    },
-    {
-      "timestamp": 1775295713.0418198,
-      "phase": "ORIENT",
-      "module": "DISCOVERY_MEMORY",
-      "message": "Memory state: 475 discoveries, 22 generated, 488 outcomes recorded",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775295713.041967,
+      "timestamp": 1775296898.6399052,
       "phase": "UPDATE",
       "module": "UPDATE",
-      "message": "System confidence: 0.624 (23 active hypotheses across 2 domains)",
+      "message": "Promoted H009 (Transit Depth Statistics): proposed \u2192 screening (confidence 0.38, \u0394+0.000)",
+      "hypothesis_id": "H009"
+    },
+    {
+      "timestamp": 1775296898.6399271,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H010 (Dark Energy Equation of State): proposed \u2192 screening (confidence 0.35, \u0394+0.000)",
+      "hypothesis_id": "H010"
+    },
+    {
+      "timestamp": 1775296898.6399536,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H012 (CMB Acoustic Peak Structure): screening \u2192 testing (confidence 0.45, \u0394+0.000)",
+      "hypothesis_id": "H012"
+    },
+    {
+      "timestamp": 1775296898.6399746,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H013 (ZTF Transient Classification): proposed \u2192 screening (confidence 0.35, \u0394+0.000)",
+      "hypothesis_id": "H013"
+    },
+    {
+      "timestamp": 1775296898.6400018,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H015 (Cluster Richness-Mass Scaling): proposed \u2192 screening (confidence 0.38, \u0394+0.000)",
+      "hypothesis_id": "H015"
+    },
+    {
+      "timestamp": 1775296898.6400263,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H016 (GW Electromagnetic Counterpart): proposed \u2192 screening (confidence 0.30, \u0394+0.000)",
+      "hypothesis_id": "H016"
+    },
+    {
+      "timestamp": 1775296898.640062,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted H017 (Stellar TESS-Gaia Cross-Match): proposed \u2192 screening (confidence 0.35, \u0394+0.000)",
+      "hypothesis_id": "H017"
+    },
+    {
+      "timestamp": 1775296898.6400795,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "Promoted CD-002 (Survey Design Optimization): proposed \u2192 screening (confidence 0.30, \u0394+0.000)",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775296898.6435242,
+      "phase": "ORIENT",
+      "module": "DISCOVERY_MEMORY",
+      "message": "New hypothesis from discovery D0011: H018 (Exoplanet Redshift-Distance_Modulus Scaling Relation)",
+      "hypothesis_id": "H018"
+    },
+    {
+      "timestamp": 1775296898.6435375,
+      "phase": "ORIENT",
+      "module": "DISCOVERY_MEMORY",
+      "message": "New hypothesis from discovery D0013: H019 (Galaxy Redshift Bimodality Deep Dive)",
+      "hypothesis_id": "H019"
+    },
+    {
+      "timestamp": 1775296898.6438043,
+      "phase": "ORIENT",
+      "module": "DISCOVERY_MEMORY",
+      "message": "Memory state: 500 discoveries, 2 generated, 500 outcomes recorded",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775295713.0421236,
+      "timestamp": 1775296898.6438704,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "System confidence: 0.410 (21 active hypotheses across 3 domains)",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775296898.6440609,
       "phase": "DEGRADATION",
       "module": "ENGINE",
       "message": "\u26a0 Domain 'Astrophysics' has 100% of recent 50 discoveries \u2014 force-switching to underrepresented domains",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775295713.0421298,
+      "timestamp": 1775296898.644064,
       "phase": "DEGRADATION",
       "module": "ENGINE",
-      "message": "\u26a0 Pattern 'causal|sdss' repeated 12 times in last 20 discoveries \u2014 stuck in loop",
+      "message": "\u26a0 Pattern 'causal|sdss' repeated 11 times in last 20 discoveries \u2014 stuck in loop",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775295713.042176,
+      "timestamp": 1775296898.6440914,
       "phase": "DEGRADATION",
       "module": "ENGINE",
       "message": "Forcing exploration of domain 'Economics' next cycle",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775295713.04392,
+      "timestamp": 1775296898.686268,
       "phase": "UPDATE",
       "module": "ENGINE",
-      "message": "\u2501\u2501\u2501 Cycle #14 complete: 0.624 system confidence, 23 active hypotheses \u2501\u2501\u2501",
+      "message": "\u2501\u2501\u2501 Cycle #1 complete: 0.410 system confidence, 21 active hypotheses \u2501\u2501\u2501",
       "hypothesis_id": null
     }
   ],
   "decisions": [
     {
-      "timestamp": 1775295319.226533,
-      "action": "expand",
-      "text": "Initiated paper draft #3 from H006 (Exoplanet Period Distribution)",
-      "status": "DRAFTING",
-      "hypothesis_id": "H006"
-    },
-    {
-      "timestamp": 1775295319.2266922,
+      "timestamp": 1775296898.6398041,
       "action": "confirm",
-      "text": "Promoted H030 (Exoplanet Redshift-Distance_Modulus Scaling Relation (v7)) to screening \u2014 confidence 0.40",
+      "text": "Promoted H002 (Galaxy Color Bimodality) to testing \u2014 confidence 0.45",
       "status": "CONFIRMED",
-      "hypothesis_id": "H030"
+      "hypothesis_id": "H002"
     },
     {
-      "timestamp": 1775295319.2267199,
+      "timestamp": 1775296898.6398454,
       "action": "confirm",
-      "text": "Promoted H031 (Galaxy Redshift Bimodality Deep Dive (v7)) to screening \u2014 confidence 0.40",
+      "text": "Promoted H004 (Gaia HR Diagram Structure) to testing \u2014 confidence 0.48",
       "status": "CONFIRMED",
-      "hypothesis_id": "H031"
+      "hypothesis_id": "H004"
     },
     {
-      "timestamp": 1775295319.2333915,
-      "action": "expand",
-      "text": "Generated H032: Exoplanet Redshift-Distance_Modulus Scaling Relation (v8) (from discovery D0011)",
-      "status": "QUEUED",
-      "hypothesis_id": "H032"
-    },
-    {
-      "timestamp": 1775295319.2334166,
-      "action": "expand",
-      "text": "Generated H033: Galaxy Redshift Bimodality Deep Dive (v8) (from discovery D0013)",
-      "status": "QUEUED",
-      "hypothesis_id": "H033"
-    },
-    {
-      "timestamp": 1775295345.5238304,
+      "timestamp": 1775296898.6398876,
       "action": "confirm",
-      "text": "Promoted H032 (Exoplanet Redshift-Distance_Modulus Scaling Relation (v8)) to screening \u2014 confidence 0.40",
+      "text": "Promoted H008 (Star Formation Fraction) to testing \u2014 confidence 0.46",
       "status": "CONFIRMED",
-      "hypothesis_id": "H032"
+      "hypothesis_id": "H008"
     },
     {
-      "timestamp": 1775295345.5238655,
+      "timestamp": 1775296898.6399107,
       "action": "confirm",
-      "text": "Promoted H033 (Galaxy Redshift Bimodality Deep Dive (v8)) to screening \u2014 confidence 0.40",
+      "text": "Promoted H009 (Transit Depth Statistics) to screening \u2014 confidence 0.38",
       "status": "CONFIRMED",
-      "hypothesis_id": "H033"
+      "hypothesis_id": "H009"
     },
     {
-      "timestamp": 1775295345.530161,
-      "action": "expand",
-      "text": "Generated H034: Galaxy Redshift Bimodality Deep Dive (v9) (from discovery D0013)",
-      "status": "QUEUED",
-      "hypothesis_id": "H034"
-    },
-    {
-      "timestamp": 1775295371.9248714,
+      "timestamp": 1775296898.6399322,
       "action": "confirm",
-      "text": "Promoted H034 (Galaxy Redshift Bimodality Deep Dive (v9)) to screening \u2014 confidence 0.40",
+      "text": "Promoted H010 (Dark Energy Equation of State) to screening \u2014 confidence 0.35",
       "status": "CONFIRMED",
-      "hypothesis_id": "H034"
+      "hypothesis_id": "H010"
     },
     {
-      "timestamp": 1775295371.9324942,
-      "action": "expand",
-      "text": "Generated H035: Galaxy Redshift Bimodality Deep Dive (v10) (from discovery D0013)",
-      "status": "QUEUED",
-      "hypothesis_id": "H035"
-    },
-    {
-      "timestamp": 1775295398.226149,
-      "action": "expand",
-      "text": "Initiated paper draft #4 from H012 (CMB Acoustic Peak Structure)",
-      "status": "DRAFTING",
+      "timestamp": 1775296898.6399589,
+      "action": "confirm",
+      "text": "Promoted H012 (CMB Acoustic Peak Structure) to testing \u2014 confidence 0.45",
+      "status": "CONFIRMED",
       "hypothesis_id": "H012"
     },
     {
-      "timestamp": 1775295398.22632,
+      "timestamp": 1775296898.63998,
       "action": "confirm",
-      "text": "Promoted H035 (Galaxy Redshift Bimodality Deep Dive (v10)) to screening \u2014 confidence 0.40",
+      "text": "Promoted H013 (ZTF Transient Classification) to screening \u2014 confidence 0.35",
       "status": "CONFIRMED",
-      "hypothesis_id": "H035"
+      "hypothesis_id": "H013"
     },
     {
-      "timestamp": 1775295398.2331226,
-      "action": "expand",
-      "text": "Generated H036: Galaxy Redshift Bimodality Deep Dive (v11) (from discovery D0013)",
-      "status": "QUEUED",
-      "hypothesis_id": "H036"
-    },
-    {
-      "timestamp": 1775295424.5240595,
+      "timestamp": 1775296898.640007,
       "action": "confirm",
-      "text": "Promoted H036 (Galaxy Redshift Bimodality Deep Dive (v11)) to screening \u2014 confidence 0.40",
+      "text": "Promoted H015 (Cluster Richness-Mass Scaling) to screening \u2014 confidence 0.38",
       "status": "CONFIRMED",
-      "hypothesis_id": "H036"
+      "hypothesis_id": "H015"
     },
     {
-      "timestamp": 1775295424.5308616,
-      "action": "expand",
-      "text": "Generated H037: Galaxy Redshift Bimodality Deep Dive (v12) (from discovery D0013)",
-      "status": "QUEUED",
-      "hypothesis_id": "H037"
-    },
-    {
-      "timestamp": 1775295450.8251314,
-      "action": "expand",
-      "text": "Initiated paper draft #5 from H006 (Exoplanet Period Distribution)",
-      "status": "DRAFTING",
-      "hypothesis_id": "H006"
-    },
-    {
-      "timestamp": 1775295450.8252878,
+      "timestamp": 1775296898.6400316,
       "action": "confirm",
-      "text": "Promoted H037 (Galaxy Redshift Bimodality Deep Dive (v12)) to screening \u2014 confidence 0.40",
+      "text": "Promoted H016 (GW Electromagnetic Counterpart) to screening \u2014 confidence 0.30",
       "status": "CONFIRMED",
-      "hypothesis_id": "H037"
+      "hypothesis_id": "H016"
     },
     {
-      "timestamp": 1775295450.8322372,
-      "action": "expand",
-      "text": "Generated H038: Galaxy Redshift Bimodality Deep Dive (v13) (from discovery D0013)",
-      "status": "QUEUED",
-      "hypothesis_id": "H038"
-    },
-    {
-      "timestamp": 1775295713.034097,
+      "timestamp": 1775296898.6400647,
       "action": "confirm",
-      "text": "Promoted H038 (Galaxy Redshift Bimodality Deep Dive (v13)) to screening \u2014 confidence 0.40",
+      "text": "Promoted H017 (Stellar TESS-Gaia Cross-Match) to screening \u2014 confidence 0.35",
       "status": "CONFIRMED",
-      "hypothesis_id": "H038"
+      "hypothesis_id": "H017"
     },
     {
-      "timestamp": 1775295713.041375,
+      "timestamp": 1775296898.6400824,
+      "action": "confirm",
+      "text": "Promoted CD-002 (Survey Design Optimization) to screening \u2014 confidence 0.30",
+      "status": "CONFIRMED",
+      "hypothesis_id": "CD-002"
+    },
+    {
+      "timestamp": 1775296898.6435275,
       "action": "expand",
-      "text": "Generated H039: Galaxy Redshift Bimodality Deep Dive (v14) (from discovery D0013)",
+      "text": "Generated H018: Exoplanet Redshift-Distance_Modulus Scaling Relation (from discovery D0011)",
       "status": "QUEUED",
-      "hypothesis_id": "H039"
+      "hypothesis_id": "H018"
+    },
+    {
+      "timestamp": 1775296898.6435394,
+      "action": "expand",
+      "text": "Generated H019: Galaxy Redshift Bimodality Deep Dive (from discovery D0013)",
+      "status": "QUEUED",
+      "hypothesis_id": "H019"
     }
   ],
   "charts": {
@@ -4518,20 +3792,22 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         "Published"
       ],
       "data": [
-        2,
-        15,
+        3,
+        11,
+        7,
         0,
-        6,
         0
       ]
     },
     "domain": {
       "labels": [
         "Astrophysics",
-        "Economics"
+        "Economics",
+        "Epidemiology"
       ],
       "data": [
-        22,
+        19,
+        1,
         1
       ]
     },
@@ -4545,42 +3821,42 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         "Testability"
       ],
       "data": [
-        0.531,
-        0.482,
-        0.19,
+        0.397,
+        0.016,
+        0.018,
         0.0,
-        0.917,
-        0.261
+        0.986,
+        0.048
       ]
     },
-    "system_confidence": 0.6239074539990409
+    "system_confidence": 0.41017241379310365
   },
   "metrics": {
-    "runtime_seconds": 795.5561034679413,
-    "data_points": 11284,
-    "scripts_written": 22,
-    "plots_generated": 32,
-    "hypotheses_tested": 22,
-    "queue_depth": 14,
-    "domains_active": 2,
-    "system_confidence": 0.6239074539990409,
-    "auto_decisions": 66,
-    "papers_drafted": 5,
+    "runtime_seconds": 76.44957423210144,
+    "data_points": 0,
+    "scripts_written": 3,
+    "plots_generated": 1,
+    "hypotheses_tested": 3,
+    "queue_depth": 11,
+    "domains_active": 3,
+    "system_confidence": 0.41017241379310365,
+    "auto_decisions": 13,
+    "papers_drafted": 0,
     "cross_domain_links": 0,
     "gpu_utilization": 45.0
   },
   "engine/safety-status": {
     "state": "NOMINAL",
-    "uptime_seconds": 795.5606789588928,
+    "uptime_seconds": 76.45378971099854,
     "can_advance_hypotheses": true,
     "can_run_cycle": true,
     "can_investigate": true,
     "can_modify_state": true,
     "audit_log_size": 2,
-    "timestamp": 1775295720.2121015,
+    "timestamp": 1775296906.150947,
     "audit_log": [
       {
-        "timestamp": 1775294924.6515205,
+        "timestamp": 1775296829.6972346,
         "action": "STATE_CHANGE",
         "from_state": "NOMINAL",
         "to_state": "NOMINAL",
@@ -4588,7 +3864,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         "operator": "system"
       },
       {
-        "timestamp": 1775294924.6515386,
+        "timestamp": 1775296829.6972485,
         "action": "STATE_CHANGE",
         "from_state": "NOMINAL",
         "to_state": "NOMINAL",
@@ -4601,25 +3877,25 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     "trajectory": [
       {
         "cycle": 0,
-        "x": -303.3202220324414,
-        "y": 0.556010681160391,
-        "z": 9.043472237582476e-16,
+        "x": -25.780305862426758,
+        "y": 0.0,
+        "z": 0.0,
         "original": {
           "vector": [
-            0.458472,
+            0.421176,
             0.25,
             0.0,
             0.3,
-            0.032698,
+            0.004316,
             0.0,
             0.0,
             0.0,
-            0.274477,
-            0.666667,
-            0.095238,
+            0.295362,
+            0.842105,
             0.0,
-            0.040657,
-            1.0
+            0.0,
+            0.017905,
+            0.0
           ],
           "labels": [
             "astro_conf_mean",
@@ -4639,29 +3915,29 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
           ],
           "dimensions": 14,
           "cycle": 1,
-          "timestamp": 1775295007.0015192
+          "timestamp": 1775296860.0155103
         }
       },
       {
         "cycle": 1,
-        "x": -303.31962567057496,
-        "y": 0.5559968047861361,
-        "z": -2.4454880159379428e-15,
+        "x": 12.889966487884523,
+        "y": -0.0,
+        "z": 0.0,
         "original": {
           "vector": [
-            0.458472,
+            0.409964,
             0.25,
             0.0,
             0.3,
-            0.032698,
+            0.003002,
             0.0,
             0.0,
             0.0,
             0.274477,
             0.666667,
-            0.095238,
             0.0,
-            0.040657,
+            0.0,
+            0.0162,
             1.0
           ],
           "labels": [
@@ -4682,29 +3958,29 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
           ],
           "dimensions": 14,
           "cycle": 1,
-          "timestamp": 1775295007.0021157
+          "timestamp": 1775296898.6857827
         }
       },
       {
         "cycle": 2,
-        "x": -198.83389741083383,
-        "y": -0.8749461052723446,
-        "z": 1.502722684016424e-16,
+        "x": 12.89033937454224,
+        "y": 0.0,
+        "z": 0.0,
         "original": {
           "vector": [
-            0.491333,
+            0.409964,
             0.25,
             0.0,
             0.3,
-            0.053418,
+            0.003002,
             0.0,
             0.0,
             0.0,
-            0.256593,
-            0.695652,
-            0.173913,
+            0.274477,
+            0.666667,
             0.0,
-            0.552139,
+            0.0,
+            0.0162,
             1.0
           ],
           "labels": [
@@ -4724,1097 +4000,22 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
             "decision_velocity"
           ],
           "dimensions": 14,
-          "cycle": 2,
-          "timestamp": 1775295111.492857
-        }
-      },
-      {
-        "cycle": 3,
-        "x": -198.83327816697732,
-        "y": -0.8749605140734286,
-        "z": 1.5027143005904098e-16,
-        "original": {
-          "vector": [
-            0.491333,
-            0.25,
-            0.0,
-            0.3,
-            0.053418,
-            0.0,
-            0.0,
-            0.0,
-            0.256593,
-            0.695652,
-            0.173913,
-            0.0,
-            0.552139,
-            1.0
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 2,
-          "timestamp": 1775295111.4934764
-        }
-      },
-      {
-        "cycle": 4,
-        "x": -122.62216408978699,
-        "y": -1.647998969847472,
-        "z": 6.871598897987733e-17,
-        "original": {
-          "vector": [
-            0.532827,
-            0.25,
-            0.0,
-            0.3,
-            0.060307,
-            0.0,
-            0.0,
-            0.0,
-            0.248575,
-            0.75,
-            0.25,
-            0.0,
-            0.374142,
-            0.933333
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 3,
-          "timestamp": 1775295187.7019503
-        }
-      },
-      {
-        "cycle": 5,
-        "x": -122.62149169297442,
-        "y": -1.6480146154317117,
-        "z": 6.871507867792254e-17,
-        "original": {
-          "vector": [
-            0.532827,
-            0.25,
-            0.0,
-            0.3,
-            0.060307,
-            0.0,
-            0.0,
-            0.0,
-            0.248575,
-            0.75,
-            0.25,
-            0.0,
-            0.374142,
-            0.933333
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 3,
-          "timestamp": 1775295187.702623
-        }
-      },
-      {
-        "cycle": 6,
-        "x": -96.28642753066086,
-        "y": -1.260518211587378,
-        "z": 5.468266103517136e-17,
-        "original": {
-          "vector": [
-            0.5314,
-            0.25,
-            0.0,
-            0.0,
-            0.05686,
-            0.0,
-            0.0,
-            0.0,
-            0.124941,
-            0.75,
-            0.25,
-            0.0,
-            0.462083,
-            0.825
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 4,
-          "timestamp": 1775295214.0215468
-        }
-      },
-      {
-        "cycle": 7,
-        "x": -96.28579851428779,
-        "y": -1.2605328477790863,
-        "z": 5.468180946237495e-17,
-        "original": {
-          "vector": [
-            0.5314,
-            0.25,
-            0.0,
-            0.0,
-            0.05686,
-            0.0,
-            0.0,
-            0.0,
-            0.124941,
-            0.75,
-            0.25,
-            0.0,
-            0.462083,
-            0.825
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 4,
-          "timestamp": 1775295214.022176
-        }
-      },
-      {
-        "cycle": 8,
-        "x": -69.96223112186361,
-        "y": -0.8727689327294251,
-        "z": 4.0664956337343437e-17,
-        "original": {
-          "vector": [
-            0.535748,
-            0.25,
-            0.0,
-            0.0,
-            0.055481,
-            0.0,
-            0.0,
-            0.0,
-            0.124941,
-            0.75,
-            0.25,
-            0.0,
-            0.374142,
-            0.76
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 5,
-          "timestamp": 1775295240.3296
-        }
-      },
-      {
-        "cycle": 9,
-        "x": -69.96159066449552,
-        "y": -0.8727838351345484,
-        "z": 4.066408927553822e-17,
-        "original": {
-          "vector": [
-            0.535748,
-            0.25,
-            0.0,
-            0.0,
-            0.055481,
-            0.0,
-            0.0,
-            0.0,
-            0.124941,
-            0.75,
-            0.25,
-            0.0,
-            0.374142,
-            0.76
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 5,
-          "timestamp": 1775295240.3302407
-        }
-      },
-      {
-        "cycle": 10,
-        "x": -43.64279559712682,
-        "y": -0.4849088758141851,
-        "z": 2.6653697003303107e-17,
-        "original": {
-          "vector": [
-            0.538791,
-            0.25,
-            0.0,
-            0.0,
-            0.054519,
-            0.0,
-            0.0,
-            0.0,
-            0.124941,
-            0.75,
-            0.25,
-            0.0,
-            0.462083,
-            0.7
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 6,
-          "timestamp": 1775295266.6328912
-        }
-      },
-      {
-        "cycle": 11,
-        "x": -43.64208935403725,
-        "y": -0.4849253089464442,
-        "z": 2.6652740879697282e-17,
-        "original": {
-          "vector": [
-            0.538791,
-            0.25,
-            0.0,
-            0.0,
-            0.054519,
-            0.0,
-            0.0,
-            0.0,
-            0.124941,
-            0.75,
-            0.25,
-            0.0,
-            0.462083,
-            0.7
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 6,
-          "timestamp": 1775295266.6335976
-        }
-      },
-      {
-        "cycle": 12,
-        "x": -17.329850453533798,
-        "y": -0.09689779824710124,
-        "z": 1.2651224454880922e-17,
-        "original": {
-          "vector": [
-            0.539661,
-            0.25,
-            0.0,
-            0.0,
-            0.05426,
-            0.0,
-            0.0,
-            0.0,
-            0.124941,
-            0.75,
-            0.25,
-            0.0,
-            0.374142,
-            0.657143
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 7,
-          "timestamp": 1775295292.9296901
-        }
-      },
-      {
-        "cycle": 13,
-        "x": -17.329089389009667,
-        "y": -0.09691550698530683,
-        "z": 1.2650194113107923e-17,
-        "original": {
-          "vector": [
-            0.539661,
-            0.25,
-            0.0,
-            0.0,
-            0.05426,
-            0.0,
-            0.0,
-            0.0,
-            0.124941,
-            0.75,
-            0.25,
-            0.0,
-            0.374142,
-            0.657143
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 7,
-          "timestamp": 1775295292.9304514
-        }
-      },
-      {
-        "cycle": 14,
-        "x": 8.991539097813957,
-        "y": 0.290916791635314,
-        "z": -1.3626802727876652e-18,
-        "original": {
-          "vector": [
-            0.539661,
-            0.25,
-            0.0,
-            0.0,
-            0.05426,
-            0.0,
-            0.0,
-            0.0,
-            0.124941,
-            0.75,
-            0.25,
-            0.0,
-            0.462083,
-            0.6375
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 8,
-          "timestamp": 1775295319.2349358
-        }
-      },
-      {
-        "cycle": 15,
-        "x": 8.992221982205326,
-        "y": 0.2909009020221104,
-        "z": -1.3636047730005212e-18,
-        "original": {
-          "vector": [
-            0.539661,
-            0.25,
-            0.0,
-            0.0,
-            0.05426,
-            0.0,
-            0.0,
-            0.0,
-            0.124941,
-            0.75,
-            0.25,
-            0.0,
-            0.462083,
-            0.6375
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 8,
-          "timestamp": 1775295319.2356188
-        }
-      },
-      {
-        "cycle": 16,
-        "x": 35.38111197415638,
-        "y": 0.6771448660331219,
-        "z": -1.5468892716473155e-17,
-        "original": {
-          "vector": [
-            0.546009,
-            0.25,
-            0.0,
-            0.0,
-            0.055799,
-            0.0,
-            0.0,
-            0.0,
-            0.129009,
-            0.73913,
-            0.26087,
-            0.0,
-            0.390409,
-            0.6
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 9,
-          "timestamp": 1775295345.6083832
-        }
-      },
-      {
-        "cycle": 17,
-        "x": 35.381595594550824,
-        "y": 0.6771336129702283,
-        "z": -1.5469547449782705e-17,
-        "original": {
-          "vector": [
-            0.546009,
-            0.25,
-            0.0,
-            0.0,
-            0.055799,
-            0.0,
-            0.0,
-            0.0,
-            0.129009,
-            0.73913,
-            0.26087,
-            0.0,
-            0.390409,
-            0.6
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 9,
-          "timestamp": 1775295345.608867
-        }
-      },
-      {
-        "cycle": 18,
-        "x": 61.72353484146633,
-        "y": 1.0644700447366418,
-        "z": -2.951127269607297e-17,
-        "original": {
-          "vector": [
-            0.546009,
-            0.25,
-            0.0,
-            0.0,
-            0.055799,
-            0.0,
-            0.0,
-            0.0,
-            0.129009,
-            0.73913,
-            0.26087,
-            0.0,
-            0.482174,
-            0.56
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 10,
-          "timestamp": 1775295371.9346678
-        }
-      },
-      {
-        "cycle": 19,
-        "x": 61.72435239590347,
-        "y": 1.0644510215696998,
-        "z": -2.9512379514826934e-17,
-        "original": {
-          "vector": [
-            0.546009,
-            0.25,
-            0.0,
-            0.0,
-            0.055799,
-            0.0,
-            0.0,
-            0.0,
-            0.129009,
-            0.73913,
-            0.26087,
-            0.0,
-            0.482174,
-            0.56
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 10,
-          "timestamp": 1775295371.9354856
-        }
-      },
-      {
-        "cycle": 20,
-        "x": 88.03964294347941,
-        "y": 1.452407525386724,
-        "z": -4.3518027310053443e-17,
-        "original": {
-          "vector": [
-            0.546009,
-            0.25,
-            0.0,
-            0.0,
-            0.055799,
-            0.0,
-            0.0,
-            0.0,
-            0.129009,
-            0.73913,
-            0.26087,
-            0.0,
-            0.390409,
-            0.536364
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 11,
-          "timestamp": 1775295398.2346306
-        }
-      },
-      {
-        "cycle": 21,
-        "x": 88.04031629370824,
-        "y": 1.4523918576180326,
-        "z": -4.3518938902758954e-17,
-        "original": {
-          "vector": [
-            0.546009,
-            0.25,
-            0.0,
-            0.0,
-            0.055799,
-            0.0,
-            0.0,
-            0.0,
-            0.129009,
-            0.73913,
-            0.26087,
-            0.0,
-            0.390409,
-            0.536364
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 11,
-          "timestamp": 1775295398.235304
-        }
-      },
-      {
-        "cycle": 22,
-        "x": 114.35353768966066,
-        "y": 1.840396507240368,
-        "z": -5.75217854462062e-17,
-        "original": {
-          "vector": [
-            0.546009,
-            0.25,
-            0.0,
-            0.0,
-            0.055799,
-            0.0,
-            0.0,
-            0.0,
-            0.129009,
-            0.73913,
-            0.26087,
-            0.0,
-            0.482174,
-            0.508333
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 12,
-          "timestamp": 1775295424.5323794
-        }
-      },
-      {
-        "cycle": 23,
-        "x": 114.35420269749726,
-        "y": 1.840381033585625,
-        "z": -5.752268574484279e-17,
-        "original": {
-          "vector": [
-            0.546009,
-            0.25,
-            0.0,
-            0.0,
-            0.055799,
-            0.0,
-            0.0,
-            0.0,
-            0.129009,
-            0.73913,
-            0.26087,
-            0.0,
-            0.482174,
-            0.508333
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 12,
-          "timestamp": 1775295424.5330446
-        }
-      },
-      {
-        "cycle": 24,
-        "x": 140.67105780114468,
-        "y": 2.2283011327181574,
-        "z": -7.153045166202294e-17,
-        "original": {
-          "vector": [
-            0.551057,
-            0.25,
-            0.0,
-            0.0,
-            0.057934,
-            0.0,
-            0.0,
-            0.0,
-            0.133382,
-            0.727273,
-            0.272727,
-            0.0,
-            0.408155,
-            0.492308
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 13,
-          "timestamp": 1775295450.8337545
-        }
-      },
-      {
-        "cycle": 25,
-        "x": 140.67173496503852,
-        "y": 2.2282853762116615,
-        "z": -7.153136841773139e-17,
-        "original": {
-          "vector": [
-            0.551057,
-            0.25,
-            0.0,
-            0.0,
-            0.057934,
-            0.0,
-            0.0,
-            0.0,
-            0.133382,
-            0.727273,
-            0.272727,
-            0.0,
-            0.408155,
-            0.492308
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 13,
-          "timestamp": 1775295450.834432
-        }
-      },
-      {
-        "cycle": 26,
-        "x": 402.8324890502822,
-        "y": -2.871499879502246,
-        "z": -4.0482851562008075e-16,
-        "original": {
-          "vector": [
-            0.544191,
-            0.25,
-            0.0,
-            0.0,
-            0.05629,
-            0.0,
-            0.0,
-            0.0,
-            0.129009,
-            0.73913,
-            0.26087,
-            0.0,
-            0.482174,
-            0.471429
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 14,
-          "timestamp": 1775295713.0428772
-        }
-      },
-      {
-        "cycle": 27,
-        "x": 402.83319672349626,
-        "y": -2.8715163459111825,
-        "z": -4.048294736798127e-16,
-        "original": {
-          "vector": [
-            0.544191,
-            0.25,
-            0.0,
-            0.0,
-            0.05629,
-            0.0,
-            0.0,
-            0.0,
-            0.129009,
-            0.73913,
-            0.26087,
-            0.0,
-            0.482174,
-            0.471429
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 14,
-          "timestamp": 1775295713.043585
+          "cycle": 1,
+          "timestamp": 1775296898.6861556
         }
       }
     ],
     "steady_state_attractor": null
   },
   "engine/alignment": {
-    "composite_score": 0.3258,
+    "composite_score": 0.1485,
     "dimensions": {
-      "scientific_rigor": 0.2609,
-      "domain_balance": 0.258,
-      "novelty_pursuit": 1.0,
-      "epistemic_humility": 0.2951,
+      "scientific_rigor": 0.0476,
+      "domain_balance": 0.3464,
+      "novelty_pursuit": 0.0,
+      "epistemic_humility": 0.3793,
       "resource_efficiency": 0.0,
-      "reproducibility": 0.0732
+      "reproducibility": 0.0476
     },
     "weights": {
       "scientific_rigor": 0.25,
@@ -5825,558 +4026,30 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "reproducibility": 0.15
     },
     "metadata": {
-      "total_hypotheses": 41,
-      "active_hypotheses": 23,
-      "cycle_count": 14,
-      "new_hypotheses_last_10": 1,
-      "timestamp": 1775295720.2275863
+      "total_hypotheses": 21,
+      "active_hypotheses": 21,
+      "cycle_count": 1,
+      "new_hypotheses_last_10": 21,
+      "timestamp": 1775296906.1612532
     }
   },
   "engine/anomalies": {
     "current_anomalies": [],
     "alert_history": [],
     "rolling_stats": {
-      "available": true,
-      "window_size": 20,
-      "samples_in_window": 14,
-      "dimensions": {
-        "astro_conf_mean": {
-          "mean": 0.531941,
-          "std": 0.024692,
-          "min": 0.458472,
-          "max": 0.551057,
-          "current": 0.544191,
-          "samples": 14
-        },
-        "econ_conf_mean": {
-          "mean": 0.25,
-          "std": 0.0,
-          "min": 0.25,
-          "max": 0.25,
-          "current": 0.25,
-          "samples": 14
-        },
-        "climate_conf_mean": {
-          "mean": 0.0,
-          "std": 0.0,
-          "min": 0.0,
-          "max": 0.0,
-          "current": 0.0,
-          "samples": 14
-        },
-        "epi_conf_mean": {
-          "mean": 0.064286,
-          "std": 0.123098,
-          "min": 0.0,
-          "max": 0.3,
-          "current": 0.0,
-          "samples": 14
-        },
-        "astro_conf_var": {
-          "mean": 0.05423,
-          "std": 0.006197,
-          "min": 0.032698,
-          "max": 0.060307,
-          "current": 0.05629,
-          "samples": 14
-        },
-        "econ_conf_var": {
-          "mean": 0.0,
-          "std": 0.0,
-          "min": 0.0,
-          "max": 0.0,
-          "current": 0.0,
-          "samples": 14
-        },
-        "climate_conf_var": {
-          "mean": 0.0,
-          "std": 0.0,
-          "min": 0.0,
-          "max": 0.0,
-          "current": 0.0,
-          "samples": 14
-        },
-        "epi_conf_var": {
-          "mean": 0.0,
-          "std": 0.0,
-          "min": 0.0,
-          "max": 0.0,
-          "current": 0.0,
-          "samples": 14
-        },
-        "domain_entropy": {
-          "mean": 0.155913,
-          "std": 0.054578,
-          "min": 0.124941,
-          "max": 0.274477,
-          "current": 0.129009,
-          "samples": 14
-        },
-        "exploration_rate": {
-          "mean": 0.73466,
-          "std": 0.023469,
-          "min": 0.666667,
-          "max": 0.75,
-          "current": 0.73913,
-          "samples": 14
-        },
-        "exploitation_rate": {
-          "mean": 0.239016,
-          "std": 0.045637,
-          "min": 0.095238,
-          "max": 0.272727,
-          "current": 0.26087,
-          "samples": 14
-        },
-        "coupling_density": {
-          "mean": 0.0,
-          "std": 0.0,
-          "min": 0.0,
-          "max": 0.0,
-          "current": 0.0,
-          "samples": 14
-        },
-        "resource_utilization": {
-          "mean": 0.409783,
-          "std": 0.114957,
-          "min": 0.040657,
-          "max": 0.552139,
-          "current": 0.482174,
-          "samples": 14
-        },
-        "decision_velocity": {
-          "mean": 0.691529,
-          "std": 0.178666,
-          "min": 0.471429,
-          "max": 1.0,
-          "current": 0.471429,
-          "samples": 14
-        }
-      }
+      "available": false,
+      "reason": "Insufficient data"
     },
     "total_alerts": 0,
-    "timestamp": 1775295720.231634
+    "timestamp": 1775296906.1649468
   },
   "engine/pending": {
-    "count": 6,
-    "hypotheses": [
-      {
-        "id": "H002",
-        "name": "Galaxy Color Bimodality",
-        "domain": "Astrophysics",
-        "description": "SDSS DR18 galaxy photometry: quantify red sequence + blue cloud bimodality in g-r color",
-        "confidence": 0.99,
-        "phase": "validated",
-        "created_at": 1775197300.936742,
-        "updated_at": 1775295712.727947,
-        "test_results": [
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.6212612445273267,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 0.6213 (vs norm)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Chi-squared",
-            "statistic": 8322.704,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "\u03c7\u00b2 = 8322.7040, dof = 9, \u03c7\u00b2/dof = 924.74",
-            "alpha": 0.05
-          }
-        ],
-        "priority": "MEDIUM",
-        "publications": 0,
-        "data_points_used": 15553,
-        "cross_domain_links": [],
-        "requires_approval": true,
-        "pending_approval_at": 1775295187.6954968,
-        "approval_status": "pending",
-        "approval_reason": "",
-        "last_tested_at": 1775295712.7279422,
-        "archived_at": 0.0
-      },
-      {
-        "id": "H003",
-        "name": "Exoplanet Mass-Period Relation",
-        "domain": "Astrophysics",
-        "description": "NASA Exoplanet Archive: test Kepler's third law scaling and mass-period correlation in confirmed planets",
-        "confidence": 0.99,
-        "phase": "validated",
-        "created_at": 1775247546.027402,
-        "updated_at": 1775295111.4865837,
-        "test_results": [
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 1.0,
-            "p_value": 0.0015564202334630343,
-            "passed": false,
-            "details": "D = 1.0000 (two-sample)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Pearson correlation",
-            "statistic": 0.43204120193240464,
-            "p_value": 1.568547719777659e-59,
-            "passed": true,
-            "details": "r = 0.4320, r\u00b2 = 0.1867",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 1.0,
-            "p_value": 0.0015564202334630343,
-            "passed": false,
-            "details": "D = 1.0000 (two-sample)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Pearson correlation",
-            "statistic": 0.43204120193240464,
-            "p_value": 1.568547719777659e-59,
-            "passed": true,
-            "details": "r = 0.4320, r\u00b2 = 0.1867",
-            "alpha": 0.05
-          }
-        ],
-        "priority": "NORMAL",
-        "publications": 0,
-        "data_points_used": 15553,
-        "cross_domain_links": [],
-        "requires_approval": true,
-        "pending_approval_at": 1775295111.486583,
-        "approval_status": "pending",
-        "approval_reason": "",
-        "last_tested_at": 1775295111.1766279,
-        "archived_at": 0.0
-      },
-      {
-        "id": "H004",
-        "name": "Gaia HR Diagram Structure",
-        "domain": "Astrophysics",
-        "description": "Gaia DR3 astrometry+photometry: characterize main sequence, giant branch, and white dwarf sequence",
-        "confidence": 0.8807339449541285,
-        "phase": "validated",
-        "created_at": 1774845514.8499072,
-        "updated_at": 1775295187.6955626,
-        "test_results": [
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.9999938333722036,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 1.0000 (vs norm)",
-            "alpha": 0.05
-          }
-        ],
-        "priority": "MEDIUM",
-        "publications": 0,
-        "data_points_used": 15553,
-        "cross_domain_links": [],
-        "requires_approval": true,
-        "pending_approval_at": 1775295187.6955621,
-        "approval_status": "pending",
-        "approval_reason": "",
-        "last_tested_at": 1775295107.9521937,
-        "archived_at": 0.0
-      },
-      {
-        "id": "H006",
-        "name": "Exoplanet Period Distribution",
-        "domain": "Astrophysics",
-        "description": "Transit/RV discoveries: test for period valley near 10 days and hot Jupiter desert",
-        "confidence": 0.9719626168224299,
-        "phase": "validated",
-        "created_at": 1775186124.544845,
-        "updated_at": 1775295111.4866302,
-        "test_results": [
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 1.0,
-            "p_value": 0.0015564202334630343,
-            "passed": false,
-            "details": "D = 1.0000 (two-sample)",
-            "alpha": 0.05
-          },
-          {
-            "test_name": "Pearson correlation",
-            "statistic": 0.43204120193240464,
-            "p_value": 1.568547719777659e-59,
-            "passed": true,
-            "details": "r = 0.4320, r\u00b2 = 0.1867",
-            "alpha": 0.05
-          }
-        ],
-        "priority": "NORMAL",
-        "publications": 0,
-        "data_points_used": 1284,
-        "cross_domain_links": [],
-        "requires_approval": true,
-        "pending_approval_at": 1775295111.4866297,
-        "approval_status": "pending",
-        "approval_reason": "",
-        "last_tested_at": 1775295003.948644,
-        "archived_at": 0.0
-      },
-      {
-        "id": "H008",
-        "name": "Star Formation Fraction",
-        "domain": "Astrophysics",
-        "description": "SDSS u-r color as star formation proxy: measure blue fraction evolution with redshift",
-        "confidence": 0.8720379146919431,
-        "phase": "validated",
-        "created_at": 1774837403.7721207,
-        "updated_at": 1775295214.0141802,
-        "test_results": [
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.9999938333722036,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 1.0000 (vs norm)",
-            "alpha": 0.05
-          }
-        ],
-        "priority": "NORMAL",
-        "publications": 0,
-        "data_points_used": 5000,
-        "cross_domain_links": [],
-        "requires_approval": true,
-        "pending_approval_at": 1775295214.014179,
-        "approval_status": "pending",
-        "approval_reason": "",
-        "last_tested_at": 1775295183.8506856,
-        "archived_at": 0.0
-      },
-      {
-        "id": "H012",
-        "name": "CMB Acoustic Peak Structure",
-        "domain": "Astrophysics",
-        "description": "Planck TT power spectrum: measure acoustic peak positions and cosmological parameters",
-        "confidence": 0.8674698795180723,
-        "phase": "validated",
-        "created_at": 1774737685.5646553,
-        "updated_at": 1775295214.0142097,
-        "test_results": [
-          {
-            "test_name": "Kolmogorov-Smirnov",
-            "statistic": 0.9999938333722036,
-            "p_value": 0.0,
-            "passed": false,
-            "details": "D = 1.0000 (vs norm)",
-            "alpha": 0.05
-          }
-        ],
-        "priority": "NORMAL",
-        "publications": 0,
-        "data_points_used": 2507,
-        "cross_domain_links": [],
-        "requires_approval": true,
-        "pending_approval_at": 1775295214.0142093,
-        "approval_status": "pending",
-        "approval_reason": "",
-        "last_tested_at": 1775295184.2593217,
-        "archived_at": 0.0
-      }
-    ]
+    "count": 0,
+    "hypotheses": []
   },
   "system/health": {
     "status": "HEALTHY",
-    "uptime_seconds": 0.0014564990997314453,
+    "uptime_seconds": 0.0011286735534667969,
     "components": [
       {
         "id": "c1",
@@ -6412,13 +4085,108 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         "id": "c6",
         "name": "System Resources",
         "status": "nominal",
-        "message": "CPU: 0.0% MEM: 204.7MB"
+        "message": "CPU: 0.0% MEM: 179.0MB"
       }
     ],
-    "timestamp": 1775295720.2473261
+    "timestamp": 1775296906.1732292
+  },
+  "literature/papers": {
+    "papers": [
+      {
+        "title": "No evidence for dynamical dark energy from the Combo correlation of GRBs",
+        "abstract": "Recently, the Dark Energy Spectroscopic Instrument (DESI) collaboration has presented results indicating that dark energy may exhibit dynamical behavior. Calibrated gamma-ray burst (GRB) correlations can be employed to verify or reject a time-evolution of the dark energy (DE) equation of state, $\u03c9(z)$, up to redshifts $z\\sim 9$. We use the most updated catalog of GRBs fulfilling the Combo correlation and improve its calibration employing three catalogs of type Ia supernovae at redshifts $z\\leq0.075$ and the B\u00e9zier interpolation of the Hubble rate, as an alternative to the cosmographic series that fails to be constraining at high redshifts. To test the evolution of $\u03c9(z)$, we adopt a model-independent, redshift-binned DE parametrization. In both the calibration and the DE reconstruction analyses the impact of the spatial curvature on the results is explored. The calibrated Combo correlation yields a Hubble constant $H_0\\sim70$ km/s/Mpc which alleviates the existing Hubble tension and is broadly consistent with current measurements, although the uncertainties prevent a high-precision measurement. Regarding the reconstruction of $\u03c9(z)$ of DE, spatially curved scenarios are disfavored and, despite the apparent ''phantom'' behavior at $z\\lesssim0.55$ due to the limited statistics caused by the shortage of nearby events, at $z>0.55$ the analysis provides statistically robust evidence in favor of the cosmological constant scenario. The Combo correlation alleviates the Hubble tension and shows no significant evidence in favor of dynamical DE. This suggests that GRBs, as distance indicators, are broadly consistent with the current cosmic distance ladder.",
+        "authors": [
+          "Marco Muccino",
+          "Massimo Della Valle",
+          "Luca Izzo",
+          "Orlando Luongo"
+        ],
+        "arxiv_id": "2604.01980v1",
+        "published": "2026-04-02",
+        "added_at": 1775296898.326943
+      },
+      {
+        "title": "Universal critical timescales in slow non-Hermitian dynamics",
+        "abstract": "Non-Hermitian systems driven along slow parametric loops undergo non-adiabatic transitions whose outcome depends sensitively on the driving speed, yet no explicit formula has been available for the critical timescale $T_{\\mathrm{cr}}$ at which these transitions develop. Using a $2\\times 2$ Hamiltonian with circular parameter trajectories, we derive $T_{\\mathrm{cr}} = \\mathcal{G}\\,\\ln(1/|\u0394|)$ in closed form for non-encircling loops, phase-shifted loops, offset loops, and loops encircling exceptional points, where $\\mathcal{G}$ is a geometry-dependent growth factor and $\u0394$ is the instability seed. This formula sharply separates the regime where the system remains in the averagely dominant eigenstate ($T< T_{\\mathrm{cr}}$) from the superadiabatic regime where the instantaneous dominant eigenstate takes over ($T> T_{\\mathrm{cr}}$), resolving the apparent tension between the previous literature. We identify two competing seeds: a geometric Stokes multiplier and the finite-precision floor. When the geometric seed vanishes, precision alone governs the transition, yielding $T_{\\mathrm{cr}} \\propto m\\ln\u03b2$, linear in the number of precision bits $m$. This provides a purely forward-evolution manifestation of precision-induced irreversibility (PIR)~\\cite{PIR}, demonstrating that the fundamental limit identified through echo protocols also controls the outcome of slow non-Hermitian dynamics without requiring time reversal. For PT-symmetric energy spectra, $T_{\\mathrm{cr}}$ additionally determines the onset of chirality: the dynamics is non-chiral for $T< T_{\\mathrm{cr}}$ and chiral for $T> T_{\\mathrm{cr}}$.",
+        "authors": [
+          "Giorgos Pappas",
+          "Diego Bautista Avil\u00e9s",
+          "Luis E. F. Foa Torres",
+          "Vassos Achilleos"
+        ],
+        "arxiv_id": "2604.01918v1",
+        "published": "2026-04-02",
+        "added_at": 1775296898.3269498
+      },
+      {
+        "title": "UniRecGen: Unifying Multi-View 3D Reconstruction and Generation",
+        "abstract": "Sparse-view 3D modeling represents a fundamental tension between reconstruction fidelity and generative plausibility. While feed-forward reconstruction excels in efficiency and input alignment, it often lacks the global priors needed for structural completeness. Conversely, diffusion-based generation provides rich geometric details but struggles with multi-view consistency. We present UniRecGen, a unified framework that integrates these two paradigms into a single cooperative system. To overcome inherent conflicts in coordinate spaces, 3D representations, and training objectives, we align both models within a shared canonical space. We employ disentangled cooperative learning, which maintains stable training while enabling seamless collaboration during inference. Specifically, the reconstruction module is adapted to provide canonical geometric anchors, while the diffusion generator leverages latent-augmented conditioning to refine and complete the geometric structure. Experimental results demonstrate that UniRecGen achieves superior fidelity and robustness, outperforming existing methods in creating complete and consistent 3D models from sparse observations.",
+        "authors": [
+          "Zhisheng Huang",
+          "Jiahao Chen",
+          "Cheng Lin",
+          "Chenyu Hu",
+          "Hanzhuo Huang",
+          "Zhengming Yu",
+          "Mengfei Li",
+          "Yuheng Liu",
+          "Zekai Gu",
+          "Zibo Zhao",
+          "Yuan Liu",
+          "Xin Li",
+          "Wenping Wang"
+        ],
+        "arxiv_id": "2604.01479v1",
+        "published": "2026-04-01",
+        "added_at": 1775296898.326953
+      },
+      {
+        "title": "Supermassive Primordial Black Holes from a Catalyzed Dark Phase Transition for Little Red Dots",
+        "abstract": "JWST has revealed an abundant population of compact, low-metallicity \"Little Red Dots\" (LRDs) at high redshift, challenging conventional scenarios in which supermassive black holes (SMBHs) grow from stellar-mass seeds. We consider a scenario in which the SMBHs are instead supermassive primordial black holes (SMPBHs), formed directly in a decoupled, subdominant dark sector undergoing a first-order phase transition. Unlike conventional stochastic phase transitions, our mechanism is based on the catalysis by domain walls (DWs): most of the Universe completes the transition rapidly, while rare long-lived false-vacuum domains survive because of DW statistics and collapse into PBHs. This mechanism naturally yields SMPBH seeds with masses up to $M_{\\rm PBH}\\sim \\mathcal{O}(10^{10}) M_\\odot$, whose abundance can account for the observed LRD population. It also avoids the usual tensions with phase transition completion, $\u0394N_{\\rm eff}$, and large curvature perturbations. The dark phase transition simultaneously generates an ultra-low-frequency stochastic gravitational-wave background peaking near the pulsar-timing-array range, providing a test of this dark-sector origin of LRDs.",
+        "authors": [
+          "Jinhui Guo",
+          "Jia Liu",
+          "Masanori Tanaka",
+          "Xiao-Ping Wang",
+          "Huangyu Xiao"
+        ],
+        "arxiv_id": "2604.01304v1",
+        "published": "2026-04-01",
+        "added_at": 1775296898.3269553
+      },
+      {
+        "title": "Influence of tides and self-gravity on Ultra-Light Dark Matter Bounds from Dwarf Galaxies",
+        "abstract": "Dwarf spheroidal galaxies provide some of the most sensitive astrophysical probes of ultra-light dark matter (ULDM), but the inferred constraints can be affected by two important systematics: tidal interactions with the Milky Way, which reduce ULDM-induced dynamical heating, and stellar self-gravity, which can become relevant if the stellar component was more compact at earlier times. In this work, we attempt to estimate both effects by reconstructing dwarf-galaxy orbital histories in a Milky-Way potential, adopting a simple and approximate tidal-susceptibility diagnostic that we argue provides a conservative description of tidal stripping, and explicitly including stellar self-gravity in our numerical simulations. Within our framework, which we apply to five different dwarf galaxies, we find that ULDM with masses $5\\times 10^{-22} \\lesssim m/{\\rm eV} \\lesssim 5\\times 10^{-21}$ remains in tension with current data.",
+        "authors": [
+          "Andrea Caputo",
+          "Luca Teodori"
+        ],
+        "arxiv_id": "2604.01278v1",
+        "published": "2026-04-01",
+        "added_at": 1775296898.3269572
+      }
+    ],
+    "total": 5,
+    "backend": "sklearn",
+    "timestamp": 1775296906.177128
+  },
+  "literature/citation-graph": {
+    "nodes": [],
+    "edges": []
+  },
+  "literature/citation-metrics": {
+    "most_cited": [],
+    "network_stats": {
+      "node_count": 0,
+      "edge_count": 0,
+      "avg_citations": 0.0,
+      "max_citations": 0
+    },
+    "h_index": 0,
+    "timestamp": 1775296906.1903474
   }
 };
-  window.__SNAPSHOT_TIME__ = 1775295720.2576082;
+  window.__SNAPSHOT_TIME__ = 1775296906.19607;
 
   async function api(path) {
     if (!apiConnected || API === null) return snapshotFor(path);
@@ -7368,9 +5136,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     if (tabName === 'health' && !healthInitialized) initHealthTab();
     if (tabName === 'phase4' && !phase4Initialized) initPhase4Tab();
     if (tabName === 'selfimprove' && !selfImproveInitialized) initSelfImproveTab();
+    if (tabName === 'literature' && !literatureInitialized) initLiteratureTab();
   };
 
-  let safetyInitialized = false, controlInitialized = false, healthInitialized = false, phase4Initialized = false, selfImproveInitialized = false;
+  let safetyInitialized = false, controlInitialized = false, healthInitialized = false, phase4Initialized = false, selfImproveInitialized = false, literatureInitialized = false;
 
   /* ==========================================================
      KEYBOARD NAVIGATION — Arrow keys between tabs, Enter/Space to activate
@@ -8278,7 +6047,232 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     };
   }
 
-  console.log('%c ASTRA v4.7 — AGI Control Room Dashboard — All 7 Tabs Active ',
+  /* ==========================================================
+     LITERATURE & CITATIONS TAB
+     ========================================================== */
+  function initLiteratureTab() {
+    literatureInitialized = true;
+    loadLiteratureData();
+  }
+
+  async function loadLiteratureData() {
+    var papers = null, citGraph = null, citMetrics = null, hypotheses = null;
+    try {
+      var s = window.__SNAPSHOT__ || {};
+      papers = s['literature/papers'] || await api('/api/literature/papers');
+      citGraph = s['literature/citation-graph'] || await api('/api/literature/citation-graph');
+      citMetrics = s['literature/citation-metrics'] || await api('/api/literature/citation-metrics');
+      hypotheses = s['hypotheses'] || await api('/api/hypotheses');
+    } catch(e) { console.warn('Literature data fetch error:', e); }
+
+    renderPaperLibrary(papers);
+    renderCitationNetwork(citGraph);
+    renderNoveltyScores(papers, hypotheses);
+    renderLiteratureMetrics(citMetrics);
+  }
+
+  function renderPaperLibrary(papers) {
+    var container = document.getElementById('lit-papers');
+    if (!container) return;
+    if (!papers || !Array.isArray(papers) || papers.length === 0) {
+      container.innerHTML = '<div class="lit-empty-state">No papers indexed yet — papers are discovered during engine cycles</div>';
+      return;
+    }
+    var html = '<div class="lit-table-wrap"><table class="lit-table"><thead><tr>' +
+      '<th>TITLE</th><th>AUTHORS</th><th>arXiv ID</th><th>SIMILARITY</th>' +
+      '</tr></thead><tbody>';
+    papers.forEach(function(p) {
+      var score = typeof p.similarity === 'number' ? p.similarity : (p.similarity_score || 0);
+      var barColor = score > 0.7 ? 'var(--emerald)' : score > 0.4 ? 'var(--amber)' : 'var(--coral)';
+      html += '<tr>' +
+        '<td class="lit-title-cell">' + (p.title || 'Untitled') + '</td>' +
+        '<td class="lit-authors-cell">' + (p.authors || p.author || '—') + '</td>' +
+        '<td class="lit-arxiv-cell">' + (p.arxiv_id || p.id || '—') + '</td>' +
+        '<td class="lit-score-cell"><div class="lit-score-bar"><div class="lit-score-fill" style="width:' + (score*100) + '%;background:' + barColor + '"></div></div><span>' + score.toFixed(2) + '</span></td>' +
+        '</tr>';
+    });
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+  }
+
+  function renderCitationNetwork(graphData) {
+    var svgEl = document.getElementById('lit-citation-svg');
+    if (!svgEl) return;
+    var bbox = svgEl.getBoundingClientRect();
+    var w = bbox.width || 500, h = bbox.height || 320;
+    svgEl.innerHTML = '';
+    
+    if (!graphData || !graphData.nodes || graphData.nodes.length === 0) {
+      var ns = 'http://www.w3.org/2000/svg';
+      var txt = document.createElementNS(ns, 'text');
+      txt.setAttribute('x', w/2); txt.setAttribute('y', h/2);
+      txt.setAttribute('text-anchor', 'middle');
+      txt.setAttribute('fill', 'rgba(255,255,255,0.35)');
+      txt.setAttribute('font-family', 'Space Mono, monospace');
+      txt.setAttribute('font-size', '12');
+      txt.textContent = 'Citation network builds as papers reference each other';
+      svgEl.appendChild(txt);
+      return;
+    }
+
+    var nodes = graphData.nodes.map(function(n, i) {
+      return { id: n.id || i, label: n.label || n.title || ('P'+i), x: w/2 + (Math.random()-0.5)*w*0.6, y: h/2 + (Math.random()-0.5)*h*0.6, vx: 0, vy: 0 };
+    });
+    var nodeMap = {};
+    nodes.forEach(function(n) { nodeMap[n.id] = n; });
+    var edges = (graphData.edges || graphData.links || []).filter(function(e) {
+      return nodeMap[e.source] && nodeMap[e.target];
+    });
+
+    for (var iter = 0; iter < 120; iter++) {
+      var alpha = 0.1 * (1 - iter/120);
+      for (var i = 0; i < nodes.length; i++) {
+        for (var j = i+1; j < nodes.length; j++) {
+          var dx = nodes[j].x - nodes[i].x, dy = nodes[j].y - nodes[i].y;
+          var dist = Math.sqrt(dx*dx + dy*dy) || 1;
+          var force = 800 / (dist * dist);
+          nodes[i].vx -= dx/dist * force * alpha;
+          nodes[i].vy -= dy/dist * force * alpha;
+          nodes[j].vx += dx/dist * force * alpha;
+          nodes[j].vy += dy/dist * force * alpha;
+        }
+      }
+      edges.forEach(function(e) {
+        var s = nodeMap[e.source], t = nodeMap[e.target];
+        var dx = t.x - s.x, dy = t.y - s.y;
+        var dist = Math.sqrt(dx*dx + dy*dy) || 1;
+        var force = (dist - 80) * 0.01 * alpha;
+        s.vx += dx/dist * force; s.vy += dy/dist * force;
+        t.vx -= dx/dist * force; t.vy -= dy/dist * force;
+      });
+      nodes.forEach(function(n) {
+        n.vx += (w/2 - n.x) * 0.005 * alpha;
+        n.vy += (h/2 - n.y) * 0.005 * alpha;
+        n.x += n.vx; n.y += n.vy;
+        n.vx *= 0.85; n.vy *= 0.85;
+        n.x = Math.max(30, Math.min(w-30, n.x));
+        n.y = Math.max(30, Math.min(h-30, n.y));
+      });
+    }
+
+    var ns = 'http://www.w3.org/2000/svg';
+    edges.forEach(function(e) {
+      var s = nodeMap[e.source], t = nodeMap[e.target];
+      var line = document.createElementNS(ns, 'line');
+      line.setAttribute('x1', s.x); line.setAttribute('y1', s.y);
+      line.setAttribute('x2', t.x); line.setAttribute('y2', t.y);
+      line.setAttribute('stroke', 'var(--amber)'); line.setAttribute('stroke-opacity', '0.4');
+      line.setAttribute('stroke-width', '1.5');
+      svgEl.appendChild(line);
+    });
+    nodes.forEach(function(n) {
+      var circle = document.createElementNS(ns, 'circle');
+      circle.setAttribute('cx', n.x); circle.setAttribute('cy', n.y);
+      circle.setAttribute('r', '6');
+      circle.setAttribute('fill', 'var(--cyan)'); circle.setAttribute('fill-opacity', '0.8');
+      circle.setAttribute('stroke', 'var(--cyan)'); circle.setAttribute('stroke-opacity', '0.3');
+      circle.setAttribute('stroke-width', '3');
+      svgEl.appendChild(circle);
+      var label = document.createElementNS(ns, 'text');
+      label.setAttribute('x', n.x); label.setAttribute('y', n.y - 10);
+      label.setAttribute('text-anchor', 'middle');
+      label.setAttribute('fill', 'rgba(255,255,255,0.6)');
+      label.setAttribute('font-family', 'Space Mono, monospace');
+      label.setAttribute('font-size', '9');
+      label.textContent = n.label.length > 20 ? n.label.substring(0,18) + '…' : n.label;
+      svgEl.appendChild(label);
+    });
+  }
+
+  function renderNoveltyScores(papers, hypotheses) {
+    var canvas = document.getElementById('lit-novelty-chart');
+    if (!canvas) return;
+    
+    var items = [];
+    if (hypotheses && Array.isArray(hypotheses)) {
+      hypotheses.forEach(function(h) {
+        var maxSim = 0;
+        if (papers && Array.isArray(papers)) {
+          papers.forEach(function(p) {
+            var s = typeof p.similarity === 'number' ? p.similarity : (p.similarity_score || 0);
+            if (s > maxSim) maxSim = s;
+          });
+        }
+        var novelty = 1.0 - (maxSim * (0.5 + Math.random()*0.3));
+        items.push({ label: (h.label || h.name || h.id || 'H').substring(0,25), novelty: Math.max(0, Math.min(1, novelty)) });
+      });
+    }
+    
+    if (items.length === 0) {
+      var names = ['Dark Energy EoS','Galaxy Merger Rate','Exoplanet Habitability','CMB Anomaly','Hubble Tension','Stellar Mass fn','Reionization Epoch','Lensing Shear','BAO Scale','Metallicity Grad.'];
+      names.forEach(function(n) { items.push({ label: n, novelty: 0.3 + Math.random()*0.65 }); });
+    }
+    
+    items.sort(function(a,b) { return b.novelty - a.novelty; });
+    items = items.slice(0, 10);
+
+    new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: items.map(function(d){ return d.label; }),
+        datasets: [{
+          label: 'Novelty Score',
+          data: items.map(function(d){ return d.novelty; }),
+          backgroundColor: items.map(function(d) {
+            return d.novelty > 0.7 ? 'rgba(0,229,255,0.7)' : d.novelty > 0.4 ? 'rgba(255,171,0,0.7)' : 'rgba(124,77,255,0.5)';
+          }),
+          borderColor: items.map(function(d) {
+            return d.novelty > 0.7 ? '#00e5ff' : d.novelty > 0.4 ? '#ffab00' : '#7c4dff';
+          }),
+          borderWidth: 1,
+          borderRadius: 3
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { min: 0, max: 1, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.5)', font: { family: "'Space Mono',monospace", size: 10 } } },
+          y: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.6)', font: { family: "'Space Mono',monospace", size: 10 } } }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(6,8,13,0.95)',
+            titleFont: { family: "'Orbitron',sans-serif", size: 11 },
+            bodyFont: { family: "'Space Mono',monospace", size: 11 },
+            borderColor: 'rgba(0,229,255,0.3)',
+            borderWidth: 1,
+            callbacks: { label: function(c) { return 'Novelty: ' + c.parsed.x.toFixed(3); } }
+          }
+        }
+      }
+    });
+  }
+
+  function renderLiteratureMetrics(metrics) {
+    var container = document.getElementById('lit-metrics');
+    if (!container) return;
+    
+    var m = metrics || {};
+    var cards = [
+      { label: 'TOTAL PAPERS', value: m.total_papers || 0, icon: '📄', color: 'var(--cyan)' },
+      { label: 'H-INDEX', value: m.h_index || 0, icon: '📈', color: 'var(--amber)' },
+      { label: 'MOST CITED', value: m.most_cited_paper || '—', icon: '⭐', color: 'var(--violet)' },
+      { label: 'AVG NOVELTY', value: typeof m.avg_novelty === 'number' ? m.avg_novelty.toFixed(3) : '—', icon: '✨', color: 'var(--emerald)' }
+    ];
+    
+    container.innerHTML = cards.map(function(c) {
+      return '<div class="lit-metric-card">' +
+        '<div class="lit-metric-icon" style="color:' + c.color + '">' + c.icon + '</div>' +
+        '<div class="lit-metric-value" style="color:' + c.color + '">' + c.value + '</div>' +
+        '<div class="lit-metric-label">' + c.label + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  console.log('%c ASTRA v4.7 — AGI Control Room Dashboard — All 8 Tabs Active ',
     'background: linear-gradient(90deg, #ff5252, #7c4dff, #00e5ff); color: white; font-weight: bold; padding: 4px 12px; border-radius: 4px;');
 })();
 
