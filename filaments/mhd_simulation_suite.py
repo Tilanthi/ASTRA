@@ -19,7 +19,7 @@ Date: 2026-04-03
 """
 
 import sys
-sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO')
+sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/ASTRA')
 
 import numpy as np
 import json
@@ -827,7 +827,7 @@ def main():
 
     # Create simulation suite
     suite = MHDSimulationSuite(
-        base_dir="/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/filaments/mhd_simulations"
+        base_dir="/Users/gjw255/astrodata/SWARM/ASTRA/filaments/mhd_simulations"
     )
 
     # Run mock simulations
@@ -835,12 +835,12 @@ def main():
 
     # Save results
     suite.save_results(
-        output_dir="/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/filaments/simulation_results"
+        output_dir="/Users/gjw255/astrodata/SWARM/ASTRA/filaments/simulation_results"
     )
 
     # Plot results
     suite.plot_results(
-        output_dir="/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/filaments/simulation_results"
+        output_dir="/Users/gjw255/astrodata/SWARM/ASTRA/filaments/simulation_results"
     )
 
     print()

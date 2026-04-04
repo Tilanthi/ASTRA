@@ -24,8 +24,8 @@ from pathlib import Path
 from scipy import stats
 from sklearn.ensemble import IsolationForest
 
-DATA_DIR = Path('/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_AI')
-FIGURES_DIR = Path('/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_paper/Example6/figures')
+DATA_DIR = Path('/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_AI')
+FIGURES_DIR = Path('/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_paper/Example6/figures')
 FIGURES_DIR.mkdir(exist_ok=True, parents=True)
 
 print("=" * 70)

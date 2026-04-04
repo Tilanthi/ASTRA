@@ -22,11 +22,11 @@ from pathlib import Path
 import warnings
 
 warnings.filterwarnings('ignore')
-sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO')
+sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/ASTRA')
 
-DATA_DIR = Path('/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_paper/Example1/data')
-RESULTS_DIR = Path('/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_paper/Example1/results')
-FIGURES_DIR = Path('/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_paper/Example1/figures')
+DATA_DIR = Path('/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_paper/Example1/data')
+RESULTS_DIR = Path('/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_paper/Example1/results')
+FIGURES_DIR = Path('/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_paper/Example1/figures')
 
 FIGURES_DIR.mkdir(exist_ok=True, parents=True)
 
@@ -168,7 +168,7 @@ print("\n[FIG 4] Causal Graph (V101)")
 fig4, ax = plt.subplots(figsize=(10, 8))
 
 try:
-    from stan_core.capabilities.v101_temporal_causal import TemporalCausalDiscovery
+    from astra_core.capabilities.v101_temporal_causal import TemporalCausalDiscovery
 
     discovery = TemporalCausalDiscovery(max_lag=3)
 
@@ -268,7 +268,7 @@ print("\n[FIG 5] Counterfactual Analysis (V102)")
 fig5, ax = plt.subplots(figsize=(9, 6))
 
 try:
-    from stan_core.capabilities.v102_counterfactual_engine import ScalableCounterfactualEngine
+    from astra_core.capabilities.v102_counterfactual_engine import ScalableCounterfactualEngine
 
     engine = ScalableCounterfactualEngine(use_gpu=False)
 
@@ -348,7 +348,7 @@ print("\n[FIG 6] Evidence Triangulation (V103)")
 fig6, ax = plt.subplots(figsize=(9, 7))
 
 try:
-    from stan_core.capabilities.v103_multimodal_evidence import MultiModalEvidenceFusion, EvidenceQuality
+    from astra_core.capabilities.v103_multimodal_evidence import MultiModalEvidenceFusion, EvidenceQuality
 
     fusion = MultiModalEvidenceFusion()
 

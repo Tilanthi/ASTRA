@@ -1,27 +1,19 @@
 # ASTRA: Autonomous Scientific Discovery in Astrophysics
 
-**Version**: 5.0
-**AGI Capability Estimate**: 80-85%
-
 ASTRA is a unified AGI-inspired framework for autonomous hypothesis generation and validation in astronomy and astrophysics. The system integrates ~320,000 lines of clean, functional code across modular cognitive capabilities.
 
 ## Overview
 
 ASTRA combines advanced AI techniques including:
+
 - **Causal Inference & Discovery**: Structural causal models, PC algorithm, counterfactual reasoning, temporal causal discovery
 - **Meta-Learning**: MAML optimization, cross-domain transfer learning, meta-discovery patterns
 - **Swarm Intelligence**: Multi-agent reasoning, stigmergic coordination
 - **Domain Expertise**: 75 specialized astrophysics domain modules
-- **V4 Revolutionary Capabilities**: Meta-Context Engine, Autocatalytic Self-Compiler, Cognitive-Relativity Navigator, Multi-Mind Orchestration
-- **V5.0 Discovery Enhancement System**: 8 new capabilities for autonomous scientific discovery
+- **Theory Engine**: Advanced theoretical reasoning and hypothesis generation
+- **Meta-Cognitive Systems**: Multi-layered context representation, self-improvement, abstraction navigation
 
 ## Quick Start
-
-### Paper and Documentation
-
-**Full Paper**: See `RASTI_AI/draft_paper_complete_v9.md` and `RASTI_AI/ASTRA_paper_complete.pdf` for the complete scientific paper describing ASTRA's capabilities with 15 comprehensive test cases using real astronomical data.
-
-**V5.0 Discovery Guide**: See `User_Manual/V5.0_Discovery_Enhancement_Guide.md` for comprehensive documentation of the new V5.0 capabilities.
 
 ### Installation
 
@@ -37,7 +29,7 @@ pip install -e .
 ### Basic Usage
 
 ```python
-from stan_core import create_stan_system
+from astra_core import create_stan_system
 
 # Create system with auto-optimized capabilities
 system = create_stan_system()
@@ -47,12 +39,12 @@ result = system.answer("What causes supernovae?")
 print(result['answer'])
 ```
 
-### V5.0 Discovery System
+### Discovery System
 
 ```python
-from stan_core.v5_discovery_orchestrator import create_discovery_orchestrator
+from astra_core.discovery_orchestrator import create_discovery_orchestrator
 
-# Create V5.0 discovery system
+# Create discovery system
 orchestrator = create_discovery_orchestrator()
 
 # Run autonomous discovery pipeline
@@ -67,21 +59,19 @@ results = orchestrator.discover(
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    Entry Points (Top Layer)                     │
-│  create_stan_system() | create_v4_system() | process_query()   │
+│                    Entry Points                                 │
+│  create_stan_system() | process_query()                        │
 └─────────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────────┐
-│              V5.0 Discovery Enhancement System                  │
-│  V101 (Temporal) | V102 (Counterfactual) | V103 (Multi-Modal) │
-│  V104 (Adversarial) | V105 (Transfer) | V106 (Explainable)   │
-│  V107 (Triage) | V108 (Streaming) | Discovery Orchestrator   │
+│                    Theory Engine                                │
+│  Theoretical reasoning | Hypothesis generation | Validation    │
 └─────────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────────┐
-│                 V4.0 Revolutionary Capabilities                  │
-│  MCE (Context) | ASC (Self-Improvement) | CRN (Abstraction)    │
-│  MMOL (7 Specialized Minds)                                     │
+│              Meta-Cognitive Capabilities                        │
+│  Meta-Context Engine | Self-Compiler | Abstraction Navigator  │
+│  Multi-Mind Orchestration                                      │
 └─────────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────────┐
@@ -99,7 +89,6 @@ results = orchestrator.discover(
 ┌─────────────────────────────────────────────────────────────────┐
 │                   Physics & Causal Engines                      │
 │  UnifiedPhysicsEngine | StructuralCausalModel | PCAlgorithm      │
-│  V97 (Novelty) | V98 (FCI) | V99 (Anomalies) | V100 (Extreme)   │
 └─────────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────────┐
@@ -111,6 +100,8 @@ results = orchestrator.discover(
 ## Key Features
 
 ### 75 Domain Modules
+
+Specialized astrophysics domains including:
 - Interstellar Medium (ISM)
 - Star Formation
 - Exoplanets
@@ -122,35 +113,36 @@ results = orchestrator.discover(
 - Galactic Archaeology
 - And 66 more specialized domains
 
-### V5.0 Discovery Enhancement System
+### Theory Engine
 
-The V5.0 system introduces 8 new capabilities for autonomous scientific discovery:
+Advanced theoretical reasoning capabilities:
+- Hypothesis generation from first principles
+- Theoretical model development
+- Mathematical derivation and validation
+- Physical consistency checking
+- Novel theoretical prediction
 
-- **V101: Temporal Causal Discovery** - Time-lagged causal discovery with change point detection, automated lag selection, and dynamic causal graph evolution
+### Discovery Enhancement System
 
-- **V102: Scalable Counterfactual Engine** - Parallel intervention computation with Double Machine Learning, causal forests, and GPU acceleration support
+Comprehensive discovery capabilities:
+- **Temporal Causal Discovery** - Time-lagged causal discovery with change point detection
+- **Counterfactual Engine** - Parallel intervention computation with advanced ML
+- **Multi-Modal Evidence Integration** - Fusion of text, numerical, and visual evidence
+- **Adversarial Hypothesis Framework** - Devil's advocate reasoning and refinement
+- **Meta-Discovery Transfer Learning** - Cross-domain analogies and adaptation
+- **Explainable Reasoning** - Natural language explanations and confidence quantification
+- **Discovery Triage** - Impact scoring and resource-aware prioritization
+- **Real-Time Discovery** - Online causal discovery and automated alerting
 
-- **V103: Multi-Modal Evidence Integration** - Fusion of text, numerical, visual, and code evidence with cross-modal validation and triangulation
+### Meta-Cognitive Capabilities
 
-- **V104: Adversarial Hypothesis Framework** - Devil's advocate reasoning, red team challenges, and automated hypothesis refinement
-
-- **V105: Meta-Discovery Transfer Learning** - Pattern library, cross-domain analogies, and few-shot discovery adaptation
-
-- **V106: Explainable Causal Reasoning** - Natural language explanations from causal graphs, automated storytelling, and confidence quantification
-
-- **V107: Discovery Triage and Prioritization** - Impact scoring, multi-criteria ranking, and resource-aware prioritization
-
-- **V108: Real-Time Streaming Discovery** - Online causal discovery, concept drift detection, and automated alerting
-
-**Discovery Orchestrator**: Unified coordination system that orchestrates all V5.0 capabilities for end-to-end autonomous discovery
-
-### V4 Revolutionary Capabilities
-- **Meta-Context Engine (MCE)**: Multi-layered context representation with temporal, perceptual, domain, modality, certainty, social, and epistemic dimensions
-- **Autocatalytic Self-Compiler (ASC)**: Self-improving system architecture with version management and safe mutation
-- **Cognitive-Relativity Navigator (CRN)**: Adaptive abstraction navigation with 0-100 scale
-- **Multi-Mind Orchestration Layer (MMOL)**: 7 specialized minds (Physics, Empathy, Politics, Poetry, Mathematics, Causal, Creative)
+- **Meta-Context Engine**: Multi-layered context representation across temporal, perceptual, domain, modality, and epistemic dimensions
+- **Autocatalytic Self-Compiler**: Self-improving system architecture with version management
+- **Cognitive-Relativity Navigator**: Adaptive abstraction navigation across scales
+- **Multi-Mind Orchestration**: 7 specialized minds (Physics, Empathy, Politics, Poetry, Mathematics, Causal, Creative)
 
 ### Physics Engine
+
 - Unified Physics Engine with 8 models
 - Relativistic Physics
 - Quantum Mechanics
@@ -158,10 +150,11 @@ The V5.0 system introduces 8 new capabilities for autonomous scientific discover
 - Differentiable Physics
 
 ### Advanced Reasoning
-- Causal Discovery (PC Algorithm, V50, V70, V97, V98, V99, V100)
-- Temporal Causal Discovery (V101)
-- Counterfactual Analysis (V102)
-- Multi-Modal Evidence Integration (V103)
+
+- Causal Discovery (PC Algorithm, multiple specialized engines)
+- Temporal Causal Discovery
+- Counterfactual Analysis
+- Multi-Modal Evidence Integration
 - Swarm Reasoning
 - Hierarchical Bayesian Meta-Learning
 - Cross-Domain Meta-Learning
@@ -173,16 +166,13 @@ The V5.0 system introduces 8 new capabilities for autonomous scientific discover
 
 ```bash
 # Comprehensive system test
-python stan_core/comprehensive_system_test.py
-
-# V4 capability tests
-python stan_core/tests/v4/run_tests.py
+python astra_core/comprehensive_system_test.py
 
 # Specialist capability tests
-python stan_core/tests/test_specialist_capabilities.py
+python astra_core/tests/test_specialist_capabilities.py
 
-# V5.0 discovery tests
-python stan_core/tests/test_v5_discovery.py
+# Discovery system tests
+python astra_core/tests/test_discovery_capabilities.py
 ```
 
 ### Test Results
@@ -190,24 +180,23 @@ python stan_core/tests/test_v5_discovery.py
 | Test Suite | Result |
 |------------|--------|
 | Comprehensive System Test | ✅ 18/18 (100%) |
-| V4 Capability Tests | ✅ 5/5 (100%) |
 | Specialist Capabilities | ✅ 6/6 (100%) |
-| V5.0 Discovery Capabilities | ✅ 8/8 (100%) |
+| Domain Integration | ✅ 75/75 (100%) |
 
 ## Project Statistics
 
 - **Total Lines**: ~320,000
 - **Python Files**: 520+
 - **Domain Modules**: 75
-- **Specialist Capabilities**: 74+ (V45 baseline + V97-V108)
-- **V4 Capabilities**: 4 revolutionary systems
-- **V5.0 Discovery Capabilities**: 8 specialized engines
+- **Specialist Capabilities**: 74+
+- **Meta-Cognitive Systems**: 4
+- **Discovery Capabilities**: 8
 
 ## Documentation
 
 - **User Manual**: `User_Manual/User_Manual.md` - Complete system documentation
-- **V5.0 Guide**: `User_Manual/V5.0_Discovery_Enhancement_Guide.md` - Detailed V5.0 capabilities with examples
 - **CLAUDE.md**: Project-specific guidance for AI-assisted development
+- **Paper**: `RASTI_AI/draft_paper_complete_v9.md` - Complete scientific paper with test cases
 
 ## Citation
 
@@ -218,7 +207,6 @@ If you use ASTRA in your research, please cite:
   title={ASTRA: Autonomous Scientific Discovery in Astrophysics},
   author={[Author Names]},
   year={2024},
-  version={5.0},
   url={https://github.com/Tilanthi/ASTRA}
 }
 ```
@@ -250,4 +238,4 @@ For questions, issues, or collaborations, please open an issue on GitHub or cont
 
 ---
 
-**Note**: ASTRA was previously known as "STAN-XI-ASTRO" internally. The codebase retains the "stan" naming for backward compatibility.
+**Note**: ASTRA was previously known as "STAN-XI-ASTRO" internally. The codebase has been renamed from `stan_core` to `astra_core` for consistency with the ASTRA project name. Function names like `create_stan_system()` are retained for API backward compatibility.

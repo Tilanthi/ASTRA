@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
-DATA_DIR = Path('/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_paper/Example3/data')
+DATA_DIR = Path('/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_paper/Example3/data')
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 np.random.seed(42)

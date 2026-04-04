@@ -10,7 +10,7 @@ Date: 2026-04-03
 """
 
 import sys
-sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO')
+sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/ASTRA')
 
 import numpy as np
 from typing import Dict, List, Tuple, Optional
@@ -467,7 +467,7 @@ def main():
     """Generate and save theoretical deep dive report"""
     report = generate_theoretical_analysis()
 
-    output_file = "/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/filaments/sonic_scale_theory_deep_dive.txt"
+    output_file = "/Users/gjw255/astrodata/SWARM/ASTRA/filaments/sonic_scale_theory_deep_dive.txt"
     with open(output_file, 'w') as f:
         f.write(report)
 

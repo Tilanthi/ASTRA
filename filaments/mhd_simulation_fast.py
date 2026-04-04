@@ -10,7 +10,7 @@ Date: 2026-04-03
 """
 
 import sys
-sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO')
+sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/ASTRA')
 
 import numpy as np
 import json
@@ -377,7 +377,7 @@ def main():
     suite.run_all_simulations()
 
     # Save results
-    output_dir = "/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/filaments/simulation_results"
+    output_dir = "/Users/gjw255/astrodata/SWARM/ASTRA/filaments/simulation_results"
     suite.save_results(output_dir)
 
     # Plot results

@@ -675,7 +675,7 @@ def main():
     """Generate and save bibliography guide"""
     guide = generate_bibliography_guide()
 
-    output_file = "/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/filaments/filament_width_bibliography.txt"
+    output_file = "/Users/gjw255/astrodata/SWARM/ASTRA/filaments/filament_width_bibliography.txt"
     with open(output_file, 'w') as f:
         f.write(guide)
 
@@ -686,7 +686,7 @@ def main():
         'tools': [tool.__dict__ for tool in compile_theoretical_tools()]
     }
 
-    json_file = "/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/filaments/filament_width_bibliography.json"
+    json_file = "/Users/gjw255/astrodata/SWARM/ASTRA/filaments/filament_width_bibliography.json"
     with open(json_file, 'w') as f:
         json.dump(data, f, indent=2)
 

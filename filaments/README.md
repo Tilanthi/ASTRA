@@ -244,7 +244,7 @@ If you use this analysis in your research, please cite:
   author = {ASTRA},
   title = {Exploring the 0.1 pc Filament Width Mystery},
   year = {2026},
-  url = {https://github.com/anthropics/astrodata/SWARM/STAN_XI_ASTRO/filaments}
+  url = {https://github.com/anthropics/astrodata/SWARM/ASTRA/filaments}
 }
 ```
 

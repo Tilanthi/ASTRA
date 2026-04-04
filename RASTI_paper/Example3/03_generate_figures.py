@@ -14,10 +14,10 @@ from pathlib import Path
 import warnings
 
 warnings.filterwarnings('ignore')
-sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO')
+sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/ASTRA')
 
-DATA_DIR = Path('/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_paper/Example3/data')
-FIGURES_DIR = Path('/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_paper/Example3/figures')
+DATA_DIR = Path('/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_paper/Example3/data')
+FIGURES_DIR = Path('/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_paper/Example3/figures')
 FIGURES_DIR.mkdir(exist_ok=True, parents=True)
 
 df = pd.read_csv(DATA_DIR / 'exoplanet_data.csv')

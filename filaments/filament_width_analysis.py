@@ -14,7 +14,7 @@ Version: 1.0
 """
 
 import sys
-sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO')
+sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/ASTRA')
 
 import numpy as np
 import json
@@ -649,14 +649,14 @@ def main():
     report = analyzer.generate_summary_report()
 
     # Save to file
-    report_file = "/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/filaments/filament_width_report.txt"
+    report_file = "/Users/gjw255/astrodata/SWARM/ASTRA/filaments/filament_width_report.txt"
     with open(report_file, 'w') as f:
         f.write(report)
 
     print(f"Report saved to {report_file}")
 
     # Save detailed JSON analysis
-    json_file = "/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/filaments/filament_width_detailed_analysis.json"
+    json_file = "/Users/gjw255/astrodata/SWARM/ASTRA/filaments/filament_width_detailed_analysis.json"
     analyzer.save_detailed_analysis(json_file)
 
     print("\n" + "=" * 80)

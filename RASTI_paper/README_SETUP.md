@@ -9,8 +9,8 @@ Two independent working folders have been created for developing separate papers
 
 ## Folder Locations
 
-- `/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_AI/`
-- `/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_ASTRO/`
+- `/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_AI/`
+- `/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_ASTRO/`
 
 ## Files in Each Folder
 
@@ -41,11 +41,11 @@ All 9 figures used in the paper:
 Both folders compile successfully:
 
 ```bash
-cd /Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_AI
+cd /Users/gjw255/astrodata/SWARM/ASTRA/RASTI_AI
 pdflatex ASTRA_V8_40_RASTI.tex
 # Output: ASTRA_V8_40_RASTI.pdf (41 pages, 2.1 MB)
 
-cd /Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_ASTRO
+cd /Users/gjw255/astrodata/SWARM/ASTRA/RASTI_ASTRO
 pdflatex ASTRA_V8_40_RASTI.tex
 # Output: ASTRA_V8_40_RASTI.pdf (41 pages, 2.1 MB)
 ```

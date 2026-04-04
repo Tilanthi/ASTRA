@@ -14,10 +14,10 @@ from pathlib import Path
 import warnings
 
 warnings.filterwarnings('ignore')
-sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO')
+sys.path.insert(0, '/Users/gjw255/astrodata/SWARM/ASTRA')
 
-DATA_DIR = Path('/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_paper/Example5/data')
-FIGURES_DIR = Path('/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO/RASTI_paper/Example5/figures')
+DATA_DIR = Path('/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_paper/Example5/data')
+FIGURES_DIR = Path('/Users/gjw255/astrodata/SWARM/ASTRA/RASTI_paper/Example5/figures')
 FIGURES_DIR.mkdir(exist_ok=True, parents=True)
 
 df_gal = pd.read_csv(DATA_DIR / 'cosmology_galaxy_data.csv')

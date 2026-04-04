@@ -184,10 +184,10 @@ pip install -e ".[dev]"
 
 ```python
 # Test installation
-python -c "import stan_core; print('ASTRA installed successfully')"
+python -c "import astra_core; print('ASTRA installed successfully')"
 
 # Check version
-python -c "from stan_core import __version__; print(__version__)"
+python -c "from astra_core import __version__; print(__version__)"
 ```
 
 ### 3.3 Configuration
@@ -359,17 +359,17 @@ claude-code "Save ASTRA's filament analysis results to filament_results.json"
 claude-code config get workspace
 
 # Set correct path
-claude-code config set workspace /Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO
+claude-code config set workspace /Users/gjw255/astrodata/SWARM/ASTRA
 ```
 
 **Issue**: Domain modules not loading
 
 ```bash
 # Check ASTRA installation
-python -c "import stan_core; print(stan_core.__version__)"
+python -c "import astra_core; print(astra_core.__version__)"
 
 # Verify domain modules
-python -c "from stan_core.domains import list_domains; print(list_domains())"
+python -c "from astra_core.domains import list_domains; print(list_domains())"
 ```
 
 **Issue**: Memory errors with large datasets
@@ -424,7 +424,7 @@ properties rather than local density.
 #### Example 1: Basic Query
 
 ```python
-from stan_core import create_stan_system
+from astra_core import create_stan_system
 
 # Create system
 system = create_stan_system()
@@ -572,7 +572,7 @@ Question → Hypothesis → Experiment → Analysis → Theory → Publication
 Generates important, novel research questions.
 
 ```python
-from stan_core.v7_autonomous_research import create_v7_scientist
+from astra_core.v7_autonomous_research import create_v7_scientist
 
 # Create autonomous scientist
 scientist = create_v7_scientist()
@@ -721,7 +721,7 @@ paper = scientist.generate_publication(
 ### 7.3 Complete Research Cycle Example
 
 ```python
-from stan_core.v7_autonomous_research import create_v7_scientist
+from astra_core.v7_autonomous_research import create_v7_scientist
 
 # Initialize autonomous scientist
 scientist = create_v7_scientist()
@@ -853,7 +853,7 @@ result = scientist.collaborative_research(
 **Question**: "Why do filament widths cluster at 0.1 pc?"
 
 ```python
-from stan_core import create_stan_system
+from astra_core import create_stan_system
 
 system = create_stan_system()
 
@@ -1036,7 +1036,7 @@ ASTRA includes **75 specialized domain modules** organized into the following ca
 
 ```python
 # Load specific domain
-from stan_core.domains import load_domain
+from astra_core.domains import load_domain
 
 ism_domain = load_domain("ism")
 

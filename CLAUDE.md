@@ -17,7 +17,7 @@ The system was previously known as "STAN-XI-ASTRO" or "STAN". **It must now be r
 - User-facing text
 - Paper titles and abstracts
 
-The internal codebase (module names, file paths, function names) retains the original "stan" naming for backward compatibility, but all external references should use "ASTRA".
+The internal codebase has been renamed from `stan_core` to `astra_core` for consistency with the ASTRA project name. Function names like `create_stan_system()` are retained for API backward compatibility.
 
 **Full name**: ASTRA: Autonomous Scientific Discovery in Astrophysics
 **Subtitle**: An AGI-inspired framework for autonomous hypothesis generation and validation
@@ -34,7 +34,7 @@ The internal codebase (module names, file paths, function names) retains the ori
 
 ```python
 # RUN THIS AT SESSION START
-from stan_core.memory.persistent import create_integrator, quick_hallucination_check
+from astra_core.memory.persistent import create_integrator, quick_hallucination_check
 
 integrator = create_integrator()
 integrator.initialize_session()
@@ -53,11 +53,11 @@ if not result.safe:
 
 ### Known Hallucinations
 
-The hallucination register is stored in `~/.stan_persistent/hallucination_register.json`.
+The hallucination register is stored in `~/.astra_persistent/hallucination_register.json`.
 To view or manage entries:
 
 ```python
-from stan_core.memory.persistent import BootstrapMemory
+from astra_core.memory.persistent import BootstrapMemory
 bm = BootstrapMemory()
 bm.list_hallucinations()  # View all entries
 bm.remove_hallucination("54 MHz")  # Remove if no longer needed
@@ -84,7 +84,7 @@ integrator.create_session_checkpoint({"current_task": "your task description"})
 ### Basic System Usage
 
 ```python
-from stan_core import create_stan_system
+from astra_core import create_stan_system
 
 # Create system with auto-optimized capabilities
 system = create_stan_system()
@@ -97,7 +97,7 @@ print(result['answer'])
 ### V4.0 Revolutionary Capabilities
 
 ```python
-from stan_core.v4_revolutionary import create_v4_system, IntegrationMode
+from astra_core.v4_revolutionary import create_v4_system, IntegrationMode
 
 # Create V4.0 system with MCE, ASC, CRN, MMOL capabilities
 system = create_v4_system()
@@ -110,23 +110,23 @@ result = system.process_query("Anze query", mode=IntegrationMode.FULL)
 
 ```python
 # Meta-Context Engine
-from stan_core.metacognitive.meta_context_engine import create_meta_context_engine
+from astra_core.metacognitive.meta_context_engine import create_meta_context_engine
 mce = create_meta_context_engine()
 result = mce.layer_context(query, dimensions=["temporal", "perceptual"])
 
 # Domain modules
-from stan_core.domains import DomainRegistry
+from astra_core.domains import DomainRegistry
 registry = DomainRegistry()
 registry.load_all_domains()
 result = registry.process_query("pulsar timing analysis")
 
 # Physics engine
-from stan_core.physics import UnifiedPhysicsEngine
+from astra_core.physics import UnifiedPhysicsEngine
 physics = UnifiedPhysicsEngine()
 result = physics.compute("blackbody", {"temperature": 5778, "wavelength": 500e-7})
 
 # MAML optimizer
-from stan_core.reasoning.maml_optimizer import create_maml_optimizer
+from astra_core.reasoning.maml_optimizer import create_maml_optimizer
 optimizer = create_maml_optimizer(model_fn, loss_fn, n_inner_steps=5)
 ```
 
@@ -138,37 +138,37 @@ optimizer = create_maml_optimizer(model_fn, loss_fn, n_inner_steps=5)
 
 ```bash
 # Run V4.0 capability tests
-python stan_core/tests/v4/run_tests.py
+python astra_core/tests/v4/run_tests.py
 
 # Run specialist capability tests (66 V45 capabilities)
-python stan_core/tests/test_specialist_capabilities.py
+python astra_core/tests/test_specialist_capabilities.py
 
 # Run Phase 2-4 enhancement tests
-python stan_core/tests/test_phase_2_4.py
+python astra_core/tests/test_phase_2_4.py
 ```
 
 ### Run Specific Tests
 
 ```bash
 # V4.0 individual capabilities
-python stan_core/tests/v4/run_tests.py --mce        # Meta-Context Engine
-python stan_core/tests/v4/run_tests.py --asc        # Autocatalytic Self-Compiler
-python stan_core/tests/v4/run_tests.py --crn        # Cognitive-Relativity Navigator
-python stan_core/tests/v4/run_tests.py --mmol       # Multi-Mind Orchestration
-python stan_core/tests/v4/run_tests.py --integration # Integration tests
+python astra_core/tests/v4/run_tests.py --mce        # Meta-Context Engine
+python astra_core/tests/v4/run_tests.py --asc        # Autocatalytic Self-Compiler
+python astra_core/tests/v4/run_tests.py --crn        # Cognitive-Relativity Navigator
+python astra_core/tests/v4/run_tests.py --mmol       # Multi-Mind Orchestration
+python astra_core/tests/v4/run_tests.py --integration # Integration tests
 ```
 
 ### Test Individual Components
 
 ```python
 # Test physics modules
-python -c "from stan_core.physics.relativistic_physics import RelativisticPhysics; print(RelativisticPhysics.schwarzschild_radius(1.989e33))"
+python -c "from astra_core.physics.relativistic_physics import RelativisticPhysics; print(RelativisticPhysics.schwarzschild_radius(1.989e33))"
 
 # Test domain modules
-python -c "from stan_core.domains.high_energy import create_high_energy_domain; d = create_high_energy_domain(); print(d.get_capabilities())"
+python -c "from astra_core.domains.high_energy import create_high_energy_domain; d = create_high_energy_domain(); print(d.get_capabilities())"
 
 # Test MAML optimizer
-python -c "from stan_core.reasoning.maml_optimizer import MAMLOptimizer; print('MAML imported')"
+python -c "from astra_core.reasoning.maml_optimizer import MAMLOptimizer; print('MAML imported')"
 ```
 
 ---
@@ -249,7 +249,7 @@ result = system.answer(query)  # Auto-selects best capabilities
 All domain modules use `@register_domain` decorator or explicit `DomainModuleRegistry.register()`. This enables runtime discovery and hot-swapping.
 
 ```python
-from stan_core.domains import BaseDomainModule, register_domain
+from astra_core.domains import BaseDomainModule, register_domain
 
 @register_domain
 class MyDomain(BaseDomainModule):
@@ -285,22 +285,22 @@ Physics capabilities develop through staged curriculum (`ComplexityLevel.BASIC` 
 
 ### Capability Files
 
-- **V36-V50 capabilities**: `stan_core/capabilities/vXX_*.py`
-- **Physics modules**: `stan_core/physics/*.py` (relativistic_physics.py, quantum_mechanics.py, nuclear_astro.py)
-- **Domain modules**: `stan_core/domains/<domain_name>/__init__.py`
-- **Meta-learning**: `stan_core/reasoning/maml_optimizer.py`, `cross_domain_meta_learner.py`
+- **V36-V50 capabilities**: `astra_core/capabilities/vXX_*.py`
+- **Physics modules**: `astra_core/physics/*.py` (relativistic_physics.py, quantum_mechanics.py, nuclear_astro.py)
+- **Domain modules**: `astra_core/domains/<domain_name>/__init__.py`
+- **Meta-learning**: `astra_core/reasoning/maml_optimizer.py`, `cross_domain_meta_learner.py`
 
 ### Memory Hierarchy
 
-- **MORK Ontology**: `stan_core/memory/mork_ontology.py` (concept hierarchies)
-- **Memory Graph**: `stan_core/memory/context_graph.py` (context relationships)
-- **Working Memory**: `stan_core/memory/working/` (7±2 capacity constraint)
+- **MORK Ontology**: `astra_core/memory/mork_ontology.py` (concept hierarchies)
+- **Memory Graph**: `astra_core/memory/context_graph.py` (context relationships)
+- **Working Memory**: `astra_core/memory/working/` (7±2 capacity constraint)
 
 ### Test Files
 
-- **Integration tests**: `stan_core/tests/v4/test_v4_integration.py`
-- **Capability tests**: `stan_core/tests/test_specialist_capabilities.py`
-- **Validation**: `stan_core/tests/validation_benchmarks.py`
+- **Integration tests**: `astra_core/tests/v4/test_v4_integration.py`
+- **Capability tests**: `astra_core/tests/test_specialist_capabilities.py`
+- **Validation**: `astra_core/tests/validation_benchmarks.py`
 
 ---
 
@@ -336,13 +336,13 @@ PREDICTIVE, ANALYTICAL, EMOTIONAL, CREATIVE, CRITICAL, SYNTHETIC, NARRATIVE, CON
 
 4. **Skipping Initialization**: Domain modules must call `.initialize(global_config)` after creation before `.process_query()`.
 
-5. **Backup File Accumulation**: Run `cleanup_stan_core.py` if directory exceeds expected size. Backup files (`*.backup`) from `cleanup_bloat.py` can accumulate to GBs.
+5. **Backup File Accumulation**: Run `cleanup_astra_core.py` if directory exceeds expected size. Backup files (`*.backup`) from `cleanup_bloat.py` can accumulate to GBs.
 
 ---
 
 ## PDF Generation Requirements
 
-When generating PDF documents using `stan_core/utils/pdf_generator.py`:
+When generating PDF documents using `astra_core/utils/pdf_generator.py`:
 
 ### Critical Rules
 
@@ -394,7 +394,7 @@ def _process_inline_formatting(self, text: str) -> str:
 
 ## Post-Upgrade Verification Testing
 
-**CRITICAL**: After any substantial upgrade to STAN functionality or stan_core components, comprehensive verification testing MUST be performed to ensure all dependencies, files, and components remain properly linked.
+**CRITICAL**: After any substantial upgrade to ASTRA functionality or astra_core components, comprehensive verification testing MUST be performed to ensure all dependencies, files, and components remain properly linked.
 
 ### When to Run Comprehensive Tests
 
@@ -411,7 +411,7 @@ Run the comprehensive system verification after:
 
 ```bash
 # Run the comprehensive system test
-python stan_core/comprehensive_system_test.py
+python astra_core/comprehensive_system_test.py
 
 # Expected output: All 18 capabilities should PASS (100%)
 ```
@@ -435,10 +435,10 @@ If errors are found:
 
 ### Test Files Reference
 
-- **Comprehensive Test**: `stan_core/comprehensive_system_test.py`
-- **Domain Validation**: `stan_core/tests/validation_benchmarks.py`
-- **V4 Integration Tests**: `stan_core/tests/v4/test_v4_integration.py`
-- **Specialist Capabilities**: `stan_core/tests/test_specialist_capabilities.py`
+- **Comprehensive Test**: `astra_core/comprehensive_system_test.py`
+- **Domain Validation**: `astra_core/tests/validation_benchmarks.py`
+- **V4 Integration Tests**: `astra_core/tests/v4/test_v4_integration.py`
+- **Specialist Capabilities**: `astra_core/tests/test_specialist_capabilities.py`
 
 ### Verification Report
 
