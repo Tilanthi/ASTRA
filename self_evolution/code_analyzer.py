@@ -41,7 +41,7 @@ class CodeAnalyzer:
     insights into code structure.
     """
 
-    def __init__(self, stan_core_path: str = "/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO"):
+    def __init__(self, stan_core_path: str = "/shared/ASTRA"):
         self.stan_core_path = stan_core_path
         self.cache: Dict[str, AnalysisResult] = {}
         self.file_tree: Dict[str, List[str]] = {}

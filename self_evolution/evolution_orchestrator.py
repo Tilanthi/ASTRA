@@ -103,7 +103,7 @@ class EvolutionOrchestrator:
     """
 
     def __init__(self,
-                 stan_core_path: str = "/Users/gjw255/astrodata/SWARM/STAN_XI_ASTRO",
+                 stan_core_path: str = "/shared/ASTRA",
                  config: Optional[EvolutionConfig] = None):
         """
         Args:
