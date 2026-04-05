@@ -39,10 +39,7 @@
 %   - Updated codebase statistics (313,000+ lines, 621+ files)
 %   - Added reproducibility note to Methods
 %
-% Known issues flagged for authors:
-%   - GitHub URL: paper says Tilanthi/ASTRA; actual repo may be web3guru888/ASTRA
-
-\documentclass[fleqn,usenatbib]{mnras}
+\documentclass[usenatbib]{rasti}
 
 % --- Packages ---
 \usepackage{graphicx}
@@ -59,14 +56,13 @@
 \newcommand{\fci}{FCI\xspace}
 
 % ======================================================================
-\title[ASTRA: An Integrated Analysis Framework]{ASTRA: An Integrated Analysis Framework for Physics-Aware Astrophysical Discovery}
+\title[ASTRA: Autonomous Scientific Discovery in Astrophysics]{ASTRA: Autonomous Scientific Discovery in Astrophysics}
 
-\author[G.\,J.~White \& R.~Dey]{%
-Glenn~J.~White$^{1,2}$\thanks{E-mail: glenn.white@open.ac.uk}
-and Robin~Dey$^{3}$\\
+\author[White]{
+Glenn~J.~White$^{1,2}$\thanks{E-mail: glenn.white@open.ac.uk}\\
 $^{1}$Department of Physics and Astronomy, The Open University, Milton Keynes MK7\,6AA, UK\\
-$^{2}$RAL Space, STFC Rutherford Appleton Laboratory, Chilton, Didcot, Oxfordshire OX11\,0QX, UK\\
-$^{3}$VBRL Holdings Inc, 1309 Coffeen Avenue STE~1200, Sheridan, WY\,82801, USA}
+$^{2}$RAL Space, STFC Rutherford Appleton Laboratory, Chilton, Didcot, Oxfordshire OX11\,0QX, UK
+}
 \date{Accepted XXX. Received YYY; in original form ZZZ}
 \pubyear{2026}
 
@@ -84,7 +80,7 @@ In the discovery test, \astra operates in ``knowledge isolation mode'' to correc
 Beyond these six controlled tests, five live deployments on archival data independently recover established physics without prior domain guidance: Kepler's third law from 2\,839 exoplanets ($R^{2}=0.9982$; multivariate fit $\log P = 1.497\,\log a - 0.474\,\log M_{\star}$, capturing stellar-mass dependence), the observational signature of dark energy from 1\,701 Type~Ia supernovae ($\mu = 5.33\,\log_{10}z + 24.42$; $\chi^{2}/\mathrm{dof} = 0.64$; \citealt{Brout2022} Pantheon+ compilation), and galaxy colour bimodality from 2\,000 SDSS galaxies ($u{-}g$ peaks at 1.44 and 1.92, with the blue fraction declining from ${\sim}50$\,per\,cent to ${\sim}10$\,per\,cent with increasing stellar mass; consistent with \citealt{Strateva2001}).
 To test cross-domain generalization, we further deploy \astra on public data from economics (World Bank; \citealt{WorldBank2024}), climate science (NASA GISS; NOAA Mauna Loa; \citealt{Hansen2010,NOAA2024}), and epidemiology (World Bank Health indicators), recovering approximately 40 validated hypotheses across five scientific domains---including well-established relationships such as Okun's Law, the Preston Curve, and CO$_{2}$--temperature coupling---while correctly identifying non-relationships (e.g., the Phillips Curve) and applying false discovery rate correction \citep{BenjaminiHochberg1995} to cross-domain syntheses.
 We discuss capabilities and limitations, emphasising \astra's role as a tool to assist scientists rather than replace domain expertise.
-Code and documentation: \url{https://github.com/Tilanthi/ASTRA} \citep{WhiteDey2026}.
+Code and documentation: \url{https://github.com/Tilanthi/ASTRA} \citep{White2026}.
 \end{abstract}
 
 \begin{keywords}
@@ -126,7 +122,7 @@ In this paper, we focus on six examples demonstrating how this integrated approa
 
 The first five test cases use real observational data to validate \astra's ability to correctly recover known astrophysical results.
 The sixth test case demonstrates discovery-mode operation beyond knowledge retrieval, under controlled conditions.
-Using synthetic data with embedded causal structure (ground truth known to the authors but not to \astra), it operates in ``knowledge isolation mode'' to discover patterns without being told what to look for, and generates testable predictions for future validation.
+Using synthetic data with embedded causal structure (ground truth known to the author but not to \astra), it operates in ``knowledge isolation mode'' to discover patterns without being told what to look for, and generates testable predictions for future validation.
 
 Section~\ref{sec:live} presents five live deployments on archival data that independently recover established physics.
 To test whether \astra's analytical capabilities generalize beyond astrophysics, Section~\ref{sec:crossdomain} presents cross-domain validation across economics, climate science, and epidemiology using public data from the World Bank, NASA GISS, and NOAA.
@@ -284,7 +280,7 @@ The system uses established scientific Python libraries (NumPy, SciPy, Pandas, s
 Key dependencies and their versions are specified in the repository's \texttt{requirements.txt}; the principal packages are \textsc{causal-learn} (causal discovery), \textsc{dynesty} (nested sampling), \textsc{astropy} (astronomical utilities), and \textsc{scikit-learn} (machine learning).
 All results in this paper can be reproduced from the provided Jupyter notebooks using these dependencies.
 
-The complete system is publicly available at: \url{https://github.com/Tilanthi/ASTRA} \citep{WhiteDey2026}.
+The complete system is publicly available at: \url{https://github.com/Tilanthi/ASTRA} \citep{White2026}.
 This repository includes: complete source code and installation instructions; system architecture documentation with detailed design diagrams; API documentation and user manual; extended validation with 15~comprehensive test cases; example notebooks and tutorials; and reproducible code for all results presented in this paper.
 The first five test cases in this paper can be reproduced using the following Jupyter notebooks in the repository:
 \texttt{test02\_scaling\_relations.ipynb} (Section~\ref{sec:tc1}),
@@ -699,7 +695,7 @@ The knowledge isolation is implemented at the software level by disabling the MO
 \subsection{Synthetic Dataset with Ground Truth}
 \label{sec:tc6:dataset}
 
-We constructed a synthetic dataset of 500 molecular cloud regions with the following causal structure (known to the authors, hidden from \astra):
+We constructed a synthetic dataset of 500 molecular cloud regions with the following causal structure (known to the author, hidden from \astra):
 
 \textbf{True Causal Drivers:}
 \begin{enumerate}
@@ -1334,7 +1330,7 @@ The cross-domain validation demonstrates that \astra's analytical capabilities--
 While individual components use established algorithms, their integration within a single framework enables analyses that would otherwise require manual combination of multiple separate tools and pipelines.
 The cross-domain results suggest that this integration is genuinely domain-general, opening the possibility of applying \astra's analytical architecture to scientific problems beyond astrophysics.
 
-The complete source code, documentation, and reproducible analysis notebooks are available in our public GitHub repository \citep{WhiteDey2026}.
+The complete source code, documentation, and reproducible analysis notebooks are available in our public GitHub repository \citep{White2026}.
 We encourage community feedback, contribution, and validation of these results on larger and more diverse datasets.
 
 % ======================================================================
@@ -1345,18 +1341,21 @@ We thank the anonymous referee for constructive comments that have significantly
 This work uses data from Gaia DR2 and EDR3, Herschel Gould Belt Survey, HST ACS, Chandra Deep Field South, SDSS, the NASA Exoplanet Archive, and the Pantheon+ supernova compilation.
 The cross-domain validation uses data from the World Bank Open Data repository (\url{https://data.worldbank.org}), the NASA Goddard Institute for Space Studies (GISS) Surface Temperature Analysis, and the NOAA Global Monitoring Laboratory Mauna Loa CO$_{2}$ record.
 We acknowledge the use of community software tools including \textsc{causal-learn}, \textsc{dowhy}, NumPy, SciPy, and scikit-learn.
-The development of ASTRA follows from work on stigmergy and autonomous intelligence by \citet{Dey2025} at OpenHub, Thailand.
+
+The development of ASTRA builds upon foundational work on stigmergic intelligence and autonomous navigation by \citet{Dey2025} at OpenHub, Thailand.
+OpenHub served as a research partner for this work, contributing to the development and testing of ASTRA's autonomous research capabilities through the Taurus multi-agent orchestration platform (\url{https://taurus.cloud}).
+The Taurus platform provided the computational infrastructure for ASTRA's autonomous research cycles, enabling persistent multi-agent coordination, scheduled discovery runs, and real-time hypothesis validation.
 
 % ======================================================================
 \section*{Author Contributions}
 % ======================================================================
 
 GJW conceived the ASTRA project, designed the framework architecture, led the scientific validation, and wrote the manuscript.
-RD developed the core codebase, implemented the integration architecture, and contributed to testing.
+The ASTRA codebase was developed with contributions from OpenHub (Thailand), who also conducted independent review and testing of the system through the Taurus research platform.
 Large language model assistance (Anthropic Claude) was used in manuscript preparation, including initial drafting, editing, and multiple rounds of simulated peer review.
-The scientific content, analysis, and conclusions were designed, executed, and verified by the authors.
-All errors and omissions are the responsibility of the authors.
-The authors declare no conflict of interest.
+The scientific content, analysis, and conclusions were designed, executed, and verified by the author.
+All errors and omissions are the responsibility of the author.
+The author declares no conflict of interest.
 
 % ======================================================================
 \section*{Data Availability}
