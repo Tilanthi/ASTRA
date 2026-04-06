@@ -84,6 +84,11 @@ _METHOD_REGISTRY = {
         "data_source": "who_gho",
         "primary_vars": ["life_expectancy", "year", "country"],
     },
+    "cryptography": {
+        "methods": ["_investigate_cryptography", "run_scaling_discovery"],
+        "data_source": "eccp131",
+        "primary_vars": ["trace", "embedding_degree", "j_invariant", "cofactor"],
+    },
     "generic": {
         "methods": ["_investigate_generic", "run_scaling_discovery",
                      "run_causal_discovery", "run_model_comparison"],
@@ -141,6 +146,8 @@ class AdaptiveStrategist:
             if "epidem" in domain:
                 return "epidemiology"
             return "economics"
+        elif "ecdlp" in name_lower or "isogeny" in name_lower or "pollard" in name_lower or "endomorphism" in name_lower or "summation polynomial" in name_lower or "lattice reduction" in name_lower or "p-adic" in name_lower or "discrete log" in name_lower or "eccp" in name_lower:
+            return "cryptography"
         elif "econ" in name_lower or "funding" in name_lower:
             return "crossdomain"
         else:
@@ -152,6 +159,8 @@ class AdaptiveStrategist:
                 return "climate"
             elif "epidem" in domain:
                 return "epidemiology"
+            elif "crypto" in domain:
+                return "cryptography"
             return "generic"
 
     def select_investigation_methods(self, h, cycle: int) -> List[str]:

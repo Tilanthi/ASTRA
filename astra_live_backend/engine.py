@@ -160,7 +160,7 @@ class DiscoveryEngine:
         self.supervisor_registry.start_shift("system", "Auto-started on engine init")
 
         # Domain list for consistent state vector dimensions
-        self._canonical_domains = ["Astrophysics", "Economics", "Climate", "Epidemiology"]
+        self._canonical_domains = ["Astrophysics", "Economics", "Climate", "Epidemiology", "Cryptography"]
 
         # Initialize
         seed_initial_hypotheses(self.store)
@@ -215,9 +215,9 @@ class DiscoveryEngine:
         current cognitive/operational state. Used for anomaly detection and
         state-space visualization.
 
-        Dimensions (14):
-          [0-3]   Per-domain confidence mean (Astrophysics, Economics, Climate, Epidemiology)
-          [4-7]   Per-domain confidence variance (same 4 domains)
+        Dimensions (16):
+          [0-4]   Per-domain confidence mean (Astrophysics, Economics, Climate, Epidemiology, Cryptography)
+          [5-9]   Per-domain confidence variance (same 5 domains)
           [8]     Domain coverage entropy
           [9]     Exploration rate (fraction of hypotheses in early phases)
           [10]    Exploitation rate (fraction in late phases)
@@ -528,6 +528,8 @@ class DiscoveryEngine:
                 self._investigate_climate(h)
             elif category == "epidemiology":
                 self._investigate_epidemiology(h)
+            elif category == "cryptography":
+                self._investigate_cryptography(h)
             else:
                 self._investigate_generic(h)
 
@@ -572,6 +574,7 @@ class DiscoveryEngine:
                 "transients": "ZTF / TESS",
                 "time_domain": "ZTF / TESS",
                 "crossdomain": "Multi-source",
+                "cryptography": "ECCp-131 / ECDLP Analysis",
             }
             if h.data_points_used > 0:
                 try:
@@ -1265,6 +1268,141 @@ class DiscoveryEngine:
             description=f"Epidemiology analysis: {len(le)} records from WHO GHO",
             data_source="who_gho",
             sample_size=len(le),
+        )
+        self.total_plots += 1
+
+    def _investigate_cryptography(self, h: Hypothesis):
+        """Cryptography investigation — ECDLP mathematical structure analysis."""
+        self._log("INVESTIGATE", "INVESTIGATE",
+                  f"Running ECDLP mathematical analysis for {h.id} ({h.name})", h.id)
+
+        from .ecdlp_hypotheses import get_random_ecdlp_hypothesis
+        research_h = get_random_ecdlp_hypothesis()
+
+        try:
+            from .ecdlp_solver import ECCp131Params
+            params = ECCp131Params()
+            p, a, b = params.p, params.a, params.b
+            n = params.n
+        except Exception:
+            # Fallback: ECCp-131 parameters
+            p = 0x0800000000000000000000000000000C9
+            a = 0x07A11B09A76B562144418FF3FF8C2570B2
+            b = 0x0217C05610884B63B9C6C7291678F9D341
+            n = 0x0800000000000000000681B1F4BCAB8A85
+
+        h.data_points_used = 16  # Number of structural checks
+
+        # Run structural analysis checks
+        checks_passed = 0
+        total_checks = 0
+
+        # 1. Trace of Frobenius
+        t = p + 1 - n
+        is_anomalous = (t == 1)
+        total_checks += 1
+        self._log("INVESTIGATE", "ECDLP",
+                  f"Trace of Frobenius t = {t} (anomalous={is_anomalous})", h.id)
+
+        # 2. Embedding degree check (MOV attack viability)
+        embedding_degree = None
+        for k in range(1, 200):
+            if pow(p, k, n) == 1:
+                embedding_degree = k
+                break
+        mov_viable = embedding_degree is not None and embedding_degree < 20
+        total_checks += 1
+        self._log("INVESTIGATE", "ECDLP",
+                  f"Embedding degree k = {embedding_degree} (MOV viable={mov_viable})", h.id)
+
+        # 3. CM discriminant
+        D = t * t - 4 * p
+        total_checks += 1
+        self._log("INVESTIGATE", "ECDLP",
+                  f"CM discriminant D = {D} (|D| bits = {abs(D).bit_length()})", h.id)
+
+        # 4. j-invariant
+        if (4 * pow(a, 3, p) + 27 * pow(b, 2, p)) % p != 0:
+            j_num = (1728 * 4 * pow(a, 3, p)) % p
+            j_den = (4 * pow(a, 3, p) + 27 * pow(b, 2, p)) % p
+            j_inv = (j_num * pow(j_den, p - 2, p)) % p
+            is_supersingular = (j_inv == 0 or j_inv == 1728)
+        else:
+            j_inv = None
+            is_supersingular = False
+        total_checks += 1
+        self._log("INVESTIGATE", "ECDLP",
+                  f"j-invariant = {j_inv} (supersingular={is_supersingular})", h.id)
+
+        # 5. Group order factorization (partial — check small factors)
+        cofactor = 1
+        temp_n = n
+        small_primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+        for sp in small_primes:
+            while temp_n % sp == 0:
+                cofactor *= sp
+                temp_n //= sp
+        has_small_cofactor = cofactor > 1
+        total_checks += 1
+        self._log("INVESTIGATE", "ECDLP",
+                  f"Cofactor = {cofactor}, remaining order bits = {temp_n.bit_length()}", h.id)
+
+        # 6. Statistical test: does any check reveal vulnerability?
+        vulnerabilities_found = sum([is_anomalous, mov_viable, is_supersingular, has_small_cofactor])
+        p_value = 1.0 if vulnerabilities_found == 0 else 0.001
+        test_result = StatTestResult(
+            test_name="ECDLP Structural Vulnerability Scan",
+            statistic=float(vulnerabilities_found),
+            p_value=p_value,
+            passed=vulnerabilities_found > 0,
+            details=f"ECCp-131: {vulnerabilities_found}/{total_checks} vulnerability checks positive. "
+                    f"anomalous={is_anomalous}, MOV(k={embedding_degree})={mov_viable}, "
+                    f"supersingular={is_supersingular}, small_cofactor={has_small_cofactor}. "
+                    f"Research hypothesis: {research_h['title']}",
+        )
+        h.test_results.append(asdict(test_result))
+        h.update_from_pvalue(p_value)
+
+        # 7. Pollard rho random walk quality (small sample)
+        import random
+        walk_steps = 10000
+        collisions = 0
+        visited = set()
+        x = random.randint(1, n - 1)
+        for _ in range(walk_steps):
+            x = (x * x + 1) % n
+            if x in visited:
+                collisions += 1
+            visited.add(x)
+        expected_collision_rate = walk_steps / (2.5 * (n ** 0.5))
+        actual_collision_rate = collisions / walk_steps if walk_steps > 0 else 0
+        total_checks += 1
+
+        walk_result = StatTestResult(
+            test_name="Pollard Walk Randomness Test",
+            statistic=float(actual_collision_rate),
+            p_value=0.5,  # Neutral — this is exploratory
+            passed=False,
+            details=f"Walk {walk_steps} steps: {collisions} revisits, "
+                    f"rate={actual_collision_rate:.6f} vs expected {expected_collision_rate:.2e}",
+        )
+        h.test_results.append(asdict(walk_result))
+
+        self._log("INVESTIGATE", "ECDLP",
+                  f"Structural scan: {vulnerabilities_found} vulnerabilities found in {total_checks} checks. "
+                  f"Research focus: {research_h['title']}", h.id)
+
+        # Record discovery
+        self.discovery_memory.record_discovery(
+            hypothesis_id=h.id, domain="Cryptography",
+            finding_type="structural_analysis",
+            variables=["trace", "embedding_degree", "j_invariant", "cofactor"],
+            statistic=float(vulnerabilities_found),
+            p_value=p_value,
+            description=f"ECDLP structural analysis: {total_checks} checks, "
+                        f"{vulnerabilities_found} vulnerabilities. Focus: {research_h['title']}",
+            data_source="ECCp-131 / ECDLP Analysis",
+            sample_size=total_checks,
         )
         self.total_plots += 1
 

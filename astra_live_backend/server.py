@@ -1551,6 +1551,20 @@ async def ecdlp_approaches():
     }
 
 
+_ecdlp_analysis_cache = {}
+
+@app.get("/api/ecdlp/analysis")
+async def ecdlp_analysis():
+    """Run mathematical structure analysis on ECCp-131 curve — checks for exploitable weaknesses (cached)."""
+    if not _ecdlp_analysis_cache:
+        try:
+            from astra_live_backend.ecdlp_math import analyze_curve_structure
+            _ecdlp_analysis_cache["result"] = analyze_curve_structure()
+        except Exception as e:
+            return {"error": str(e), "status": "analysis_failed"}
+    return _ecdlp_analysis_cache["result"]
+
+
 if __name__ == "__main__":
     import uvicorn
     print("=" * 60)

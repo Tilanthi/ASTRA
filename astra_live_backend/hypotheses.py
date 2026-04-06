@@ -321,6 +321,17 @@ def seed_initial_hypotheses(store: HypothesisStore):
          "WHO health indicators: life expectancy gains, cross-country disparity, normality of distribution", 0.38, "EP"),
         ("Disease Burden Inequality", "Epidemiology",
          "WHO data: life expectancy inequality across nations, IQR analysis, distribution shape", 0.35, "EP"),
+        # Cryptography — ECDLP mathematical research
+        ("Summation Polynomial Sparsity", "Cryptography",
+         "Semaev summation polynomial S_m for ECCp-131: analyze monomial structure for exploitable sparsity reducing Gröbner basis cost", 0.05, "ECDLP"),
+        ("Isogeny Graph DLP Reduction", "Cryptography",
+         "Search isogeny graph from ECCp-131 curve for isogenous curves with exploitable structure (anomalous, supersingular, small embedding degree)", 0.02, "ECDLP"),
+        ("Pollard Walk Statistical Structure", "Cryptography",
+         "Analyze Pollard rho iteration function on ECCp-131 for non-random behavior: cycle length distribution, autocorrelation, birthday paradox deviation", 0.10, "ECDLP"),
+        ("EC Endomorphism Ring Analysis", "Cryptography",
+         "Compute End(E) for ECCp-131: CM discriminant, non-trivial endomorphisms for Gallant-Lambert-Vanstone speedup", 0.03, "ECDLP"),
+        ("Lattice Reduction EC Relations", "Cryptography",
+         "Build lattice from EC point linear combinations, apply LLL/BKZ reduction to find short vectors encoding discrete logarithm", 0.03, "ECDLP"),
     ]
 
     for name, domain, desc, conf, prefix in seeds:
