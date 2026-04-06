@@ -2768,15 +2768,15 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     "status": "running",
     "engine": {
       "running": true,
-      "current_phase": "ORIENT",
-      "cycle_count": 50,
-      "uptime_seconds": 1476.7514934539795,
+      "current_phase": "UPDATE",
+      "cycle_count": 51,
+      "uptime_seconds": 1522.638746023178,
       "system_confidence": 0.6420140349582292,
       "total_data_points": 10000,
-      "total_scripts": 293,
-      "total_plots": 306,
+      "total_scripts": 305,
+      "total_plots": 318,
       "total_decisions": 116,
-      "hypotheses_tested": 195,
+      "hypotheses_tested": 203,
       "cross_domain_links": 12,
       "papers_drafted": 59,
       "gpu_utilization": 45.0,
@@ -2793,8 +2793,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "safety_state": "NOMINAL",
       "pending_approvals": 12,
       "discovery_memory": {
-        "discovery_count": 442,
-        "method_outcome_count": 480,
+        "discovery_count": 452,
+        "method_outcome_count": 450,
         "exploration_sources": [
           "who_gho",
           "world_bank",
@@ -2811,7 +2811,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         "hot_domains": [
           [
             "Astrophysics",
-            72.19991926582954
+            79.27770278917409
           ],
           [
             "Economics",
@@ -2819,47 +2819,47 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
           ],
           [
             "Epidemiology",
-            1.256727952459932e-44
+            4.909093564296609e-47
           ]
         ],
         "improvement": {
           "status": "ok",
-          "total_discoveries": 442,
-          "total_outcomes": 480,
+          "total_discoveries": 452,
+          "total_outcomes": 450,
           "hypotheses_generated_from_memory": 7,
           "metrics": {
             "success_rate": {
               "early": 1.0,
-              "recent": 0.963,
-              "delta": -0.037,
+              "recent": 1.0,
+              "delta": 0.0,
               "improving": false
             },
             "avg_significant_results": {
-              "early": 9.43,
-              "recent": 0.39,
-              "delta": -9.04,
+              "early": 9.98,
+              "recent": 0.51,
+              "delta": -9.47,
               "improving": false
             },
             "avg_novelty_signals": {
-              "early": 0.03,
-              "recent": 0.23,
-              "delta": 0.2,
+              "early": 0.0,
+              "recent": 0.24,
+              "delta": 0.24,
               "improving": true
             },
             "avg_confidence_delta": {
-              "early": 0.0552,
-              "recent": 0.0008,
-              "delta": -0.0544,
+              "early": 0.0428,
+              "recent": 0.0169,
+              "delta": -0.0259,
               "improving": false
             }
           }
         },
         "top_variable_affinities": {
-          "redshift": 172.61008909725405,
-          "g_r_color": 145.2188562724758,
-          "u_g_color": 145.08835633722538,
-          "g_r": 19.992202883617882,
-          "u_g": 19.992202883617882,
+          "redshift": 174.35621277909476,
+          "g_r_color": 146.21055720399136,
+          "u_g_color": 146.08005726874094,
+          "g_r": 20.746625633943086,
+          "u_g": 20.746625633943086,
           "distance_modulus": 7.399029941161649,
           "abs_mag": 7.399029941161649,
           "year": 4.970022572678239,
@@ -2868,9 +2868,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       "degradation": {
-        "last_check_cycle": 49,
+        "last_check_cycle": 51,
         "rolling_success_rates": [
-          0.75,
           0.8,
           0.9,
           0.85,
@@ -2918,10 +2917,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
           0.7,
           0.85,
           0.7,
+          0.7,
+          0.7,
           0.7
         ],
         "rolling_sig_results": [
-          0.45,
           0.6,
           0.75,
           0.55,
@@ -2969,16 +2969,19 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
           0.2,
           0.3,
           0.2,
+          0.2,
+          0.2,
           0.2
         ],
         "low_success_streak": 0,
-        "low_sig_streak": 49,
+        "low_sig_streak": 51,
         "safe_mode_triggered": false,
         "strategy_switch_recommended": true,
         "recommendations": [
           "Domain 'Astrophysics' has 100% of recent 50 discoveries \u2014 force-switching to underrepresented domains",
-          "Pattern 'bimodality|galaxy' repeated 12 times in last 20 discoveries \u2014 stuck in loop",
-          "Pattern 'correlation|galaxy' repeated 5 times in last 20 discoveries \u2014 stuck in loop"
+          "Pattern 'correlation|galaxy' repeated 5 times in last 20 discoveries \u2014 stuck in loop",
+          "Pattern 'bimodality|galaxy' repeated 6 times in last 20 discoveries \u2014 stuck in loop",
+          "Pattern 'causal|sdss' repeated 9 times in last 20 discoveries \u2014 stuck in loop"
         ],
         "thresholds": {
           "success_rate": 0.5,
@@ -2991,24 +2994,24 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     },
     "stigmergy": {
       "pheromone_weight": 0.3,
-      "total_deposits": 753,
+      "total_deposits": 767,
       "success_deposits": 8,
-      "failure_deposits": 473,
-      "novelty_deposits": 458
+      "failure_deposits": 485,
+      "novelty_deposits": 462
     },
-    "timestamp": 1775445131.1440299
+    "timestamp": 1775445177.0313315
   },
   "state": {
     "running": true,
-    "current_phase": "ORIENT",
-    "cycle_count": 50,
-    "uptime_seconds": 1476.7733254432678,
+    "current_phase": "UPDATE",
+    "cycle_count": 51,
+    "uptime_seconds": 1522.6441717147827,
     "system_confidence": 0.6420140349582292,
     "total_data_points": 10000,
-    "total_scripts": 293,
-    "total_plots": 306,
+    "total_scripts": 305,
+    "total_plots": 318,
     "total_decisions": 116,
-    "hypotheses_tested": 195,
+    "hypotheses_tested": 203,
     "cross_domain_links": 12,
     "papers_drafted": 59,
     "gpu_utilization": 45.0,
@@ -3025,8 +3028,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     "safety_state": "NOMINAL",
     "pending_approvals": 12,
     "discovery_memory": {
-      "discovery_count": 442,
-      "method_outcome_count": 480,
+      "discovery_count": 452,
+      "method_outcome_count": 450,
       "exploration_sources": [
         "who_gho",
         "world_bank",
@@ -3043,7 +3046,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "hot_domains": [
         [
           "Astrophysics",
-          72.19991926582954
+          79.27770278917409
         ],
         [
           "Economics",
@@ -3051,47 +3054,47 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         ],
         [
           "Epidemiology",
-          6.28363976229966e-45
+          2.4545467821483046e-47
         ]
       ],
       "improvement": {
         "status": "ok",
-        "total_discoveries": 442,
-        "total_outcomes": 480,
+        "total_discoveries": 452,
+        "total_outcomes": 450,
         "hypotheses_generated_from_memory": 7,
         "metrics": {
           "success_rate": {
             "early": 1.0,
-            "recent": 0.963,
-            "delta": -0.037,
+            "recent": 1.0,
+            "delta": 0.0,
             "improving": false
           },
           "avg_significant_results": {
-            "early": 9.43,
-            "recent": 0.39,
-            "delta": -9.04,
+            "early": 9.98,
+            "recent": 0.51,
+            "delta": -9.47,
             "improving": false
           },
           "avg_novelty_signals": {
-            "early": 0.03,
-            "recent": 0.23,
-            "delta": 0.2,
+            "early": 0.0,
+            "recent": 0.24,
+            "delta": 0.24,
             "improving": true
           },
           "avg_confidence_delta": {
-            "early": 0.0552,
-            "recent": 0.0008,
-            "delta": -0.0544,
+            "early": 0.0428,
+            "recent": 0.0169,
+            "delta": -0.0259,
             "improving": false
           }
         }
       },
       "top_variable_affinities": {
-        "redshift": 172.61008909725405,
-        "g_r_color": 145.2188562724758,
-        "u_g_color": 145.08835633722538,
-        "g_r": 19.992202883617882,
-        "u_g": 19.992202883617882,
+        "redshift": 174.35621277909476,
+        "g_r_color": 146.21055720399136,
+        "u_g_color": 146.08005726874094,
+        "g_r": 20.746625633943086,
+        "u_g": 20.746625633943086,
         "distance_modulus": 7.399029941161649,
         "abs_mag": 7.399029941161649,
         "year": 4.970022572678239,
@@ -3100,9 +3103,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       }
     },
     "degradation": {
-      "last_check_cycle": 49,
+      "last_check_cycle": 51,
       "rolling_success_rates": [
-        0.75,
         0.8,
         0.9,
         0.85,
@@ -3150,10 +3152,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         0.7,
         0.85,
         0.7,
+        0.7,
+        0.7,
         0.7
       ],
       "rolling_sig_results": [
-        0.45,
         0.6,
         0.75,
         0.55,
@@ -3201,16 +3204,19 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         0.2,
         0.3,
         0.2,
+        0.2,
+        0.2,
         0.2
       ],
       "low_success_streak": 0,
-      "low_sig_streak": 49,
+      "low_sig_streak": 51,
       "safe_mode_triggered": false,
       "strategy_switch_recommended": true,
       "recommendations": [
         "Domain 'Astrophysics' has 100% of recent 50 discoveries \u2014 force-switching to underrepresented domains",
-        "Pattern 'bimodality|galaxy' repeated 12 times in last 20 discoveries \u2014 stuck in loop",
-        "Pattern 'correlation|galaxy' repeated 5 times in last 20 discoveries \u2014 stuck in loop"
+        "Pattern 'correlation|galaxy' repeated 5 times in last 20 discoveries \u2014 stuck in loop",
+        "Pattern 'bimodality|galaxy' repeated 6 times in last 20 discoveries \u2014 stuck in loop",
+        "Pattern 'causal|sdss' repeated 9 times in last 20 discoveries \u2014 stuck in loop"
       ],
       "thresholds": {
         "success_rate": 0.5,
@@ -3326,8 +3332,40 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "confidence": 0.99,
       "phase": "validated",
       "created_at": 1775094939.1068516,
-      "updated_at": 1775445105.5718188,
+      "updated_at": 1775445158.5986953,
       "test_results": [
+        {
+          "test_name": "Kolmogorov-Smirnov",
+          "statistic": 0.6185503025217371,
+          "p_value": 0.0,
+          "passed": false,
+          "details": "D = 0.6186 (vs norm)",
+          "alpha": 0.05
+        },
+        {
+          "test_name": "Chi-squared",
+          "statistic": 9811.196,
+          "p_value": 0.0,
+          "passed": false,
+          "details": "\u03c7\u00b2 = 9811.1960, dof = 9, \u03c7\u00b2/dof = 1090.13",
+          "alpha": 0.05
+        },
+        {
+          "test_name": "Kolmogorov-Smirnov",
+          "statistic": 0.6185503025217371,
+          "p_value": 0.0,
+          "passed": false,
+          "details": "D = 0.6186 (vs norm)",
+          "alpha": 0.05
+        },
+        {
+          "test_name": "Chi-squared",
+          "statistic": 9811.196,
+          "p_value": 0.0,
+          "passed": false,
+          "details": "\u03c7\u00b2 = 9811.1960, dof = 9, \u03c7\u00b2/dof = 1090.13",
+          "alpha": 0.05
+        },
         {
           "test_name": "Kolmogorov-Smirnov",
           "statistic": 0.6185503025217371,
@@ -4124,7 +4162,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "pending_approval_at": 1775443822.902323,
       "approval_status": "pending",
       "approval_reason": "",
-      "last_tested_at": 1775445105.5718145,
+      "last_tested_at": 1775445158.598691,
       "archived_at": 0.0
     },
     {
@@ -5140,353 +5178,353 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
   ],
   "activity": [
     {
-      "timestamp": 1775445104.588363,
-      "phase": "ORIENT",
-      "module": "ENGINE",
-      "message": "\u2501\u2501\u2501 Discovery Cycle #49 starting \u2501\u2501\u2501",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445104.5883772,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "Scanning astronomical data feeds\u2026",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445104.5885348,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "Registry: 12 sources across 11 domains, 29 cross-match pairs, 49 variables",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445104.588541,
-      "phase": "ORIENT",
-      "module": "ORIENT",
-      "message": "Cached data: Gaia DR3: 5000, SDSS galaxies: 5000",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445104.8889604,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "\ud83d\udd04 Forced domain exploration: Economics",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445104.9023764,
-      "phase": "SELECT",
-      "module": "STIGMERGY",
-      "message": "Pheromone re-ranking applied (weight=0.30)",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445104.9023976,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #1: CD-001 (Econ-Astro Funding Correlation) \u2014 score 1.291, confidence 0.25, priority HIGH",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775445104.902404,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #2: H019 (Trade Network Structure) \u2014 score 1.185, confidence 0.81, priority MEDIUM",
-      "hypothesis_id": "H019"
-    },
-    {
-      "timestamp": 1775445104.90241,
-      "phase": "SELECT",
-      "module": "SELECT",
-      "message": "Rank #3: H029 (Cross-Domain: Bimodality from Astrophysics\u2192Economics) \u2014 score 1.116, confidence 0.12, priority NORMAL",
-      "hypothesis_id": "H029"
-    },
-    {
-      "timestamp": 1775445105.2034986,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running experiment for CD-001 (Econ-Astro Funding Correlation) \u2014 strategy: crossdomain, methods: ['_investigate_generic', 'run_scaling_discovery']",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775445105.2035089,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Computing cross-domain metrics for CD-001",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775445105.2035246,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Insufficient cross-domain data for CD-001",
-      "hypothesis_id": "CD-001"
-    },
-    {
-      "timestamp": 1775445105.2137928,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running experiment for H028 (Urbanization Cascade) \u2014 strategy: generic, methods: ['_investigate_generic', 'run_scaling_discovery']",
-      "hypothesis_id": "H028"
-    },
-    {
-      "timestamp": 1775445105.2138014,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running generic analysis for H028 (Urbanization Cascade)",
-      "hypothesis_id": "H028"
-    },
-    {
-      "timestamp": 1775445105.2138119,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Using Gaia sample: 5000 stars",
-      "hypothesis_id": "H028"
-    },
-    {
-      "timestamp": 1775445105.2191706,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running experiment for H003 (Exoplanet Mass-Period Relation) \u2014 strategy: exoplanet, methods: ['_investigate_exoplanets', 'run_scaling_discovery']",
-      "hypothesis_id": "H003"
-    },
-    {
-      "timestamp": 1775445105.2191772,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Fetching NASA Exoplanet Archive for H003",
-      "hypothesis_id": "H003"
-    },
-    {
-      "timestamp": 1775445105.2191856,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "\u26a0 No exoplanet data available \u2014 skipping H003",
-      "hypothesis_id": "H003"
-    },
-    {
-      "timestamp": 1775445105.224365,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running experiment for H006 (Exoplanet Period Distribution) \u2014 strategy: exoplanet, methods: ['_investigate_exoplanets', 'run_scaling_discovery']",
-      "hypothesis_id": "H006"
-    },
-    {
-      "timestamp": 1775445105.2243714,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Fetching NASA Exoplanet Archive for H006",
-      "hypothesis_id": "H006"
-    },
-    {
-      "timestamp": 1775445105.2243788,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "\u26a0 No exoplanet data available \u2014 skipping H006",
-      "hypothesis_id": "H006"
-    },
-    {
-      "timestamp": 1775445105.2297053,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running experiment for H009 (Transit Depth Statistics) \u2014 strategy: exoplanet, methods: ['_investigate_exoplanets', 'run_scaling_discovery']",
-      "hypothesis_id": "H009"
-    },
-    {
-      "timestamp": 1775445105.2297127,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Fetching NASA Exoplanet Archive for H009",
-      "hypothesis_id": "H009"
-    },
-    {
-      "timestamp": 1775445105.2297213,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "\u26a0 No exoplanet data available \u2014 skipping H009",
-      "hypothesis_id": "H009"
-    },
-    {
-      "timestamp": 1775445105.2350407,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Running experiment for H002 (Galaxy Color Bimodality) \u2014 strategy: galaxy, methods: ['_investigate_galaxy', 'run_causal_discovery']",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775445105.2350478,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Fetching SDSS galaxy sample for H002",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775445105.2351673,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Loaded 5000 galaxies from SDSS DR18 (z = 0.010\u20130.484)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775445105.2354949,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Galaxy colors: u-g = 1.69 \u00b1 0.41, g-r = 0.86 \u00b1 0.28",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775445105.2362015,
-      "phase": "INVESTIGATE",
-      "module": "INVESTIGATE",
-      "message": "Redshift distribution: median z = 0.091, IQR = 0.064\u20130.127",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775445105.2363234,
-      "phase": "CAUSAL",
-      "module": "ENGINE",
-      "message": "Running PC causal discovery on 3 variables (\u03b1=0.05)",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445105.2469192,
-      "phase": "CAUSAL",
-      "module": "ENGINE",
-      "message": "Causal graph: 3 edges, 0 v-structures",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445105.5651891,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "Running statistical battery on H003 (Exoplanet Mass-Period Relation)",
-      "hypothesis_id": "H003"
-    },
-    {
-      "timestamp": 1775445105.5668933,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "Running statistical battery on H006 (Exoplanet Period Distribution)",
-      "hypothesis_id": "H006"
-    },
-    {
-      "timestamp": 1775445105.5680742,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "Running statistical battery on H009 (Transit Depth Statistics)",
-      "hypothesis_id": "H009"
-    },
-    {
-      "timestamp": 1775445105.5692382,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "Running statistical battery on H002 (Galaxy Color Bimodality)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775445105.570988,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "KS test on g-r colors for H002: D = 0.6186 (vs norm), p = 0.0000",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775445105.571784,
-      "phase": "EVALUATE",
-      "module": "EVALUATE",
-      "message": "Chi-squared on z-distribution for H002: \u03c7\u00b2 = 9811.1960, dof = 9, \u03c7\u00b2/dof = 1090.13, p = 0.0000",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775445105.5835752,
-      "phase": "EVALUATE",
-      "module": "FDR",
-      "message": "FDR correction for H002: 98/98 tests significant after BH correction (\u03b1*=0.0000)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775445105.5836973,
-      "phase": "NOVELTY",
-      "module": "ENGINE",
-      "message": "\ud83d\udd0d 3 unexplored novelty signals \u2014 potential follow-up candidates",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445105.8841112,
-      "phase": "UPDATE",
-      "module": "UPDATE",
-      "message": "Drafting paper: results from H002 (Galaxy Color Bimodality)",
-      "hypothesis_id": "H002"
-    },
-    {
-      "timestamp": 1775445105.8962586,
-      "phase": "UPDATE",
-      "module": "UPDATE",
-      "message": "System confidence: 0.642 (29 active hypotheses across 4 domains)",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445105.8963776,
-      "phase": "DEGRADATION",
-      "module": "ENGINE",
-      "message": "\u26a0 Domain 'Astrophysics' has 100% of recent 50 discoveries \u2014 force-switching to underrepresented domains",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445105.8963819,
-      "phase": "DEGRADATION",
-      "module": "ENGINE",
-      "message": "\u26a0 Pattern 'bimodality|galaxy' repeated 12 times in last 20 discoveries \u2014 stuck in loop",
-      "hypothesis_id": null
-    },
-    {
-      "timestamp": 1775445105.8963842,
+      "timestamp": 1775445132.5917609,
       "phase": "DEGRADATION",
       "module": "ENGINE",
       "message": "\u26a0 Pattern 'correlation|galaxy' repeated 5 times in last 20 discoveries \u2014 stuck in loop",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775445105.8964107,
+      "timestamp": 1775445132.591763,
+      "phase": "DEGRADATION",
+      "module": "ENGINE",
+      "message": "\u26a0 Pattern 'causal|sdss' repeated 6 times in last 20 discoveries \u2014 stuck in loop",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445132.5917892,
       "phase": "DEGRADATION",
       "module": "ENGINE",
       "message": "Forcing exploration of domain 'Economics' next cycle",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775445105.8974824,
+      "timestamp": 1775445132.5928745,
       "phase": "UPDATE",
       "module": "ENGINE",
-      "message": "\u2501\u2501\u2501 Cycle #49 complete: 0.642 system confidence, 29 active hypotheses \u2501\u2501\u2501",
+      "message": "\u2501\u2501\u2501 Cycle #50 complete: 0.642 system confidence, 29 active hypotheses \u2501\u2501\u2501",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775445130.9010468,
+      "timestamp": 1775445157.6173434,
       "phase": "ORIENT",
       "module": "ENGINE",
-      "message": "\u2501\u2501\u2501 Discovery Cycle #50 starting \u2501\u2501\u2501",
+      "message": "\u2501\u2501\u2501 Discovery Cycle #51 starting \u2501\u2501\u2501",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775445130.90106,
+      "timestamp": 1775445157.617357,
       "phase": "ORIENT",
       "module": "ORIENT",
       "message": "Scanning astronomical data feeds\u2026",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775445130.901213,
+      "timestamp": 1775445157.617512,
       "phase": "ORIENT",
       "module": "ORIENT",
       "message": "Registry: 12 sources across 11 domains, 29 cross-match pairs, 49 variables",
       "hypothesis_id": null
     },
     {
-      "timestamp": 1775445130.9012191,
+      "timestamp": 1775445157.6175182,
       "phase": "ORIENT",
       "module": "ORIENT",
       "message": "Cached data: Gaia DR3: 5000, SDSS galaxies: 5000",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445157.9179416,
+      "phase": "SELECT",
+      "module": "SELECT",
+      "message": "\ud83d\udd04 Forced domain exploration: Economics",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445157.931502,
+      "phase": "SELECT",
+      "module": "STIGMERGY",
+      "message": "Pheromone re-ranking applied (weight=0.30)",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445157.931529,
+      "phase": "SELECT",
+      "module": "SELECT",
+      "message": "Rank #1: CD-001 (Econ-Astro Funding Correlation) \u2014 score 1.291, confidence 0.25, priority HIGH",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775445157.9315395,
+      "phase": "SELECT",
+      "module": "SELECT",
+      "message": "Rank #2: H019 (Trade Network Structure) \u2014 score 1.185, confidence 0.81, priority MEDIUM",
+      "hypothesis_id": "H019"
+    },
+    {
+      "timestamp": 1775445157.9315488,
+      "phase": "SELECT",
+      "module": "SELECT",
+      "message": "Rank #3: H029 (Cross-Domain: Bimodality from Astrophysics\u2192Economics) \u2014 score 1.116, confidence 0.12, priority NORMAL",
+      "hypothesis_id": "H029"
+    },
+    {
+      "timestamp": 1775445158.2327049,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for CD-001 (Econ-Astro Funding Correlation) \u2014 strategy: crossdomain, methods: ['_investigate_generic', 'run_scaling_discovery']",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775445158.232716,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Computing cross-domain metrics for CD-001",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775445158.2327313,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Insufficient cross-domain data for CD-001",
+      "hypothesis_id": "CD-001"
+    },
+    {
+      "timestamp": 1775445158.2391732,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for H028 (Urbanization Cascade) \u2014 strategy: generic, methods: ['_investigate_generic', 'run_scaling_discovery']",
+      "hypothesis_id": "H028"
+    },
+    {
+      "timestamp": 1775445158.2391815,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running generic analysis for H028 (Urbanization Cascade)",
+      "hypothesis_id": "H028"
+    },
+    {
+      "timestamp": 1775445158.2391925,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Using Gaia sample: 5000 stars",
+      "hypothesis_id": "H028"
+    },
+    {
+      "timestamp": 1775445158.2444131,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for H003 (Exoplanet Mass-Period Relation) \u2014 strategy: exoplanet, methods: ['_investigate_exoplanets', 'run_scaling_discovery']",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775445158.24442,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Fetching NASA Exoplanet Archive for H003",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775445158.2444277,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "\u26a0 No exoplanet data available \u2014 skipping H003",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775445158.2499998,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for H006 (Exoplanet Period Distribution) \u2014 strategy: exoplanet, methods: ['_investigate_exoplanets', 'run_scaling_discovery']",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775445158.2500083,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Fetching NASA Exoplanet Archive for H006",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775445158.2500188,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "\u26a0 No exoplanet data available \u2014 skipping H006",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775445158.2557857,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for H009 (Transit Depth Statistics) \u2014 strategy: exoplanet, methods: ['_investigate_exoplanets', 'run_scaling_discovery']",
+      "hypothesis_id": "H009"
+    },
+    {
+      "timestamp": 1775445158.2557926,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Fetching NASA Exoplanet Archive for H009",
+      "hypothesis_id": "H009"
+    },
+    {
+      "timestamp": 1775445158.2557998,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "\u26a0 No exoplanet data available \u2014 skipping H009",
+      "hypothesis_id": "H009"
+    },
+    {
+      "timestamp": 1775445158.261373,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Running experiment for H002 (Galaxy Color Bimodality) \u2014 strategy: galaxy, methods: ['_investigate_galaxy', 'run_causal_discovery']",
+      "hypothesis_id": "H002"
+    },
+    {
+      "timestamp": 1775445158.2613819,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Fetching SDSS galaxy sample for H002",
+      "hypothesis_id": "H002"
+    },
+    {
+      "timestamp": 1775445158.2615001,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Loaded 5000 galaxies from SDSS DR18 (z = 0.010\u20130.484)",
+      "hypothesis_id": "H002"
+    },
+    {
+      "timestamp": 1775445158.2617815,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Galaxy colors: u-g = 1.69 \u00b1 0.41, g-r = 0.86 \u00b1 0.28",
+      "hypothesis_id": "H002"
+    },
+    {
+      "timestamp": 1775445158.262493,
+      "phase": "INVESTIGATE",
+      "module": "INVESTIGATE",
+      "message": "Redshift distribution: median z = 0.091, IQR = 0.064\u20130.127",
+      "hypothesis_id": "H002"
+    },
+    {
+      "timestamp": 1775445158.2626042,
+      "phase": "CAUSAL",
+      "module": "ENGINE",
+      "message": "Running PC causal discovery on 3 variables (\u03b1=0.05)",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445158.2731667,
+      "phase": "CAUSAL",
+      "module": "ENGINE",
+      "message": "Causal graph: 3 edges, 0 v-structures",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445158.592204,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Running statistical battery on H003 (Exoplanet Mass-Period Relation)",
+      "hypothesis_id": "H003"
+    },
+    {
+      "timestamp": 1775445158.5938292,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Running statistical battery on H006 (Exoplanet Period Distribution)",
+      "hypothesis_id": "H006"
+    },
+    {
+      "timestamp": 1775445158.5950022,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Running statistical battery on H009 (Transit Depth Statistics)",
+      "hypothesis_id": "H009"
+    },
+    {
+      "timestamp": 1775445158.5961463,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Running statistical battery on H002 (Galaxy Color Bimodality)",
+      "hypothesis_id": "H002"
+    },
+    {
+      "timestamp": 1775445158.59787,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "KS test on g-r colors for H002: D = 0.6186 (vs norm), p = 0.0000",
+      "hypothesis_id": "H002"
+    },
+    {
+      "timestamp": 1775445158.5986598,
+      "phase": "EVALUATE",
+      "module": "EVALUATE",
+      "message": "Chi-squared on z-distribution for H002: \u03c7\u00b2 = 9811.1960, dof = 9, \u03c7\u00b2/dof = 1090.13, p = 0.0000",
+      "hypothesis_id": "H002"
+    },
+    {
+      "timestamp": 1775445158.615978,
+      "phase": "EVALUATE",
+      "module": "FDR",
+      "message": "FDR correction for H002: 102/102 tests significant after BH correction (\u03b1*=0.0000)",
+      "hypothesis_id": "H002"
+    },
+    {
+      "timestamp": 1775445158.6161058,
+      "phase": "NOVELTY",
+      "module": "ENGINE",
+      "message": "\ud83d\udd0d 3 unexplored novelty signals \u2014 potential follow-up candidates",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445158.9263685,
+      "phase": "UPDATE",
+      "module": "UPDATE",
+      "message": "System confidence: 0.642 (29 active hypotheses across 4 domains)",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445158.9264784,
+      "phase": "DEGRADATION",
+      "module": "ENGINE",
+      "message": "\u26a0 Domain 'Astrophysics' has 100% of recent 50 discoveries \u2014 force-switching to underrepresented domains",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445158.9264822,
+      "phase": "DEGRADATION",
+      "module": "ENGINE",
+      "message": "\u26a0 Pattern 'correlation|galaxy' repeated 5 times in last 20 discoveries \u2014 stuck in loop",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445158.926484,
+      "phase": "DEGRADATION",
+      "module": "ENGINE",
+      "message": "\u26a0 Pattern 'bimodality|galaxy' repeated 6 times in last 20 discoveries \u2014 stuck in loop",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445158.9264863,
+      "phase": "DEGRADATION",
+      "module": "ENGINE",
+      "message": "\u26a0 Pattern 'causal|sdss' repeated 9 times in last 20 discoveries \u2014 stuck in loop",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445158.9265127,
+      "phase": "DEGRADATION",
+      "module": "ENGINE",
+      "message": "Forcing exploration of domain 'Economics' next cycle",
+      "hypothesis_id": null
+    },
+    {
+      "timestamp": 1775445158.928673,
+      "phase": "UPDATE",
+      "module": "ENGINE",
+      "message": "\u2501\u2501\u2501 Cycle #51 complete: 0.642 system confidence, 29 active hypotheses \u2501\u2501\u2501",
       "hypothesis_id": null
     }
   ],
@@ -5675,7 +5713,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "data": [
         0.546,
         0.72,
-        0.478,
+        0.496,
         0.8,
         0.921,
         0.312
@@ -5684,11 +5722,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     "system_confidence": 0.6420140349582292
   },
   "metrics": {
-    "runtime_seconds": 1476.8915510177612,
+    "runtime_seconds": 1522.6757769584656,
     "data_points": 10000,
-    "scripts_written": 293,
-    "plots_generated": 306,
-    "hypotheses_tested": 195,
+    "scripts_written": 305,
+    "plots_generated": 318,
+    "hypotheses_tested": 203,
     "queue_depth": 11,
     "domains_active": 4,
     "system_confidence": 0.6420140349582292,
@@ -5699,13 +5737,13 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
   },
   "engine/safety-status": {
     "state": "NOMINAL",
-    "uptime_seconds": 1476.8979485034943,
+    "uptime_seconds": 1522.6791038513184,
     "can_advance_hypotheses": true,
     "can_run_cycle": true,
     "can_investigate": true,
     "can_modify_state": true,
     "audit_log_size": 2,
-    "timestamp": 1775445131.2897437,
+    "timestamp": 1775445177.070899,
     "audit_log": [
       {
         "timestamp": 1775443654.3918705,
@@ -5729,138 +5767,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     "trajectory": [
       {
         "cycle": 0,
-        "x": -777.2564301490784,
-        "y": 4.739334970712662,
-        "z": 1.14202802947716e-06,
-        "original": {
-          "vector": [
-            0.421176,
-            0.448026,
-            0.500931,
-            0.326618,
-            0.004316,
-            0.053433,
-            0.06232,
-            0.007831,
-            0.792218,
-            0.035714,
-            0.0,
-            0.0,
-            0.018907,
-            1.0
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 1,
-          "timestamp": 1775443684.8440354
-        }
-      },
-      {
-        "cycle": 1,
-        "x": -734.717710018158,
-        "y": 3.178843691945076,
-        "z": 7.870610037041814e-07,
-        "original": {
-          "vector": [
-            0.442387,
-            0.448026,
-            0.500931,
-            0.326618,
-            0.021397,
-            0.053433,
-            0.06232,
-            0.007831,
-            0.916083,
-            0.1,
-            0.1,
-            0.002299,
-            0.05098,
-            1.0
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 1,
-          "timestamp": 1775443727.4113684
-        }
-      },
-      {
-        "cycle": 2,
-        "x": -734.7169699668884,
-        "y": 3.178816542029381,
-        "z": 7.870548285326961e-07,
-        "original": {
-          "vector": [
-            0.442387,
-            0.448026,
-            0.500931,
-            0.326618,
-            0.021397,
-            0.053433,
-            0.06232,
-            0.007831,
-            0.916083,
-            0.1,
-            0.1,
-            0.002299,
-            0.05098,
-            1.0
-          ],
-          "labels": [
-            "astro_conf_mean",
-            "econ_conf_mean",
-            "climate_conf_mean",
-            "epi_conf_mean",
-            "astro_conf_var",
-            "econ_conf_var",
-            "climate_conf_var",
-            "epi_conf_var",
-            "domain_entropy",
-            "exploration_rate",
-            "exploitation_rate",
-            "coupling_density",
-            "resource_utilization",
-            "decision_velocity"
-          ],
-          "dimensions": 14,
-          "cycle": 1,
-          "timestamp": 1775443727.412109
-        }
-      },
-      {
-        "cycle": 3,
-        "x": -639.2003390789032,
-        "y": 0.6755551248788834,
-        "z": 2.1494221302820193e-07,
+        "x": -689.0465848445892,
+        "y": 1.0394080430269241,
+        "z": 1.49379632219393e-07,
         "original": {
           "vector": [
             0.457928,
@@ -5900,10 +5809,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 4,
-        "x": -639.1998624801636,
-        "y": 0.675537645816803,
-        "z": 2.1493823665341694e-07,
+        "cycle": 1,
+        "x": -689.0461084842682,
+        "y": 1.0393903702497482,
+        "z": 1.49377829217201e-07,
         "original": {
           "vector": [
             0.457928,
@@ -5943,10 +5852,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 5,
-        "x": -573.5900919437408,
-        "y": -0.7306198924779892,
-        "z": -1.0761469926290346e-07,
+        "cycle": 2,
+        "x": -623.4369122982025,
+        "y": -0.39332102984189987,
+        "z": 1.394794502118657e-09,
         "original": {
           "vector": [
             0.48586,
@@ -5986,10 +5895,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 6,
-        "x": -573.5896551609039,
-        "y": -0.7306359186768532,
-        "z": -1.0761834556838323e-07,
+        "cycle": 3,
+        "x": -623.436475276947,
+        "y": -0.3933372348546982,
+        "z": 1.3931407139011753e-09,
         "original": {
           "vector": [
             0.48586,
@@ -6029,10 +5938,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 7,
-        "x": -543.647575378418,
-        "y": -0.8283591568470001,
-        "z": -1.3253999309181808e-07,
+        "cycle": 4,
+        "x": -593.4944376945496,
+        "y": -0.5031787976622581,
+        "z": -1.1584212700199714e-08,
         "original": {
           "vector": [
             0.491762,
@@ -6072,10 +5981,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 8,
-        "x": -543.6467835903168,
-        "y": -0.8283881992101669,
-        "z": -1.325465996959707e-07,
+        "cycle": 5,
+        "x": -593.4936459064484,
+        "y": -0.5032081604003906,
+        "z": -1.1587209414187782e-08,
         "original": {
           "vector": [
             0.491762,
@@ -6115,10 +6024,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 9,
-        "x": -517.2550346851349,
-        "y": -0.7958710268139839,
-        "z": -1.2784228842210865e-07,
+        "cycle": 6,
+        "x": -567.1018860340118,
+        "y": -0.4813724085688591,
+        "z": -1.1126217280832407e-08,
         "original": {
           "vector": [
             0.495461,
@@ -6158,10 +6067,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 10,
-        "x": -517.2542412281036,
-        "y": -0.7959001362323761,
-        "z": -1.2784891101347284e-07,
+        "cycle": 7,
+        "x": -567.101092338562,
+        "y": -0.48140184581279755,
+        "z": -1.1129221100247833e-08,
         "original": {
           "vector": [
             0.495461,
@@ -6201,10 +6110,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 11,
-        "x": -490.87747979164124,
-        "y": -0.7628331631422043,
-        "z": -1.230195345591767e-07,
+        "cycle": 8,
+        "x": -540.7243196964264,
+        "y": -0.4590102359652519,
+        "z": -1.0611497458512531e-08,
         "original": {
           "vector": [
             0.495461,
@@ -6244,10 +6153,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 12,
-        "x": -490.8766827583313,
-        "y": -0.7628623992204666,
-        "z": -1.230261850171388e-07,
+        "cycle": 9,
+        "x": -540.723522901535,
+        "y": -0.4590397924184799,
+        "z": -1.0614514600604252e-08,
         "original": {
           "vector": [
             0.495461,
@@ -6287,10 +6196,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 13,
-        "x": -464.4967415332794,
-        "y": -0.7299120798707008,
-        "z": -1.1822334433642112e-07,
+        "cycle": 10,
+        "x": -514.3435702323914,
+        "y": -0.436766117811203,
+        "z": -1.0108827552812727e-08,
         "original": {
           "vector": [
             0.495461,
@@ -6330,10 +6239,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 14,
-        "x": -464.4959375858307,
-        "y": -0.7299415692687035,
-        "z": -1.1823005241495821e-07,
+        "cycle": 11,
+        "x": -514.3427665233612,
+        "y": -0.4367959350347519,
+        "z": -1.01118695639002e-08,
         "original": {
           "vector": [
             0.495461,
@@ -6373,10 +6282,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 15,
-        "x": -438.1086769104004,
-        "y": -0.697259746491909,
-        "z": -1.1348828632407049e-07,
+        "cycle": 12,
+        "x": -487.95549488067627,
+        "y": -0.4147937223315239,
+        "z": -9.6338883537328e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6416,10 +6325,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 16,
-        "x": -438.1078658103943,
-        "y": -0.6972895041108131,
-        "z": -1.1349505601998544e-07,
+        "cycle": 13,
+        "x": -487.9546835422516,
+        "y": -0.4148238077759743,
+        "z": -9.636959674708123e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6459,10 +6368,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 17,
-        "x": -411.7300796508789,
-        "y": -0.6642601117491722,
-        "z": -1.0867423050342495e-07,
+        "cycle": 14,
+        "x": -461.57688641548157,
+        "y": -0.39247019588947296,
+        "z": -9.123113819953232e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6502,10 +6411,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 18,
-        "x": -411.7292559146881,
-        "y": -0.6642903387546539,
-        "z": -1.0868110555950494e-07,
+        "cycle": 15,
+        "x": -461.5760624408722,
+        "y": -0.39250075817108154,
+        "z": -9.12623310256322e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6545,10 +6454,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 19,
-        "x": -385.27817392349243,
-        "y": -0.6339497342705727,
-        "z": -1.0447190212925506e-07,
+        "cycle": 16,
+        "x": -435.1249704360962,
+        "y": -0.37286559492349625,
+        "z": -8.88981954716428e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6588,10 +6497,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 20,
-        "x": -385.2775876522064,
-        "y": -0.633971244096756,
-        "z": -1.0447679499314688e-07,
+        "cycle": 17,
+        "x": -435.1243841648102,
+        "y": -0.37288734316825867,
+        "z": -8.89203910503511e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6631,10 +6540,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 21,
-        "x": -358.8984999656677,
-        "y": -0.6009896025061607,
-        "z": -9.966682901207946e-08,
+        "cycle": 18,
+        "x": -408.74528551101685,
+        "y": -0.3505820035934448,
+        "z": -8.383120864152716e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6674,10 +6583,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 22,
-        "x": -358.8977665901184,
-        "y": -0.6010165065526962,
-        "z": -9.96729486724135e-08,
+        "cycle": 19,
+        "x": -408.74455213546753,
+        "y": -0.3506092056632042,
+        "z": -8.385896421714278e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6717,10 +6626,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 23,
-        "x": -331.98571848869324,
-        "y": -0.5875860005617142,
-        "z": -9.931030697796217e-08,
+        "cycle": 20,
+        "x": -381.83250069618225,
+        "y": -0.3480707034468651,
+        "z": -9.894287167355742e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6760,10 +6669,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 24,
-        "x": -331.9849681854248,
-        "y": -0.5876135230064392,
-        "z": -9.931656763662033e-08,
+        "cycle": 21,
+        "x": -381.8317503929138,
+        "y": -0.348098523914814,
+        "z": -9.897126673763523e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6803,10 +6712,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 25,
-        "x": -305.5998296737671,
-        "y": -0.5548538565635681,
-        "z": -9.455709504280208e-08,
+        "cycle": 22,
+        "x": -355.4466006755829,
+        "y": -0.3260176181793213,
+        "z": -9.411111889789936e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6846,10 +6755,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 26,
-        "x": -305.5990686416626,
-        "y": -0.5548817738890648,
-        "z": -9.456344518543602e-08,
+        "cycle": 23,
+        "x": -355.4458396434784,
+        "y": -0.32604584097862244,
+        "z": -9.413992252405023e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6889,10 +6798,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 27,
-        "x": -279.20258474349976,
-        "y": -0.5225383043289185,
-        "z": -8.989864663799807e-08,
+        "cycle": 24,
+        "x": -329.0493447780609,
+        "y": -0.3043857142329216,
+        "z": -8.970920895023937e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6932,10 +6841,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 28,
-        "x": -279.2018096446991,
-        "y": -0.5225667357444763,
-        "z": -8.990511413120572e-08,
+        "cycle": 25,
+        "x": -329.04856967926025,
+        "y": -0.30441445857286453,
+        "z": -8.973854548344207e-09,
         "original": {
           "vector": [
             0.495461,
@@ -6975,10 +6884,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 29,
-        "x": -252.4951810836792,
-        "y": -0.5016006082296371,
-        "z": -8.782833338383256e-08,
+        "cycle": 26,
+        "x": -302.3419349193573,
+        "y": -0.29425720125436783,
+        "z": -9.704712589098108e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7018,10 +6927,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 30,
-        "x": -252.49441647529602,
-        "y": -0.5016286596655846,
-        "z": -8.783471339146587e-08,
+        "cycle": 27,
+        "x": -302.3411705493927,
+        "y": -0.2942855581641197,
+        "z": -9.707606274389491e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7061,10 +6970,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 31,
-        "x": -226.10813570022583,
-        "y": -0.46891089528799057,
-        "z": -8.308477383867086e-08,
+        "cycle": 28,
+        "x": -275.9548785686493,
+        "y": -0.2722470089793205,
+        "z": -9.225915142963004e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7104,10 +7013,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 32,
-        "x": -226.107355594635,
-        "y": -0.46893951296806335,
-        "z": -8.309128307626423e-08,
+        "cycle": 29,
+        "x": -275.9540984630585,
+        "y": -0.2722759395837784,
+        "z": -9.228867448030087e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7147,10 +7056,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 33,
-        "x": -199.73438048362732,
-        "y": -0.4357336387038231,
-        "z": -7.823031256126711e-08,
+        "cycle": 30,
+        "x": -249.58111214637756,
+        "y": -0.24974389374256134,
+        "z": -8.696812159314504e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7190,10 +7099,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 34,
-        "x": -199.73360443115234,
-        "y": -0.43576211482286453,
-        "z": -7.823679004648199e-08,
+        "cycle": 31,
+        "x": -249.580335855484,
+        "y": -0.24977268278598785,
+        "z": -8.699750253526872e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7233,10 +7142,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 35,
-        "x": -173.2269470691681,
-        "y": -0.4074602425098419,
-        "z": -7.449133743175906e-08,
+        "cycle": 32,
+        "x": -223.07366943359375,
+        "y": -0.23219874501228333,
+        "z": -8.673695539584969e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7276,10 +7185,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 36,
-        "x": -173.22615575790405,
-        "y": -0.40748926997184753,
-        "z": -7.449794015013111e-08,
+        "cycle": 33,
+        "x": -223.0728781223297,
+        "y": -0.2322280928492546,
+        "z": -8.676690477216198e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7319,10 +7228,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 37,
-        "x": -146.8257462978363,
-        "y": -0.37528979778289795,
-        "z": -6.986589851099012e-08,
+        "cycle": 34,
+        "x": -196.67245769500732,
+        "y": -0.21071355789899826,
+        "z": -8.248480121153534e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7362,10 +7271,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 38,
-        "x": -146.8249855041504,
-        "y": -0.375317707657814,
-        "z": -6.987224665522263e-08,
+        "cycle": 35,
+        "x": -196.6716969013214,
+        "y": -0.2107417806982994,
+        "z": -8.251359595590202e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7405,10 +7314,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 39,
-        "x": -120.44119834899902,
-        "y": -0.342508465051651,
-        "z": -6.510149719307634e-08,
+        "cycle": 36,
+        "x": -170.28789854049683,
+        "y": -0.18861074000597,
+        "z": -7.760229792097562e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7448,10 +7357,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 40,
-        "x": -120.44042348861694,
-        "y": -0.34253688901662827,
-        "z": -6.510796268788255e-08,
+        "cycle": 37,
+        "x": -170.28712368011475,
+        "y": -0.18863947689533234,
+        "z": -7.763162557239411e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7491,10 +7400,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 41,
-        "x": -94.05260157585144,
-        "y": -0.30987565964460373,
-        "z": -6.037088251531486e-08,
+        "cycle": 38,
+        "x": -143.8992908000946,
+        "y": -0.16665808856487274,
+        "z": -7.287304093495095e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7534,10 +7443,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 42,
-        "x": -94.05180621147156,
-        "y": -0.3099048361182213,
-        "z": -6.037751898446686e-08,
+        "cycle": 39,
+        "x": -143.89849543571472,
+        "y": -0.16668758541345596,
+        "z": -7.290314130159459e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7577,10 +7486,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 43,
-        "x": -67.59292817115784,
-        "y": -0.27985022962093353,
-        "z": -5.6233372180969354e-08,
+        "cycle": 40,
+        "x": -117.43960738182068,
+        "y": -0.14734157919883728,
+        "z": -7.0834129672903146e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7620,10 +7529,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 44,
-        "x": -67.59231162071228,
-        "y": -0.2798728421330452,
-        "z": -5.6238515511175535e-08,
+        "cycle": 41,
+        "x": -117.4389910697937,
+        "y": -0.14736443758010864,
+        "z": -7.085745323820447e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7663,10 +7572,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 45,
-        "x": -41.23825287818909,
-        "y": -0.24597304314374924,
-        "z": -5.121969515187175e-08,
+        "cycle": 42,
+        "x": -91.08492064476013,
+        "y": -0.12413081526756287,
+        "z": -6.4820904199791585e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7706,10 +7615,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 46,
-        "x": -41.23780798912048,
-        "y": -0.2459893599152565,
-        "z": -5.122340707153228e-08,
+        "cycle": 43,
+        "x": -91.08447575569153,
+        "y": -0.12414731085300446,
+        "z": -6.48377440626291e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7749,10 +7658,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 47,
-        "x": -14.861644268035889,
-        "y": -0.21290046721696854,
-        "z": -4.638904615994477e-08,
+        "cycle": 44,
+        "x": -64.70830059051514,
+        "y": -0.10173353552818298,
+        "z": -5.963789462271052e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7792,10 +7701,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 48,
-        "x": -14.861180543899536,
-        "y": -0.2129174768924713,
-        "z": -4.6392915176163285e-08,
+        "cycle": 45,
+        "x": -64.70783710479736,
+        "y": -0.10175073146820068,
+        "z": -5.965544502828379e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7835,10 +7744,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 49,
-        "x": 11.49943208694458,
-        "y": -0.1792581006884575,
-        "z": -4.1428783181807205e-08,
+        "cycle": 46,
+        "x": -38.34721302986145,
+        "y": -0.07876018434762955,
+        "z": -5.386696422249315e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7878,10 +7787,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 50,
-        "x": 11.49993085861206,
-        "y": -0.17927639931440353,
-        "z": -4.1432946296104944e-08,
+        "cycle": 47,
+        "x": -38.34671401977539,
+        "y": -0.07877868413925171,
+        "z": -5.388584689569598e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7921,10 +7830,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 51,
-        "x": 37.867847204208374,
-        "y": -0.1458849459886551,
-        "z": -3.652976121593099e-08,
+        "cycle": 48,
+        "x": -11.97878646850586,
+        "y": -0.056059010326862335,
+        "z": -4.837382938660539e-09,
         "original": {
           "vector": [
             0.495461,
@@ -7964,10 +7873,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 52,
-        "x": 37.86831474304199,
-        "y": -0.1459021046757698,
-        "z": -3.6533663982929454e-08,
+        "cycle": 49,
+        "x": -11.978318929672241,
+        "y": -0.056076355278491974,
+        "z": -4.839153078251002e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8007,10 +7916,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 53,
-        "x": 64.23047494888306,
-        "y": -0.11229949444532394,
-        "z": -3.158244687995193e-08,
+        "cycle": 50,
+        "x": 14.38385272026062,
+        "y": -0.03314319998025894,
+        "z": -4.26616253434986e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8050,10 +7959,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 54,
-        "x": 64.2309205532074,
-        "y": -0.1123158410191536,
-        "z": -3.158616668219594e-08,
+        "cycle": 51,
+        "x": 14.384298324584961,
+        "y": -0.033159732818603516,
+        "z": -4.2678491851688705e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8093,10 +8002,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 55,
-        "x": 90.5901551246643,
-        "y": -0.07860591262578964,
-        "z": -2.6610535219795395e-08,
+        "cycle": 52,
+        "x": 40.74354434013367,
+        "y": -0.010118067264556885,
+        "z": -3.6837848327309075e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8136,10 +8045,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 56,
-        "x": 90.59060573577881,
-        "y": -0.07862243801355362,
-        "z": -2.6614294768023683e-08,
+        "cycle": 53,
+        "x": 40.74399495124817,
+        "y": -0.010134778916835785,
+        "z": -3.6854901352967318e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8179,10 +8088,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 57,
-        "x": 116.97299885749817,
-        "y": -0.045762062072753906,
-        "z": -2.183191438742682e-08,
+        "cycle": 54,
+        "x": 67.12639927864075,
+        "y": 0.012047961354255676,
+        "z": -3.1890854401694924e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8222,10 +8131,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 58,
-        "x": 116.97343683242798,
-        "y": -0.045778125524520874,
-        "z": -2.1835568575490072e-08,
+        "cycle": 55,
+        "x": 67.12683701515198,
+        "y": 0.012031719088554382,
+        "z": -3.1907436692790725e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8265,10 +8174,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 59,
-        "x": 143.33477020263672,
-        "y": -0.012145191431045532,
-        "z": -1.6877452768682133e-08,
+        "cycle": 56,
+        "x": 93.4881820678711,
+        "y": 0.034995533525943756,
+        "z": -2.614624072805327e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8308,10 +8217,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 60,
-        "x": 143.3352165222168,
-        "y": -0.012161560356616974,
-        "z": -1.6881176567729028e-08,
+        "cycle": 57,
+        "x": 93.48862838745117,
+        "y": 0.03497897833585739,
+        "z": -2.616313388159597e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8351,10 +8260,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 61,
-        "x": 169.69253087043762,
-        "y": 0.021618805825710297,
-        "z": -1.1889524254016237e-08,
+        "cycle": 58,
+        "x": 119.8459541797638,
+        "y": 0.05809185653924942,
+        "z": -2.0249810717132277e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8394,10 +8303,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 62,
-        "x": 169.69297456741333,
-        "y": 0.021602533757686615,
-        "z": -1.1893226181669547e-08,
+        "cycle": 59,
+        "x": 119.8463978767395,
+        "y": 0.05807540565729141,
+        "z": -2.026659728926461e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8437,10 +8346,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 63,
-        "x": 196.04865145683289,
-        "y": 0.05544297397136688,
-        "z": -6.88790924296967e-09,
+        "cycle": 60,
+        "x": 146.20208621025085,
+        "y": 0.08124902099370956,
+        "z": -1.4291297034674244e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8480,10 +8389,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 64,
-        "x": 196.0490927696228,
-        "y": 0.05542678385972977,
-        "z": -6.8915932960322834e-09,
+        "cycle": 61,
+        "x": 146.20252776145935,
+        "y": 0.08123264461755753,
+        "z": -1.4308003670748803e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8523,10 +8432,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 65,
-        "x": 222.4045433998108,
-        "y": 0.0892755314707756,
-        "z": -1.8843858695660742e-09,
+        "cycle": 62,
+        "x": 172.55798959732056,
+        "y": 0.10441465675830841,
+        "z": -8.324150257976726e-10,
         "original": {
           "vector": [
             0.495461,
@@ -8566,10 +8475,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 66,
-        "x": 222.4049849510193,
-        "y": 0.0892593264579773,
-        "z": -1.8880719210301322e-09,
+        "cycle": 63,
+        "x": 172.55843138694763,
+        "y": 0.10439827293157578,
+        "z": -8.340865775835482e-10,
         "original": {
           "vector": [
             0.495461,
@@ -8609,10 +8518,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 67,
-        "x": 248.7776756286621,
-        "y": 0.12247563153505325,
-        "z": 2.975272472838242e-09,
+        "cycle": 64,
+        "x": 198.93113327026367,
+        "y": 0.12694086879491806,
+        "z": -3.0095481662328893e-10,
         "original": {
           "vector": [
             0.495461,
@@ -8652,10 +8561,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 68,
-        "x": 248.77812027931213,
-        "y": 0.12245932221412659,
-        "z": 2.9715625515791544e-09,
+        "cycle": 65,
+        "x": 198.9315779209137,
+        "y": 0.12692438066005707,
+        "z": -3.0263791472862067e-10,
         "original": {
           "vector": [
             0.495461,
@@ -8695,10 +8604,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 69,
-        "x": 275.1783661842346,
-        "y": 0.1546647921204567,
-        "z": 7.604971874464184e-09,
+        "cycle": 66,
+        "x": 225.33183455467224,
+        "y": 0.1484449803829193,
+        "z": 1.261941662278332e-10,
         "original": {
           "vector": [
             0.495461,
@@ -8738,10 +8647,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 70,
-        "x": 275.1788468360901,
-        "y": 0.15464715659618378,
-        "z": 7.600959750497793e-09,
+        "cycle": 67,
+        "x": 225.3323154449463,
+        "y": 0.14842715114355087,
+        "z": 1.2437428864586764e-10,
         "original": {
           "vector": [
             0.495461,
@@ -8781,10 +8690,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 71,
-        "x": 301.5107452869415,
-        "y": 0.1893598884344101,
-        "z": 1.280469719144861e-08,
+        "cycle": 68,
+        "x": 251.6642255783081,
+        "y": 0.1724826768040657,
+        "z": 8.119069860867967e-10,
         "original": {
           "vector": [
             0.495461,
@@ -8824,10 +8733,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 72,
-        "x": 301.51121163368225,
-        "y": 0.18934278190135956,
-        "z": 1.2800806414858812e-08,
+        "cycle": 69,
+        "x": 251.66469192504883,
+        "y": 0.17246538400650024,
+        "z": 8.101421755668525e-10,
         "original": {
           "vector": [
             0.495461,
@@ -8867,10 +8776,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 73,
-        "x": 327.87054467201233,
-        "y": 0.223049096763134,
-        "z": 1.77756148689312e-08,
+        "cycle": 70,
+        "x": 278.0240366458893,
+        "y": 0.19550339132547379,
+        "z": 1.3938334930685414e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8910,10 +8819,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 74,
-        "x": 327.8709897994995,
-        "y": 0.22303277254104614,
-        "z": 1.7771900950869224e-08,
+        "cycle": 71,
+        "x": 278.0244815349579,
+        "y": 0.195486880838871,
+        "z": 1.3921486186063703e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8953,10 +8862,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 75,
-        "x": 354.24879360198975,
-        "y": 0.25606150180101395,
-        "z": 2.2592577364477506e-08,
+        "cycle": 72,
+        "x": 304.4022967815399,
+        "y": 0.2178398296236992,
+        "z": 1.905926083622944e-09,
         "original": {
           "vector": [
             0.495461,
@@ -8996,10 +8905,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 76,
-        "x": 354.2492606639862,
-        "y": 0.2560443729162216,
-        "z": 2.2588680592683374e-08,
+        "cycle": 73,
+        "x": 304.4027636051178,
+        "y": 0.21782251447439194,
+        "z": 1.904158608567741e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9039,10 +8948,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 77,
-        "x": 380.62178230285645,
-        "y": 0.2892668768763542,
-        "z": 2.7453434525703813e-08,
+        "cycle": 74,
+        "x": 330.77529668807983,
+        "y": 0.24037136882543564,
+        "z": 2.4379298579901842e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9082,10 +8991,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 78,
-        "x": 380.62225127220154,
-        "y": 0.2892496734857559,
-        "z": 2.7449519768296682e-08,
+        "cycle": 75,
+        "x": 330.7757656574249,
+        "y": 0.24035397171974182,
+        "z": 2.4361543893292037e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9125,10 +9034,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 79,
-        "x": 406.97915601730347,
-        "y": 0.3230450749397278,
-        "z": 3.244459356732676e-08,
+        "cycle": 76,
+        "x": 357.13268184661865,
+        "y": 0.2634820491075516,
+        "z": 3.0290356889395298e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9168,10 +9077,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 80,
-        "x": 406.9796042442322,
-        "y": 0.3230286240577698,
-        "z": 3.244085189368917e-08,
+        "cycle": 77,
+        "x": 357.13313007354736,
+        "y": 0.26346541941165924,
+        "z": 3.027338379979483e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9211,10 +9120,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 81,
-        "x": 433.34991216659546,
-        "y": 0.35633234679698944,
-        "z": 3.732407982681707e-08,
+        "cycle": 78,
+        "x": 383.50344920158386,
+        "y": 0.28609639406204224,
+        "z": 3.569489592791797e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9254,10 +9163,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 82,
-        "x": 433.3503715991974,
-        "y": 0.3563154861330986,
-        "z": 3.7320244672400804e-08,
+        "cycle": 79,
+        "x": 383.50390887260437,
+        "y": 0.2860793471336365,
+        "z": 3.5677496512676043e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9297,10 +9206,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 83,
-        "x": 460.0500090122223,
-        "y": 0.3775380775332451,
-        "z": 3.945536397598204e-08,
+        "cycle": 80,
+        "x": 410.20355248451233,
+        "y": 0.2964958995580673,
+        "z": 2.863356662885508e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9340,10 +9249,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 84,
-        "x": 460.05080938339233,
-        "y": 0.377508707344532,
-        "z": 3.9448683653020566e-08,
+        "cycle": 81,
+        "x": 410.20435309410095,
+        "y": 0.2964662089943886,
+        "z": 2.8603270862959107e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9383,10 +9292,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 85,
-        "x": 486.41354513168335,
-        "y": 0.4110902026295662,
-        "z": 4.439509737608205e-08,
+        "cycle": 82,
+        "x": 436.5671000480652,
+        "y": 0.3193780183792114,
+        "z": 3.4311371521766887e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9426,10 +9335,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 86,
-        "x": 486.41402316093445,
-        "y": 0.41107267141342163,
-        "z": 4.439110912191069e-08,
+        "cycle": 83,
+        "x": 436.5675780773163,
+        "y": 0.31936029344797134,
+        "z": 3.4293279327357595e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9469,10 +9378,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 87,
-        "x": 512.767560005188,
-        "y": 0.4449916109442711,
-        "z": 4.941428177751561e-08,
+        "cycle": 84,
+        "x": 462.9211266040802,
+        "y": 0.34261326491832733,
+        "z": 4.034958145382461e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9512,10 +9421,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 88,
-        "x": 512.768013715744,
-        "y": 0.44497497379779816,
-        "z": 4.941049636109085e-08,
+        "cycle": 85,
+        "x": 462.92158031463623,
+        "y": 0.3425964415073395,
+        "z": 4.033240408318761e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9555,10 +9464,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 89,
-        "x": 539.1337232589722,
-        "y": 0.4784473702311516,
-        "z": 5.433209560035124e-08,
+        "cycle": 86,
+        "x": 489.2873013019562,
+        "y": 0.36539795249700546,
+        "z": 4.592796365443519e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9598,10 +9507,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 90,
-        "x": 539.1344356536865,
-        "y": 0.47842123359441757,
-        "z": 5.4326151022188185e-08,
+        "cycle": 87,
+        "x": 489.28801369667053,
+        "y": 0.36537153273820877,
+        "z": 4.590099855761309e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9641,10 +9550,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 91,
-        "x": 565.5113360881805,
-        "y": 0.5114831104874611,
-        "z": 5.915436651626749e-08,
+        "cycle": 88,
+        "x": 515.6649253368378,
+        "y": 0.3877579867839813,
+        "z": 5.107296807693729e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9684,10 +9593,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 92,
-        "x": 565.5118036270142,
-        "y": 0.5114659667015076,
-        "z": 5.9150465747670466e-08,
+        "cycle": 89,
+        "x": 515.6653928756714,
+        "y": 0.3877406492829323,
+        "z": 5.105527556281686e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9727,10 +9636,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 93,
-        "x": 591.8640565872192,
-        "y": 0.5454320088028908,
-        "z": 6.418435438693137e-08,
+        "cycle": 90,
+        "x": 542.0176572799683,
+        "y": 0.4110412523150444,
+        "z": 5.716016104884147e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9770,10 +9679,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 94,
-        "x": 591.8645253181458,
-        "y": 0.5454148128628731,
-        "z": 6.418044373734944e-08,
+        "cycle": 91,
+        "x": 542.0181260108948,
+        "y": 0.4110238701105118,
+        "z": 5.7142415244015865e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9813,10 +9722,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 95,
-        "x": 618.2598416805267,
-        "y": 0.5778011232614517,
-        "z": 6.885498626818531e-08,
+        "cycle": 92,
+        "x": 568.4134533405304,
+        "y": 0.43272730708122253,
+        "z": 6.16173334577752e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9856,10 +9765,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 96,
-        "x": 618.2603385448456,
-        "y": 0.577782891690731,
-        "z": 6.885083891905452e-08,
+        "cycle": 93,
+        "x": 568.4139502048492,
+        "y": 0.43270886689424515,
+        "z": 6.1598521838845954e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9899,10 +9808,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 97,
-        "x": 644.600777387619,
-        "y": 0.6121823266148567,
-        "z": 7.398331081098775e-08,
+        "cycle": 94,
+        "x": 594.754400730133,
+        "y": 0.45644764602184296,
+        "z": 6.8150596277405384e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9942,10 +9851,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         }
       },
       {
-        "cycle": 98,
-        "x": 644.601229429245,
-        "y": 0.612165741622448,
-        "z": 7.397953927235079e-08,
+        "cycle": 95,
+        "x": 594.754852771759,
+        "y": 0.4564308822154999,
+        "z": 6.813348996104196e-09,
         "original": {
           "vector": [
             0.495461,
@@ -9983,18 +9892,190 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
           "cycle": 49,
           "timestamp": 1775445105.8972495
         }
+      },
+      {
+        "cycle": 96,
+        "x": 621.4684944152832,
+        "y": 0.4663282632827759,
+        "z": 6.055969947738049e-09,
+        "original": {
+          "vector": [
+            0.495461,
+            0.567059,
+            0.81286,
+            0.0,
+            0.073292,
+            0.099127,
+            0.00103,
+            0.0,
+            0.720798,
+            0.206897,
+            0.413793,
+            0.024631,
+            0.865255,
+            0.232
+          ],
+          "labels": [
+            "astro_conf_mean",
+            "econ_conf_mean",
+            "climate_conf_mean",
+            "epi_conf_mean",
+            "astro_conf_var",
+            "econ_conf_var",
+            "climate_conf_var",
+            "epi_conf_var",
+            "domain_entropy",
+            "exploration_rate",
+            "exploitation_rate",
+            "coupling_density",
+            "resource_utilization",
+            "decision_velocity"
+          ],
+          "dimensions": 14,
+          "cycle": 50,
+          "timestamp": 1775445132.5921693
+        }
+      },
+      {
+        "cycle": 97,
+        "x": 621.4689660072327,
+        "y": 0.4663107693195343,
+        "z": 6.054184709114452e-09,
+        "original": {
+          "vector": [
+            0.495461,
+            0.567059,
+            0.81286,
+            0.0,
+            0.073292,
+            0.099127,
+            0.00103,
+            0.0,
+            0.720798,
+            0.206897,
+            0.413793,
+            0.024631,
+            0.865255,
+            0.232
+          ],
+          "labels": [
+            "astro_conf_mean",
+            "econ_conf_mean",
+            "climate_conf_mean",
+            "epi_conf_mean",
+            "astro_conf_var",
+            "econ_conf_var",
+            "climate_conf_var",
+            "epi_conf_var",
+            "domain_entropy",
+            "exploration_rate",
+            "exploitation_rate",
+            "coupling_density",
+            "resource_utilization",
+            "decision_velocity"
+          ],
+          "dimensions": 14,
+          "cycle": 50,
+          "timestamp": 1775445132.5926414
+        }
+      },
+      {
+        "cycle": 98,
+        "x": 647.8232662677765,
+        "y": 0.4895358607172966,
+        "z": 6.656969198104434e-09,
+        "original": {
+          "vector": [
+            0.495461,
+            0.567059,
+            0.81286,
+            0.0,
+            0.073292,
+            0.099127,
+            0.00103,
+            0.0,
+            0.720798,
+            0.206897,
+            0.413793,
+            0.024631,
+            0.719697,
+            0.227451
+          ],
+          "labels": [
+            "astro_conf_mean",
+            "econ_conf_mean",
+            "climate_conf_mean",
+            "epi_conf_mean",
+            "astro_conf_var",
+            "econ_conf_var",
+            "climate_conf_var",
+            "epi_conf_var",
+            "domain_entropy",
+            "exploration_rate",
+            "exploitation_rate",
+            "coupling_density",
+            "resource_utilization",
+            "decision_velocity"
+          ],
+          "dimensions": 14,
+          "cycle": 51,
+          "timestamp": 1775445158.9279728
+        }
+      },
+      {
+        "cycle": 99,
+        "x": 647.8237402439117,
+        "y": 0.48951828479766846,
+        "z": 6.65517507769664e-09,
+        "original": {
+          "vector": [
+            0.495461,
+            0.567059,
+            0.81286,
+            0.0,
+            0.073292,
+            0.099127,
+            0.00103,
+            0.0,
+            0.720798,
+            0.206897,
+            0.413793,
+            0.024631,
+            0.719697,
+            0.227451
+          ],
+          "labels": [
+            "astro_conf_mean",
+            "econ_conf_mean",
+            "climate_conf_mean",
+            "epi_conf_mean",
+            "astro_conf_var",
+            "econ_conf_var",
+            "climate_conf_var",
+            "epi_conf_var",
+            "domain_entropy",
+            "exploration_rate",
+            "exploitation_rate",
+            "coupling_density",
+            "resource_utilization",
+            "decision_velocity"
+          ],
+          "dimensions": 14,
+          "cycle": 51,
+          "timestamp": 1775445158.928447
+        }
       }
     ],
     "steady_state_attractor": null
   },
   "engine/alignment": {
-    "composite_score": 0.3502,
+    "composite_score": 0.3526,
     "dimensions": {
       "scientific_rigor": 0.4138,
       "domain_balance": 0.7208,
       "novelty_pursuit": 0.0,
       "epistemic_humility": 0.4588,
-      "resource_efficiency": 0.3,
+      "resource_efficiency": 0.3235,
       "reproducibility": 0.2
     },
     "weights": {
@@ -10008,9 +10089,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     "metadata": {
       "total_hypotheses": 35,
       "active_hypotheses": 29,
-      "cycle_count": 50,
+      "cycle_count": 51,
       "new_hypotheses_last_10": 0,
-      "timestamp": 1775445131.3137472
+      "timestamp": 1775445177.0902426
     }
   },
   "engine/anomalies": {
@@ -10126,17 +10207,17 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
           "samples": 20
         },
         "decision_velocity": {
-          "mean": 0.269781,
-          "std": 0.023031,
-          "min": 0.236735,
-          "max": 0.31,
-          "current": 0.236735,
+          "mean": 0.262092,
+          "std": 0.022259,
+          "min": 0.227451,
+          "max": 0.296875,
+          "current": 0.227451,
           "samples": 20
         }
       }
     },
     "total_alerts": 0,
-    "timestamp": 1775445131.3174148
+    "timestamp": 1775445177.0931883
   },
   "engine/pending": {
     "count": 12,
@@ -10149,8 +10230,40 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         "confidence": 0.99,
         "phase": "validated",
         "created_at": 1775094939.1068516,
-        "updated_at": 1775445105.5718188,
+        "updated_at": 1775445158.5986953,
         "test_results": [
+          {
+            "test_name": "Kolmogorov-Smirnov",
+            "statistic": 0.6185503025217371,
+            "p_value": 0.0,
+            "passed": false,
+            "details": "D = 0.6186 (vs norm)",
+            "alpha": 0.05
+          },
+          {
+            "test_name": "Chi-squared",
+            "statistic": 9811.196,
+            "p_value": 0.0,
+            "passed": false,
+            "details": "\u03c7\u00b2 = 9811.1960, dof = 9, \u03c7\u00b2/dof = 1090.13",
+            "alpha": 0.05
+          },
+          {
+            "test_name": "Kolmogorov-Smirnov",
+            "statistic": 0.6185503025217371,
+            "p_value": 0.0,
+            "passed": false,
+            "details": "D = 0.6186 (vs norm)",
+            "alpha": 0.05
+          },
+          {
+            "test_name": "Chi-squared",
+            "statistic": 9811.196,
+            "p_value": 0.0,
+            "passed": false,
+            "details": "\u03c7\u00b2 = 9811.1960, dof = 9, \u03c7\u00b2/dof = 1090.13",
+            "alpha": 0.05
+          },
           {
             "test_name": "Kolmogorov-Smirnov",
             "statistic": 0.6185503025217371,
@@ -10947,7 +11060,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         "pending_approval_at": 1775443822.902323,
         "approval_status": "pending",
         "approval_reason": "",
-        "last_tested_at": 1775445105.5718145,
+        "last_tested_at": 1775445158.598691,
         "archived_at": 0.0
       },
       {
@@ -11323,7 +11436,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
   },
   "system/health": {
     "status": "HEALTHY",
-    "uptime_seconds": 0.0010128021240234375,
+    "uptime_seconds": 0.001024007797241211,
     "components": [
       {
         "id": "c1",
@@ -11359,10 +11472,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         "id": "c6",
         "name": "System Resources",
         "status": "nominal",
-        "message": "CPU: 0.0% MEM: 224.5MB"
+        "message": "CPU: 0.0% MEM: 219.4MB"
       }
     ],
-    "timestamp": 1775445131.3338745
+    "timestamp": 1775445177.1123636
   },
   "literature/papers": {
     "papers": [
@@ -11609,7 +11722,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     ],
     "total": 18,
     "backend": "sklearn",
-    "timestamp": 1775445131.3372414
+    "timestamp": 1775445177.1158228
   },
   "literature/citation-graph": {
     "nodes": [],
@@ -11624,44 +11737,44 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "max_citations": 0
     },
     "h_index": 0,
-    "timestamp": 1775445131.3534951
+    "timestamp": 1775445177.1306634
   },
   "pheromones/status": {
     "pheromone_weight": 0.3,
     "pheromone_field": {
       "total_deposits": 9614,
       "deposits_by_type": {
-        "exploration": 474,
-        "success": 136,
-        "failure": 399,
-        "analogy": 8279,
+        "exploration": 484,
+        "success": 135,
+        "failure": 409,
+        "analogy": 8260,
         "novelty": 326,
         "attention": 0
       },
       "field_stats": {
         "exploration": {
-          "max": 0.15386037528514862,
-          "mean": 0.0007742118905298412,
+          "max": 0.31536489725112915,
+          "mean": 0.0015889988280832767,
           "nonzero_cells": 4
         },
         "success": {
-          "max": 5.6743083000183105,
-          "mean": 0.01418577041476965,
+          "max": 3.900771379470825,
+          "mean": 0.00975192803889513,
           "nonzero_cells": 1
         },
         "failure": {
-          "max": 1.3083064556121826,
-          "mean": 0.003886600723490119,
+          "max": 1.8714185953140259,
+          "mean": 0.005559444427490234,
           "nonzero_cells": 3
         },
         "analogy": {
-          "max": 4.667776584625244,
-          "mean": 0.011669441126286983,
+          "max": 5.78963565826416,
+          "mean": 0.01447408925741911,
           "nonzero_cells": 1
         },
         "novelty": {
-          "max": 5.898799896240234,
-          "mean": 0.014746999368071556,
+          "max": 6.809197425842285,
+          "mean": 0.0170229934155941,
           "nonzero_cells": 1
         },
         "attention": {
@@ -11673,12 +11786,12 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     },
     "stigmergic_memory": {
       "n_fields": 9,
-      "n_trails": 293,
-      "n_discoveries": 106,
-      "total_deposits": 481,
-      "total_discoveries": 458,
+      "n_trails": 305,
+      "n_discoveries": 110,
+      "total_deposits": 493,
+      "total_discoveries": 462,
       "avg_tau": 0.3396529946686711,
-      "avg_eta": 2.217095210070668,
+      "avg_eta": 2.311761876737334,
       "avg_c_k": 0.5809376084454472,
       "domains": [
         "Climate",
@@ -11690,23 +11803,23 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "integration_score": 0.5569792028151491
     },
     "metrics": {
-      "total_deposits": 753,
+      "total_deposits": 767,
       "success_deposits": 8,
-      "failure_deposits": 473,
-      "analogy_deposits": 5172,
-      "novelty_deposits": 458,
-      "queries": 203,
-      "pheromone_guided_selections": 203,
+      "failure_deposits": 485,
+      "analogy_deposits": 5211,
+      "novelty_deposits": 462,
+      "queries": 205,
+      "pheromone_guided_selections": 205,
       "baseline_selections": 0,
-      "engine_cycles": 50,
+      "engine_cycles": 51,
       "last_persist": 1775445131.2809746,
       "last_success_time": 1775443848.644544
     },
     "ab_test": {
       "pheromone_guided": {
-        "total": 480,
+        "total": 492,
         "successes": 8,
-        "rate": 0.016666666666666666
+        "rate": 0.016260162601626018
       },
       "baseline": {
         "total": 0,
@@ -11727,9 +11840,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
   },
   "pheromones/ab-test": {
     "pheromone_guided": {
-      "total": 480,
+      "total": 492,
       "successes": 8,
-      "rate": 0.016666666666666666
+      "rate": 0.016260162601626018
     },
     "baseline": {
       "total": 0,
@@ -11744,10 +11857,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     "mathematics": 0.8,
     "astronomy": 0.8,
     "general": 0.8,
-    "Economics": 0.9824682775851762,
-    "Climate": 0.41777448989450927,
-    "Epidemiology": 0.9921105794608593,
-    "Cross-Domain": 0.41777448989450927
+    "Economics": 0.9725403703735949,
+    "Climate": 0.5863783322274685,
+    "Epidemiology": 0.9837447762489319,
+    "Cross-Domain": 0.5863783322274685
   },
   "stigmergy/exploration": {
     "direction": {
@@ -11756,7 +11869,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "D2": 0.0
     },
     "strategy": "explore",
-    "curiosity_value": 0.7952274676362673,
+    "curiosity_value": 0.7993267030648099,
     "knowledge_gaps": {
       "astrophysics": 0.8,
       "causal_inference": 0.8,
@@ -11764,10 +11877,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       "mathematics": 0.8,
       "astronomy": 0.8,
       "general": 0.8,
-      "Economics": 0.9824682775851762,
-      "Climate": 0.41777448989450927,
-      "Epidemiology": 0.9921105794608593,
-      "Cross-Domain": 0.41777448989450927
+      "Economics": 0.9725403703735949,
+      "Climate": 0.5863783322274685,
+      "Epidemiology": 0.9837447762489319,
+      "Cross-Domain": 0.5863783322274685
     },
     "success_hotspots": [
       {
@@ -11776,7 +11889,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
           "D1": 0.325,
           "D2": 0.35000000000000003
         },
-        "concentration": 5.6743083000183105
+        "concentration": 3.900771379470825
       }
     ],
     "novelty_hotspots": [
@@ -11786,7 +11899,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
           "D1": 0.125,
           "D2": 0.050000000000000044
         },
-        "concentration": 5.898799896240234
+        "concentration": 6.809197425842285
       }
     ],
     "recommended_domain": "Epidemiology"
@@ -11797,20 +11910,20 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       {
         "agent_id": "explorer_708fbb8bb670",
         "agent_type": "explorer",
-        "contacts": 26,
+        "contacts": 27,
         "contact_rate": 0.033,
-        "actions_taken": 20,
+        "actions_taken": 21,
         "successes": 0,
         "success_rate": 0.0
       },
       {
         "agent_id": "exploiter_708fbb268cd0",
         "agent_type": "exploiter",
-        "contacts": 47,
+        "contacts": 49,
         "contact_rate": 0.167,
-        "actions_taken": 40,
-        "successes": 39,
-        "success_rate": 0.975
+        "actions_taken": 41,
+        "successes": 40,
+        "success_rate": 0.975609756097561
       },
       {
         "agent_id": "falsifier_708fbb268d30",
@@ -11824,10 +11937,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
       {
         "agent_id": "analogist_708fbb268dc0",
         "agent_type": "analogist",
-        "contacts": 26,
+        "contacts": 27,
         "contact_rate": 0.033,
-        "actions_taken": 24,
-        "successes": 24,
+        "actions_taken": 25,
+        "successes": 25,
         "success_rate": 1.0
       },
       {
@@ -11840,9 +11953,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
         "success_rate": 0.0
       }
     ],
-    "total_actions": 84,
-    "total_successes": 63,
-    "overall_success_rate": 0.75,
+    "total_actions": 87,
+    "total_successes": 65,
+    "overall_success_rate": 0.7471264367816092,
     "gordon_params": {
       "evaporation_rate": 0.05,
       "reinforcement_rate": 0.1,
@@ -11854,7 +11967,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
     }
   }
 };
-  window.__SNAPSHOT_TIME__ = 1775445131.4120781;
+  window.__SNAPSHOT_TIME__ = 1775445177.1897223;
   /* __SNAPSHOT_DATA_END__ */
 
   async function api(path) {
