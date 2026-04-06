@@ -2,10 +2,13 @@
 Generate a self-contained ASTRA Live dashboard with all API data embedded inline.
 This makes the dashboard work at any URL without needing a live API connection.
 
+Uses marker-based injection: everything between /* SNAPSHOT_START */ and /* SNAPSHOT_END */
+is replaced on each refresh, making the process fully idempotent.
+
 Usage: python3 generate_dashboard.py
-The dashboard auto-refreshes by attempting live API calls; falls back to embedded data.
 """
 import json
+import re
 import sys
 import time
 import requests
@@ -13,10 +16,22 @@ import requests
 API_BASE = "http://localhost:8787"
 OUTPUT_PATH = "/shared/public/astra-live/index.html"
 
+SNAPSHOT_START = "/* __SNAPSHOT_DATA_START__ */"
+SNAPSHOT_END = "/* __SNAPSHOT_DATA_END__ */"
+
+ENDPOINTS = [
+    'status', 'state', 'hypotheses', 'activity', 'decisions', 'charts',
+    'metrics', 'engine/safety-status', 'engine/state-space', 'engine/alignment',
+    'engine/anomalies', 'engine/pending', 'system/health',
+    'literature/papers', 'literature/citation-graph', 'literature/citation-metrics',
+    'pheromones/status', 'pheromones/ab-test',
+    'stigmergy/gaps', 'stigmergy/exploration', 'swarm/status',
+]
+
 
 def fetch_all_data():
     data = {}
-    for ep in ['status', 'state', 'hypotheses', 'activity', 'decisions', 'charts', 'metrics', 'engine/safety-status', 'engine/state-space', 'engine/alignment', 'engine/anomalies', 'engine/pending', 'system/health', 'literature/papers', 'literature/citation-graph', 'literature/citation-metrics', 'pheromones/status', 'pheromones/ab-test', 'stigmergy/gaps', 'stigmergy/exploration', 'swarm/status']:
+    for ep in ENDPOINTS:
         try:
             r = requests.get(f"{API_BASE}/api/{ep}", timeout=15)
             data[ep] = r.json()
@@ -26,44 +41,40 @@ def fetch_all_data():
     return data
 
 
-def build_dashboard_html(snapshot_data):
-    """Read the template HTML and inject snapshot data."""
-    with open(OUTPUT_PATH, 'r') as f:
-        html = f.read()
-
-    # Build the snapshot injection script
+def inject_snapshot(html: str, snapshot_data: dict) -> str:
+    """Replace the snapshot block between markers. Fully idempotent."""
     snapshot_json = json.dumps(snapshot_data, indent=2, default=str)
-    snapshot_block = f"""
-  // ── Embedded snapshot data (auto-generated, fallback when API unreachable) ──
-  window.__SNAPSHOT__ = {snapshot_json};
-  window.__SNAPSHOT_TIME__ = {time.time()};
-"""
-
-    # Remove any old snapshot blocks first
-    import re
-    html = re.sub(
-        r'\n\s*// ── Embedded snapshot data.*?window\.__SNAPSHOT__\s*=\s*\{.*?\};\s*\n',
-        '\n',
-        html,
-        flags=re.DOTALL
-    )
-    # Also remove older style snapshot blocks
-    html = re.sub(
-        r'\n\s*window\.__SNAPSHOT__\s*=\s*\{[^}]*"status".*?\n\s*\};\s*\n',
-        '\n',
-        html,
-        flags=re.DOTALL
+    new_block = (
+        f"{SNAPSHOT_START}\n"
+        f"  window.__SNAPSHOT__ = {snapshot_json};\n"
+        f"  window.__SNAPSHOT_TIME__ = {time.time()};\n"
+        f"  {SNAPSHOT_END}"
     )
 
-    # Find the injection point — right before the api() function
-    marker = "  async function api(path) {"
-    if marker in html:
-        html = html.replace(marker, snapshot_block + "\n" + marker)
+    if SNAPSHOT_START in html and SNAPSHOT_END in html:
+        # Replace between markers (idempotent)
+        pattern = re.escape(SNAPSHOT_START) + r'.*?' + re.escape(SNAPSHOT_END)
+        # Use lambda to avoid \u in JSON being treated as regex backreference
+        html = re.sub(pattern, lambda m: new_block, html, count=1, flags=re.DOTALL)
     else:
-        print("Warning: Could not find injection marker")
+        # First-time injection: insert markers before the api() function
+        marker = "  async function api(path) {"
+        alt_marker = "  function snapshotFor(path) {"
+        target = marker if marker in html else alt_marker
+        if target in html:
+            html = html.replace(target, new_block + "\n\n  " + target.lstrip(), 1)
+        else:
+            print("Warning: Could not find injection point for snapshot")
+
+    return html
+
+
+def ensure_snapshot_api(html: str) -> str:
+    """Ensure the api() function has snapshot fallback. One-time transformation."""
+    # Already has snapshotFor? Nothing to do
+    if "function snapshotFor(path)" in html:
         return html
 
-    # Now patch the api() function to use snapshot fallback
     old_api = """  async function api(path) {
     // Try live API first
     if (!apiConnected) {
@@ -125,9 +136,10 @@ def build_dashboard_html(snapshot_data):
     }
   }"""
 
-    html = html.replace(old_api, new_api)
+    if old_api in html:
+        html = html.replace(old_api, new_api)
 
-    # Also fix the connection status to show "LIVE" when connected, "CACHED" when using snapshot
+    # Connection status: show CACHED when using snapshot
     old_status = """  function updateConnectionStatus(connected) {
     const dot = document.querySelector('.status-dot');
     const headerCenter = document.querySelector('.header-center');
@@ -153,7 +165,43 @@ def build_dashboard_html(snapshot_data):
     }
   }"""
 
-    html = html.replace(old_status, new_status)
+    if old_status in html:
+        html = html.replace(old_status, new_status)
+
+    return html
+
+
+def build_dashboard_html(snapshot_data: dict) -> str:
+    """Read the HTML, inject snapshot data, ensure API fallback. Idempotent."""
+    with open(OUTPUT_PATH, 'r') as f:
+        html = f.read()
+
+    # Clean up legacy cruft: remove any stray __SNAPSHOT_TIME__ lines not inside markers
+    # (from the old broken generator that kept appending)
+    html = re.sub(
+        r'^\s*window\.__SNAPSHOT_TIME__\s*=\s*[\d.]+;\s*$\n',
+        '', html, flags=re.MULTILINE
+    )
+    # Remove old-style snapshot blocks (no markers)
+    html = re.sub(
+        r'\n\s*// ── Embedded snapshot data[^\n]*\n'
+        r'(?:\s*window\.__SNAPSHOT__\s*=\s*\{.*?\};\s*\n)?',
+        '\n', html, flags=re.DOTALL
+    )
+    # Remove any orphaned window.__SNAPSHOT__ = { ... }; blocks not inside markers
+    if SNAPSHOT_START not in html:
+        # Only clean if we haven't placed markers yet
+        html = re.sub(
+            r'\n\s*window\.__SNAPSHOT__\s*=\s*\{[^;]{100,}\};\s*\n',
+            '\n', html, flags=re.DOTALL
+        )
+
+    # Ensure API fallback (one-time)
+    html = ensure_snapshot_api(html)
+
+    # Inject snapshot data (idempotent with markers)
+    html = inject_snapshot(html, snapshot_data)
+
     return html
 
 
@@ -174,16 +222,11 @@ if __name__ == "__main__":
               f"{metrics.get('auto_decisions', 0)} decisions, "
               f"confidence {metrics.get('system_confidence', 0):.3f}")
 
-    print("\n2. Reading template...")
-    with open(OUTPUT_PATH, 'r') as f:
-        html = f.read()
-    print(f"   Template: {len(html)} bytes")
-
-    print("\n3. Injecting snapshot data...")
+    print("\n2. Reading template & cleaning up...")
     html = build_dashboard_html(data)
     print(f"   Result: {len(html)} bytes")
 
-    print(f"\n4. Writing to {OUTPUT_PATH}...")
+    print(f"\n3. Writing to {OUTPUT_PATH}...")
     with open(OUTPUT_PATH, 'w') as f:
         f.write(html)
 

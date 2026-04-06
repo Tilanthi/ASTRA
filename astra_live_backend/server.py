@@ -90,7 +90,7 @@ def _snapshot_thread_fn(interval=120):
 
 
 _snapshot_thread = threading.Thread(
-    target=_snapshot_thread_fn, args=(120,), daemon=True, name="snapshot-refresh"
+    target=_snapshot_thread_fn, args=(60,), daemon=True, name="snapshot-refresh"
 )
 _snapshot_thread.start()
 
