@@ -7,6 +7,7 @@ Every cycle the engine writes outcome signals here. On future cycles,
 the memory feeds back into hypothesis generation, method selection, and
 exploration strategy.
 """
+import itertools
 import time
 import json
 import math
@@ -228,7 +229,7 @@ class DiscoveryMemory:
         # ── Deduplication: skip if last N discoveries have same fingerprint ──
         dedup_window = 20  # look back this many discoveries
         variables_key = tuple(sorted(variables)) if variables else ()
-        recent = self.discoveries[-dedup_window:] if len(self.discoveries) > 0 else []
+        recent = list(itertools.islice(reversed(self.discoveries), dedup_window)) if len(self.discoveries) > 0 else []
         for prev in recent:
             prev_vars = tuple(sorted(prev.variables)) if prev.variables else ()
             if (prev.finding_type == finding_type
