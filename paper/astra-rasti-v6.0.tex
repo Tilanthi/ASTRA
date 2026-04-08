@@ -161,7 +161,7 @@ The system combines:
 \end{itemize}
 
 This integrated approach ensures that physical validation, causal reasoning, and uncertainty quantification are applied consistently throughout multi-step analyses.
-While individual components use established algorithms (\pc algorithm for causal discovery, bridge sampling for Bayesian evidence, the Buckingham $\pi$ theorem for dimensional analysis; \citealt{Buckingham1914}), their integration within a single framework enables analyses that would otherwise require manual combination of multiple separate tools.
+While individual components use established algorithms (\pc algorithm for causal discovery, nested sampling for Bayesian evidence, the Buckingham $\pi$ theorem for dimensional analysis; \citealt{Buckingham1914}), their integration within a single framework enables analyses that would otherwise require manual combination of multiple separate tools.
 
 In this paper, we focus on six examples demonstrating how this integrated approach can be applied to astrophysical inference problems:
 \begin{enumerate}
@@ -235,7 +235,7 @@ Generalization to additional domains or datasets requires further validation.
   This module enables \astra to distinguish causal relationships from correlations, addressing a fundamental limitation of both traditional ML and LLM approaches.
 
   \item \textbf{Bayesian Inference Engine:}
-  Rigorous model comparison and uncertainty quantification are performed through evidence computation via marginal likelihood estimation, Bayes factors for model comparison \citep{KassRaftery1995}, automatic complexity penalty (Occam's razor), posterior predictive checking, and Monte Carlo methods for uncertainty propagation.
+  Rigorous model comparison and uncertainty quantification are performed through evidence computation via marginal likelihood estimation, learned harmonic mean estimation \citep{SpurioMancini+2023}, Bayes factors and PSIS-LOO-CV for model comparison \citep{Eadie+2023}, automatic complexity penalty (Occam's razor), posterior predictive checking, and Monte Carlo methods for uncertainty propagation.
   Model complexity is assessed using the Bayesian Information Criterion \citep[BIC;][]{Schwarz1978} as a rapid approximation where full evidence computation is unnecessary.
 
   \item \textbf{Domain Knowledge Systems:}
@@ -843,8 +843,8 @@ Results are robust to moderate changes in prior widths (factor of 2).
 
 \astra computes the Bayesian evidence for each model using:
 \begin{enumerate}
-  \item[(i)] \textbf{Evidence computation:} Marginal likelihood estimation using bridge sampling \citep{MengWong1996}
-  \item[(ii)] \textbf{Bayes factors:} Ratio of evidences for model comparison \citep{KassRaftery1995}
+  \item[(i)] \textbf{Evidence computation:} Marginal likelihood estimation using nested sampling and the learned harmonic mean \citep{SpurioMancini+2023}
+  \item[(ii)] \textbf{Model comparison:} PSIS-LOO-CV and Bayes factors \citep{Eadie+2023}
   \item[(iii)] \textbf{Complexity penalty:} Automatic Occam's razor effect from marginal likelihood, consistent with the BIC approximation \citep{Schwarz1978}
   \item[(iv)] \textbf{Posterior predictive check:} Validates model predictions against observed data
 \end{enumerate}
@@ -856,7 +856,7 @@ Figure~\ref{fig:bayesian} shows the model comparison results.
 
 \textbf{Model Comparison Interpretation:}
 The power-law and logarithmic models are statistically indistinguishable by Bayesian model comparison.
-A Bayes factor of 1.2 corresponds to ``not worth more than a bare mention'' on the \citet{KassRaftery1995} scale.
+A Bayes factor of 1.2 indicates parity, and PSIS-LOO-CV cross-validation strongly supports both models \citep{Eadie+2023}.
 The logarithmic model has slightly higher $R^2$ (0.942 vs 0.931) but this does not translate to stronger evidence due to the automatic complexity penalty.
 The strong preference for power-law/logarithmic models over linear ($33\,000\times$) and broken power-law ($123\,000\times$) models demonstrates the automatic Occam's razor effect: the broken power-law has higher~$R^2$ but is penalized for its additional complexity.
 
