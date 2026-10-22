@@ -1,0 +1,611 @@
+"""novelty_gate.py — Gate 2 of the two-gate EVALUATE: is a candidate scientific
+claim ALREADY in the literature?
+
+This is the "do not simply repeat things we already know from textbooks or the
+scientific literature (incl. arXiv)" gate that the prime directive requires for
+open-ended Eureka search (design doc §5.3).
+
+How it works
+------------
+1. Retrieve the most similar papers from arXiv (primary; no API key needed) and,
+   if reachable, Semantic Scholar — for terms extracted from the claim.
+2. Ask the LLM, GROUNDED ONLY in the retrieved abstracts, whether the SPECIFIC
+   claim is stated or directly implied by any of them. The LLM must cite which
+   abstract entails it, or say "none".
+
+Honesty guarantees
+------------------
+- The entailment judgment is constrained to retrieved text — the LLM is given the
+  abstracts and asked to point at the entailing one. It is NOT a free-form
+  "is this novel?" judgement (that would re-introduce the circular LLM-as-judge
+  fiction problem this whole effort removes).
+- Retrieval/judge failures are CONSERVATIVE: if novelty cannot be checked, the
+  claim is NOT promoted as a novel Eureka. It returns status ``retrieval-failed``
+  / ``judge-failed`` with ``novel=False``.
+- Retrieved papers are persisted to a provenance manifest; nothing is fabricated.
+
+Caching: results are keyed by a normalized claim hash in
+``~/.astra_persistent/evolved_programs/novelty_cache.json`` so repeated claims do
+not re-hit the APIs.
+
+Public API: ``check_novelty(claim, min_effect_description="") -> NoveltyResult``.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import logging
+import os
+import re
+import time
+import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
+from dataclasses import dataclass, asdict
+from pathlib import Path
+from typing import List, Optional
+
+logger = logging.getLogger(__name__)
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+_GATEWAY = None  # cached llm gateway (loaded decoupled from astra_core/__init__)
+
+
+def _get_gateway():
+    """Return the canonical LLM gateway via the shared decoupled loader
+    (see ``_llm.py``). Returns None on failure."""
+    global _GATEWAY
+    if _GATEWAY is not None:
+        return _GATEWAY
+    try:
+        from ._llm import get_gateway as _gg
+        _GATEWAY = _gg()
+        return _GATEWAY
+    except Exception as e:
+        logger.warning("[novelty] could not load LLM gateway: %s", e)
+        return None
+
+CACHE_PATH = Path.home() / ".astra_persistent" / "evolved_programs" / "novelty_cache.json"
+# Count sidecar read by claim_gates._novelty_cache_size (written on every save)
+CACHE_COUNT_PATH = CACHE_PATH.with_name("novelty_cache.count")
+# Prune cap (token-economy point 12, 2026-10-10): the cache grew to 43.6 MB
+# because entries persisted their full retrieved-abstract lists and nothing
+# ever removed old entries. Saves now strip "retrieved" and keep only the
+# NEWEST NOVELTY_CACHE_MAX_ENTRIES verdicts (insertion order = age order).
+NOVELTY_CACHE_MAX_ENTRIES = 6000
+ARXIV_ENDPOINT = "https://export.arxiv.org/api/query"
+S2_ENDPOINT = "https://api.semanticscholar.org/graph/v1/paper/search"
+_RATE_SLEEP = 4.0  # arXiv asks for >=3s between calls
+
+
+@dataclass
+class Paper:
+    source: str        # "arxiv" | "s2"
+    title: str
+    abstract: str
+    identifier: str    # arxiv id or s2 paperId
+    year: Optional[str] = None
+
+
+@dataclass
+class NoveltyResult:
+    novel: bool
+    status: str        # novel | known | retrieval-failed | judge-failed
+    claim: str
+    entailed_by: Optional[Paper] = None
+    n_retrieved: int = 0
+    reasoning: str = ""
+    retrieved: List[Paper] = None
+    confidence: Optional[float] = None      # judge self-report, ranking signal only
+    revision: int = 0                       # times this claim's novelty was re-judged
+    # F4 (2026-09-08): True when this verdict came from the cache without a
+    # live retrieval this call. Pure observability — the TTL policy below is
+    # what enforces "novel => live-verified within LIVE_CHECK_TTL".
+    from_cache: bool = False
+
+    def to_dict(self) -> dict:
+        d = asdict(self)
+        if self.entailed_by:
+            d["entailed_by"] = asdict(self.entailed_by)
+        d.pop("from_cache", None)   # runtime flag, not part of the cache schema
+        return d
+
+
+# --------------------------------------------------------------------------- #
+# retrieval                                                                    #
+# --------------------------------------------------------------------------- #
+def _http_get(url: str, timeout: int = 25, retries: int = 3) -> Optional[str]:
+    """GET with retry/backoff. arXiv/S2 transiently rate-limit or drop requests
+    (the 2026-07-14 pilot saw whole batches return empty), so retry a few times
+    before giving up. Returns None if all attempts fail."""
+    for attempt in range(retries):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "ASTRA-novelty-gate/1.0"})
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return r.read().decode("utf-8", errors="replace")
+        except Exception as e:
+            logger.debug("[novelty] GET failed (attempt %d/%d) %s: %s",
+                         attempt + 1, retries, url[:80], e)
+            if attempt < retries - 1:
+                time.sleep(2 * (attempt + 1))  # 2s, 4s backoff between attempts
+    return None
+
+
+def retrieve_arxiv(query: str, max_results: int = 5) -> List[Paper]:
+    """Query arXiv Atom API. Returns papers (title+abstract). Rate-limited."""
+    q = urllib.parse.quote(query)
+    url = (f"{ARXIV_ENDPOINT}?search_query=all:{q}&start=0&max_results={max_results}"
+           f"&sortBy=relevance")
+    raw = _http_get(url)
+    time.sleep(_RATE_SLEEP)  # respect arXiv's >=3s guideline
+    if not raw:
+        return []
+    papers: List[Paper] = []
+    try:
+        ns = {"a": "http://www.w3.org/2005/Atom"}
+        root = ET.fromstring(raw)
+        for e in root.findall("a:entry", ns):
+            title = (e.find("a:title", ns).text or "").strip().replace("\n", " ")
+            summary = (e.find("a:summary", ns).text or "").strip().replace("\n", " ")
+            arxiv_id = (e.find("a:id", ns).text or "").rsplit("/", 1)[-1]
+            published = (e.find("a:published", ns).text or "")[:4]
+            papers.append(Paper("arxiv", title, summary, arxiv_id, published))
+    except Exception as e:
+        logger.warning("[novelty] arXiv parse failed: %s", e)
+    return papers
+
+
+def retrieve_s2(query: str, max_results: int = 5) -> List[Paper]:
+    """Query Semantic Scholar (optional; often rate-limited without a key)."""
+    q = urllib.parse.quote(query)
+    fields = "title,abstract,year,externalIds"
+    url = (f"{S2_ENDPOINT}?query={q}&limit={max_results}&fields={fields}")
+    raw = _http_get(url)
+    time.sleep(_RATE_SLEEP)
+    if not raw:
+        return []
+    try:
+        data = json.loads(raw)
+        if isinstance(data, dict) and data.get("code") == 429:
+            return []  # rate-limited; silently skip
+        papers = []
+        for item in data.get("data", []) or []:
+            papers.append(Paper(
+                "s2",
+                (item.get("title") or "").strip(),
+                (item.get("abstract") or "").strip(),
+                item.get("paperId", ""),
+                str(item.get("year") or "")[:4]))
+        return papers
+    except Exception as e:
+        logger.debug("[novelty] s2 parse failed: %s", e)
+        return []
+
+
+def _extract_query(claim: str) -> str:
+    """Reduce a claim to arXiv-searchable terms, keeping DOMAIN NOUNS and
+    dropping generic connective/statistical words.
+
+    Earlier this kept the first 6 non-stopwords, which for a claim like
+    "...galaxy's g-r color is positively correlated with ... redshift" yielded
+    "sdss sample galaxy color positively correlated" — dropping 'redshift', the
+    crucial term, so retrieval never fetched the photo-z papers that would entail
+    it. We now drop generic stats words (correlated, significant, relation, …)
+    and keep up to 8 domain-relevant terms.
+    """
+    stop = {"the", "a", "an", "of", "in", "with", "and", "to", "is", "are",
+            "that", "this", "for", "on", "at", "by", "be", "from", "as", "it",
+            "we", "show", "have", "has", "than", "more", "less", "very",
+            "between", "into", "its", "their", "was", "were", "our", "these",
+            "those", "such", "also", "using", "used", "use",
+            # generic statistical / framing words — not useful as search terms
+            "correlated", "correlation", "correlates", "positively", "negatively",
+            "significant", "significantly", "strongly", "weakly", "relation",
+            "relationship", "associated", "associate", "sample", "samples",
+            "result", "results", "found", "find", "report", "reported",
+            "higher", "lower", "greater", "fewer", "increase", "decrease",
+            "evidence", "indicates", "indicate", "suggests", "suggest"}
+    words = re.findall(r"[A-Za-z][A-Za-z0-9\-]+", claim.lower())
+    terms = [w for w in words if w not in stop and len(w) > 2]
+    # de-dup preserving order, keep up to 8
+    seen, kept = set(), []
+    for w in terms:
+        if w not in seen:
+            seen.add(w)
+            kept.append(w)
+    return " ".join(kept[:8]) or claim[:60]
+
+
+# --------------------------------------------------------------------------- #
+# the grounded entailment judge                                                #
+# --------------------------------------------------------------------------- #
+def _parse_judge_text(text: str) -> tuple:
+    """Parse the judge's JSON verdict. Returns (confidence, verdict_dict);
+    confidence is a float in [0, 1] or None when the judge did not state one.
+    Returns (None, {}) when no JSON object is present."""
+    m = re.search(r"\{.*\}", text or "", re.DOTALL)
+    if not m:
+        return None, {}
+    try:
+        verdict = json.loads(m.group(0))
+    except ValueError:
+        return None, {}
+    conf = verdict.get("confidence")
+    if isinstance(conf, (int, float)) and 0.0 <= float(conf) <= 1.0:
+        conf = float(conf)
+    else:
+        conf = None
+    return conf, verdict
+
+
+def _judge_model() -> str:
+    """Gate-2 judge model (token-economy point 9, 2026-10-10).
+
+    The entailment judge is a grounded single-question lookup over 8 abstracts
+    — a cheap FAST model carries it. Default ``claude-haiku-4-5-20251001``;
+    override with ASTRA_JUDGE_MODEL (set it to the gateway default model to
+    inherit the gateway's own choice)."""
+    return (os.environ.get("ASTRA_JUDGE_MODEL") or "").strip() \
+        or "claude-haiku-4-5-20251001"
+
+
+def _judge_known(claim: str, papers: List[Paper]) -> tuple:
+    """Ask the LLM whether ``claim`` is ALREADY-KNOWN (not a new discovery).
+
+    A claim is already-known if EITHER:
+      (a) one of the retrieved abstracts states or directly implies it (cite it), OR
+      (b) it is a well-established foundational/textbook result the field treats as
+          given (e.g. the Tully–Fisher relation, the basic colour–redshift
+          correlation underpinning photometric redshifts, the luminosity function).
+
+    (a) is grounded in retrieved text; (b) is a domain-knowledge judgement. Both
+    are auditable via the returned ``reason_label`` and ``reasoning``. Be
+    conservative: borderline claims lean toward 'known' (we would rather drop a
+    marginal result than emit a textbook restatement as a 'discovery').
+
+    Returns (known, entailing_paper, reason_label, reasoning, confidence).
+    reason_label is 'entailed' | 'foundational' | 'novel'; confidence is the
+    judge's self-reported [0, 1] calibration signal (recorded for ranking,
+    never a verdict). On judge failure returns (False, None, '', '', None) —
+    caller treats that conservatively (judge-failed)."""
+    if not papers:
+        return False, None, "", "", None
+    gw = _get_gateway()
+    if gw is None:
+        return False, None, "", "", None
+    abstracts = "\n\n".join(
+        f"[{i}] {p.title} ({p.year})\n{p.abstract[:900]}"
+        for i, p in enumerate(papers))
+    system = (
+        "You are a strict scientific novelty auditor. A candidate astrophysical "
+        "CLAIM is ALREADY-KNOWN (not a new discovery) if EITHER (a) one of the "
+        "RETRIEVED ABSTRACTS states or directly implies it — cite that abstract's "
+        "index; OR (b) it is a well-established foundational / textbook result "
+        "that the field treats as given (standard scaling relations, the basic "
+        "colour–redshift correlation behind photometric redshifts, Tully–Fisher, "
+        "the luminosity function, magnitude limits, K-corrections, etc.). Use "
+        "retrieved text for (a) and standard domain knowledge for (b). When "
+        "uncertain, lean toward already-known — a borderline claim should not be "
+        "advertised as a new discovery.")
+    user = (f"CANDIDATE CLAIM:\n{claim}\n\nRETRIEVED ABSTRACTS:\n{abstracts}\n\n"
+            "Respond with ONLY JSON: "
+            '{"known": true|false, "reason": "entailed"|"foundational"|"novel", '
+            '"by_abstract": <int|null>, "confidence": <0.0-1.0>, '
+            '"reasoning": "<one sentence>"}')
+    try:
+        text, _ = gw.complete(
+            system=system, messages=[{"role": "user", "content": user}],
+            model=_judge_model(), max_tokens=300, caller="novelty_gate")
+        conf, verdict = _parse_judge_text(text)
+        if not verdict:
+            return False, None, "", "", None
+        known = bool(verdict.get("known"))
+        label = str(verdict.get("reason", ""))[:24]
+        idx = verdict.get("by_abstract")
+        reasoning = str(verdict.get("reasoning", ""))[:300]
+        entailing = None
+        if known and isinstance(idx, int) and 0 <= idx < len(papers):
+            entailing = papers[idx]
+        return known, entailing, label, reasoning, conf
+    except Exception as e:
+        logger.warning("[novelty] judge failed: %s", e)
+        return False, None, "", "", None
+
+
+# --------------------------------------------------------------------------- #
+# caching                                                                      #
+# --------------------------------------------------------------------------- #
+def _cache_key(claim: str) -> str:
+    norm = re.sub(r"\s+", " ", re.sub(r"[^A-Za-z0-9 ]", " ", claim.lower())).strip()
+    return hashlib.sha1(norm.encode()).hexdigest()[:16]
+
+
+def _load_cache() -> dict:
+    try:
+        if CACHE_PATH.exists():
+            return json.loads(CACHE_PATH.read_text())
+    except Exception:
+        pass
+    return {}
+
+
+def _save_cache(cache: dict) -> None:
+    """Persist the cache: strip retrieved abstracts, prune to the newest
+    NOVELTY_CACHE_MAX_ENTRIES entries, and write the count sidecar that
+    claim_gates._novelty_cache_size reads (so family_size never parses this
+    file again)."""
+    try:
+        CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        slim = {}
+        for k, v in cache.items():
+            if isinstance(v, dict) and "retrieved" in v:
+                v = {kk: vv for kk, vv in v.items() if kk != "retrieved"}
+            slim[k] = v
+        if len(slim) > NOVELTY_CACHE_MAX_ENTRIES:
+            keep = list(slim)[-NOVELTY_CACHE_MAX_ENTRIES:]
+            slim = {k: slim[k] for k in keep}
+        CACHE_PATH.write_text(json.dumps(slim, indent=2, default=str))
+        try:
+            CACHE_COUNT_PATH.write_text(json.dumps({"n": len(slim)}))
+        except OSError:
+            pass
+    except Exception as e:
+        logger.debug("[novelty] cache save failed: %s", e)
+
+
+# --------------------------------------------------------------------------- #
+# public entry point                                                           #
+# --------------------------------------------------------------------------- #
+def _retrieve_papers(query: str, use_s2: bool, max_results: int = 5) -> List[Paper]:
+    """Retrieve + de-dup papers from arXiv (and optionally S2) for a query."""
+    papers = retrieve_arxiv(query, max_results=max_results)
+    if use_s2:
+        papers += retrieve_s2(query, max_results=max_results)
+    seen, deduped = set(), []
+    for p in papers:
+        k = p.title.lower()[:80]
+        if k and k not in seen:
+            seen.add(k)
+            deduped.append(p)
+    return deduped[:8]
+
+
+# Phase 2 live-source check: how long a live retrieval on a cached known-
+# verdict stays fresh (seconds). One week balances source-liveness assurance
+# against API load from retried claims.
+LIVE_CHECK_TTL = 7 * 24 * 3600
+
+
+def _dedup_candidates(cache: dict, limit: int = 500) -> dict:
+    """Cached claims eligible as near-dup priors: key -> claim text.
+
+    Eligible = status 'known' (suppression-only tier — a 'novel' prior never
+    suppresses) and never re-judged novel in its history. Freshness
+    (LIVE_CHECK_TTL) is deliberately NOT filtered here: the tier must SEE a
+    stale near-dup prior so it can return the honest 'known-cache-only'
+    downgrade instead of re-retrieving; only the newest ``limit`` entries are
+    scanned (embedding the whole 6000-entry cache per call would recreate the
+    I/O problem this tier exists to solve)."""
+    out = {}
+    for k in list(cache)[-limit:]:
+        v = cache.get(k)
+        if not isinstance(v, dict):
+            continue
+        if v.get("status") != "known" or v.get("novel", False):
+            continue
+        if any((h or {}).get("status") == "novel"
+               for h in (v.get("history") or [])):
+            continue
+        text = v.get("claim")
+        if text:
+            out[k] = text
+    return out
+
+
+def _log_live_check(claim: str, n_papers: int, outcome: str) -> None:
+    """Log the live-source check beside everything else (never raises)."""
+    try:
+        from .evidence_ledger import safe_append
+        safe_append("note", f"live-check-{outcome}", claim=claim,
+                    value=float(n_papers),
+                    detail=f"live-source check on a known-verdict: "
+                           f"{n_papers} paper(s) retrieved live")
+    except Exception:
+        pass
+
+
+def check_novelty(claim: str, use_s2: bool = True, force: bool = False) -> NoveltyResult:
+    """Gate 2: return whether ``claim`` is novel (not in the literature).
+
+    Conservative on failure: retrieval- or judge-failures are NOT promoted as
+    novel (``novel=False`` with a ``status`` explaining why).
+    """
+    if not claim or not claim.strip():
+        return NoveltyResult(False, "judge-failed", claim, reasoning="empty claim")
+
+    key = _cache_key(claim)
+    cache = _load_cache()
+    if not force and key in cache:
+        c = cache[key]
+        # Phase 2 (Eureka plan, 2026-08-30) — logged live-source check: a
+        # cached "known" verdict EXPLAINS A FINDING AWAY, so it may not stand
+        # on memory alone. Re-check that the source is live (one retrieval,
+        # no re-judging) unless a live check ran within LIVE_CHECK_TTL
+        # seconds. Without it the verdict is downgraded to known-cache-only
+        # (not a resolution — the claim stays open in the register).
+        fall_through = False
+        if c.get("status") == "known":
+            age = time.time() - float(c.get("live_checked_ts", 0) or 0)
+            if age > LIVE_CHECK_TTL:
+                papers = _retrieve_papers(_extract_query(claim), use_s2)
+                if papers:
+                    c["live_checked_ts"] = time.time()
+                    c["live_checked_n"] = len(papers)
+                    cache[key] = c
+                    _save_cache(cache)
+                    _log_live_check(claim, len(papers), "ok")
+                else:
+                    _log_live_check(claim, 0, "unavailable")
+                    return NoveltyResult(
+                        False, "known-cache-only", claim, n_retrieved=0,
+                        reasoning="cached known-verdict could not be "
+                                  "live-checked (retrieval unavailable); "
+                                  "dismissal not accepted")
+        elif c.get("status") == "novel":
+            # F4 (2026-09-08) — prior-art sweep at promotion: a cached NOVEL
+            # verdict AUTHORIZES a finding, so it may not stand on memory
+            # alone either. The mirror of the known-verdict rule above: once
+            # older than LIVE_CHECK_TTL the claim falls through to the fresh
+            # path (live retrieval + re-judge; the archived history and the
+            # bumped revision record the re-verification). Within the TTL the
+            # cached verdict stands, returned marked from_cache=True.
+            age = time.time() - float(c.get("live_checked_ts", 0) or 0)
+            if age > LIVE_CHECK_TTL:
+                logger.info("[novelty] cached novel verdict older than "
+                            "LIVE_CHECK_TTL — re-verifying against live sources")
+                fall_through = True
+        if not fall_through:
+            res = NoveltyResult(c.get("novel", False), c.get("status", "?"),
+                                claim, None, c.get("n_retrieved", 0),
+                                c.get("reasoning", ""),
+                                confidence=c.get("confidence"),
+                                revision=int(c.get("revision", 0)))
+            res.from_cache = True
+            return res
+
+    # Near-dup known-precheck tier (token-economy point 8, 2026-10-10), on the
+    # cache-MISS path BEFORE retrieval: a claim within tau of a fresh
+    # live-checked KNOWN verdict is suppressed without a retrieval or judge
+    # call. SUPPRESSION-ONLY by design — the 2026-08-20 calibration
+    # (novelty_precheck.py) measured 55% verdict agreement at >=0.9 similarity,
+    # so the tier never resolves toward novel and never replaces a live check
+    # with memory beyond the same LIVE_CHECK_TTL the cached path already
+    # applies. Every firing is logged to novelty_precheck.jsonl so its standing
+    # precision stays measurable. ASTRA_NOVELTY_DEDUP_TAU<=0 disables.
+    from . import novelty_precheck as _pc
+    if not force:
+        try:
+            cands = _dedup_candidates(cache)
+            if cands:
+                dup_key, sim = _pc.near_dup_match(claim, cands)
+                if dup_key is not None:
+                    prior = cache[dup_key]
+                    prior_age = time.time() - float(
+                        prior.get("live_checked_ts", 0) or 0)
+                    if prior_age > LIVE_CHECK_TTL:
+                        # Stale prior: memory alone may not dismiss (the same
+                        # rule as the cached-known path) — downgrade, never
+                        # 'known', no retrieval spent on the tier's say-so.
+                        _pc.log_precheck({"top_similarity": round(sim, 4)},
+                                         "known-cache-only")
+                        return NoveltyResult(
+                            False, "known-cache-only", claim, n_retrieved=0,
+                            reasoning="near-duplicate of a known claim whose "
+                                      "live-source check is stale; dismissal "
+                                      "not accepted")
+                    cache[key] = {
+                        "novel": False, "status": "known-precheck",
+                        "claim": claim[:300], "dedup_of": dup_key,
+                        "dedup_sim": round(float(sim), 4), "n_retrieved": 0,
+                        "live_checked_ts": prior.get("live_checked_ts"),
+                        "ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                    }
+                    _save_cache(cache)
+                    _pc.log_precheck({"top_similarity": round(float(sim), 4)},
+                                     "known-precheck")
+                    logger.info("[novelty] known-precheck (near-dup of %s, "
+                                "sim=%.3f) — %s", dup_key, sim, claim[:60])
+                    res = NoveltyResult(
+                        False, "known-precheck", claim, n_retrieved=0,
+                        reasoning=f"near-duplicate (sim={sim:.2f}) of a "
+                                  f"live-checked known claim")
+                    res.from_cache = True
+                    return res
+        except Exception as e:
+            logger.debug("[novelty] near-dup precheck failed: %s", e)
+
+    # forced re-judgement: archive the prior verdict so the iteration history
+    # of how this claim's novelty assessment evolved is preserved (Egent
+    # provenance rule — archive outputs, never assume a re-run reproduces)
+    history = list(cache.get(key, {}).get("history", []))
+    if key in cache:
+        history.append({"status": cache[key].get("status"),
+                        "ts": time.strftime("%Y-%m-%dT%H:%M:%S")})
+
+    query = _extract_query(claim)
+    logger.info("[novelty] retrieving for claim (query=%r)", query)
+    papers = _retrieve_papers(query, use_s2)
+    if not papers:
+        # Transient rate-limiting can return empty on the first pass (the
+        # 2026-07-14 pilot saw whole batches come back empty). Retry once after
+        # backoff before declaring retrieval-failed.
+        logger.info("[novelty] no papers on first pass; retrying after backoff")
+        time.sleep(_RATE_SLEEP)
+        papers = _retrieve_papers(query, use_s2)
+
+    if not papers:
+        # Retrieval genuinely failed. This is TRANSIENT — do NOT cache it, so the
+        # next run retries instead of inheriting a permanent "failed" verdict.
+        return NoveltyResult(False, "retrieval-failed", claim, n_retrieved=0,
+                             reasoning="no papers retrieved after retry; novelty unverified")
+
+    # deterministic pre-check tier: features are logged beside every verdict
+    # so any future auto-known threshold is measured, not assumed (see
+    # novelty_precheck.py for the 2026-08-20 calibration negative result)
+    from . import novelty_precheck as _pc
+    feats = _pc.precheck_features(claim, [asdict(p) for p in papers])
+    if _pc.should_auto_known(feats):
+        res = NoveltyResult(False, "known", claim, entailed_by=papers[feats.get(
+            "top_similarity_idx", 0)] if feats.get("top_similarity_idx", -1) >= 0
+            else None, n_retrieved=len(papers),
+            reasoning="auto-known: top_similarity above armed tau",
+            retrieved=papers)
+        cache[key] = res.to_dict()
+        _save_cache(cache)
+        _pc.log_precheck(feats, "known-auto")
+        logger.info("[novelty] known-auto (tau tier) — %s", claim[:60])
+        _log_live_check(claim, len(papers), "ok")   # papers WERE retrieved live
+        return res
+
+    known, entailing, label, reasoning, confidence = _judge_known(claim, papers)
+    if not label and not reasoning:
+        # judge itself failed -> conservative
+        res = NoveltyResult(False, "judge-failed", claim, n_retrieved=len(papers),
+                            reasoning="LLM novelty judge unavailable")
+        cache[key] = res.to_dict()
+        _save_cache(cache)
+        return res
+
+    if known:
+        reason = (f"{label}: {reasoning}") if label else reasoning
+        res = NoveltyResult(False, "known", claim, entailed_by=entailing,
+                            n_retrieved=len(papers), reasoning=reason,
+                            retrieved=papers)
+    else:
+        res = NoveltyResult(True, "novel", claim, n_retrieved=len(papers),
+                            reasoning=reasoning, retrieved=papers)
+    res.confidence = confidence
+    res.revision = len(history)
+    cache[key] = res.to_dict()
+    if res.status in ("known", "novel"):
+        # the fresh path judged on live-retrieved papers: stamp the check
+        # (novel included since F4 — it is what the cached-novel TTL reads)
+        cache[key]["live_checked_ts"] = time.time()
+        cache[key]["live_checked_n"] = len(papers)
+    if confidence is not None:
+        cache[key]["confidence"] = confidence
+    if history:
+        cache[key]["history"] = history
+        cache[key]["revision"] = len(history)
+    _save_cache(cache)
+    _pc.log_precheck(feats, res.status, confidence=confidence)
+    logger.info("[novelty] %s — %s (n=%d)", res.status, claim[:60], len(papers))
+    return res
+
+
+if __name__ == "__main__":
+    import sys
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+    claim = " ".join(sys.argv[1:]) or "Galaxies with redder g-r color are at higher redshift in SDSS"
+    r = check_novelty(claim)
+    print(json.dumps(r.to_dict(), indent=2)[:1500])
